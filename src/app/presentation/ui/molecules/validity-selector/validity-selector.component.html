@@ -1,0 +1,13 @@
+<div class="validity-selector">
+  <select 
+    class="form-select" 
+    [value]="selectedPeriod()"
+    (change)="onPeriodChange($event)"
+  >
+    @for (option of validityOptions; track option.minutes) {
+      <option [value]="option.minutes">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+</div>

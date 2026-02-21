@@ -1,0 +1,200 @@
+.authorization-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.authorization-form-container {
+  background: #f8f9fb;
+  /* Light greyish background from image */
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
+  /* Mobile-like width */
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+}
+
+.header-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8D90A6;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2D3047;
+  margin-bottom: 0.5rem;
+}
+
+.header-subtitle {
+  margin: 0;
+  color: #8D90A6;
+  font-size: 0.95rem;
+}
+
+/* Form Layout */
+.authorization-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-content {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8D90A6;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.optional-badge {
+  background-color: #f0f0f0;
+  color: #8D90A6;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #A0A3BD;
+  font-size: 1.1rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Style deep into the app-text-input to ensure padding for icon */
+::ng-deep app-text-input input {
+  padding-left: 3rem !important;
+  /* Make space for the icon */
+  background-color: #F8F9FB !important;
+  border: none !important;
+  border-radius: 12px !important;
+  height: 50px !important;
+  font-size: 0.95rem !important;
+  color: #2D3047 !important;
+}
+
+::ng-deep app-text-input input:focus {
+  box-shadow: 0 0 0 2px rgba(167, 155, 255, 0.2) !important;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.75rem;
+  margin-top: -0.25rem;
+}
+
+/* Button */
+.form-actions {
+  margin-top: 0.5rem;
+}
+
+.submit-button {
+  width: 100%;
+  background: #FF8E6E;
+  /* Coral color */
+  color: white;
+  border: none;
+  border-radius: 30px;
+  /* Pill shape */
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+  text-transform: uppercase;
+}
+
+.submit-button:hover {
+  background: #ff7a54;
+}
+
+.submit-button:disabled {
+  background: #ffdccf;
+  cursor: not-allowed;
+}

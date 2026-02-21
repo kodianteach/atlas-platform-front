@@ -1,0 +1,262 @@
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.form-container {
+  background: white;
+  border-radius: 1.5rem 1.5rem 0 0;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  padding-bottom: 2rem;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  flex: 1;
+}
+
+/* Unit Card */
+.unit-card {
+  margin: 1.25rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  border-radius: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.unit-info {
+  flex: 1;
+}
+
+.unit-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5rem 0;
+  opacity: 0.9;
+}
+
+.unit-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+}
+
+.unit-name {
+  font-size: 0.9375rem;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.unit-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unit-icon i {
+  font-size: 1.75rem;
+}
+
+/* Description */
+.form-description {
+  padding: 0 1.25rem 1rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #666;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Form */
+.vehicle-form {
+  padding: 0 1.25rem;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.field-input,
+.field-select {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  color: #1a1a1a;
+  background: white;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.field-input:focus,
+.field-select:focus {
+  outline: none;
+  border-color: #FF6B6B;
+}
+
+.field-input::placeholder {
+  color: #999;
+}
+
+.field-select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.5rem;
+}
+
+.select-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: #666;
+  pointer-events: none;
+}
+
+/* Buttons */
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  border: none;
+  border-radius: 3rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  margin-bottom: 0.75rem;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.5);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.cancel-btn:hover {
+  color: #1a1a1a;
+}
+
+/* Responsive */
+@media (max-width: 375px) {
+  .form-header {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .form-title {
+    font-size: 1.125rem;
+  }
+
+  .unit-card {
+    margin: 1rem;
+  }
+
+  .form-description {
+    padding: 0 1rem 1rem;
+  }
+
+  .vehicle-form {
+    padding: 0 1rem;
+  }
+}

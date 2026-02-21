@@ -1,0 +1,7 @@
+<div class="quick-action-card" (click)="onCardClick()">
+  <div class="icon-container" [style.background-color]="backgroundColor()">
+    <i [class]="'bi ' + icon()"></i>
+  </div>
+  <h3 class="card-title">{{ title() }}</h3>
+  <p class="card-subtitle">{{ subtitle() }}</p>
+</div>

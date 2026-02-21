@@ -1,0 +1,44 @@
+<div class="enrollment-url">
+  <div class="enrollment-url__backdrop" (click)="onClose()"></div>
+  <div class="enrollment-url__modal">
+    <div class="enrollment-url__header">
+      <h3 class="enrollment-url__title">
+        <i class="bi bi-link-45deg"></i>
+        URL de Enrolamiento
+      </h3>
+      <button class="enrollment-url__close" (click)="onClose()" type="button">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <p class="enrollment-url__description">
+      Comparta esta URL con el portero para que configure su dispositivo. 
+      Válida por 24 horas.
+    </p>
+
+    <div class="enrollment-url__url-box">
+      <code class="enrollment-url__url-text">{{ enrollmentUrl() }}</code>
+    </div>
+
+    <div class="enrollment-url__actions">
+      <button
+        class="enrollment-url__btn enrollment-url__btn--copy"
+        (click)="copyUrl()"
+        type="button">
+        @if (copied()) {
+          <i class="bi bi-check-lg"></i>
+          URL copiada
+        } @else {
+          <i class="bi bi-clipboard"></i>
+          Copiar URL
+        }
+      </button>
+      <button
+        class="enrollment-url__btn enrollment-url__btn--close"
+        (click)="onClose()"
+        type="button">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

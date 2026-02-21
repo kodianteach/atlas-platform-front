@@ -1,0 +1,19 @@
+<div 
+  class="avatar" 
+  [class]="'avatar avatar--' + size()"
+  [attr.aria-label]="name() || 'User avatar'">
+  @if (imageUrl() && !imageError()) {
+    <img 
+      [src]="imageUrl()" 
+      [alt]="name() || 'User avatar'"
+      loading="lazy"
+      (error)="onImageError()"
+      class="avatar__image" />
+  } @else {
+    <div 
+      class="avatar__placeholder"
+      [attr.aria-label]="name() ? name() + ' initials' : 'User placeholder'">
+      {{ initials() }}
+    </div>
+  }
+</div>

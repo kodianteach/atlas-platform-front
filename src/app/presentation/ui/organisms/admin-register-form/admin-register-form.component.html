@@ -1,0 +1,71 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+  @if (generalError()) {
+    <div class="alert alert-error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ generalError() }}
+    </div>
+  }
+
+  <app-form-field
+    id="fullName"
+    label="Nombre completo"
+    [errorMessage]="getFullNameError()"
+    type="text"
+    placeholder="ej. Juan Carlos Pérez"
+    [value]="registerForm.get('fullName')?.value || ''"
+    (valueChange)="updateField('fullName', $event)"
+    (blurred)="markFieldTouched('fullName')" />
+
+  <app-form-field
+    id="email"
+    label="Correo electrónico"
+    [errorMessage]="getEmailError()"
+    type="email"
+    placeholder="ej. admin@empresa.co"
+    [value]="registerForm.get('email')?.value || ''"
+    (valueChange)="updateField('email', $event)"
+    (blurred)="markFieldTouched('email')" />
+
+  <div class="select-field-wrapper">
+    <label class="field-label">Tipo de documento</label>
+    <app-select-input
+      id="documentType"
+      [value]="registerForm.get('documentType')?.value"
+      placeholder="Selecciona tipo de documento"
+      [options]="documentTypeOptions"
+      [error]="!!getDocumentTypeError()"
+      (valueChange)="updateField('documentType', $event); markFieldTouched('documentType')"
+      (blurred)="markFieldTouched('documentType')" />
+    @if (getDocumentTypeError()) {
+      <span class="error-message">{{ getDocumentTypeError() }}</span>
+    }
+  </div>
+
+  <app-form-field
+    id="documentNumber"
+    label="Número de documento"
+    [errorMessage]="getDocumentNumberError()"
+    type="text"
+    placeholder="ej. 1234567890"
+    [value]="registerForm.get('documentNumber')?.value || ''"
+    (valueChange)="updateField('documentNumber', $event)"
+    (blurred)="markFieldTouched('documentNumber')" />
+
+  <app-form-field
+    id="phone"
+    label="Teléfono"
+    [errorMessage]="getPhoneError()"
+    type="tel"
+    placeholder="ej. 3001234567"
+    [value]="registerForm.get('phone')?.value || ''"
+    (valueChange)="updateField('phone', $event)"
+    (blurred)="markFieldTouched('phone')" />
+
+  <div class="form-actions">
+    <app-button
+      [label]="isSubmitting() ? 'Registrando...' : 'Pre-registrar Administrador'"
+      type="submit"
+      variant="primary"
+      [disabled]="isSubmitting()" />
+  </div>
+</form>

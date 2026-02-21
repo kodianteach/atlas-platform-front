@@ -1,0 +1,111 @@
+<div class="entry-control-page">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div>
+        <h1 class="page-title">Control de Acceso</h1>
+        <p class="page-subtitle">{{ gateLocation().wing }} • Puerta {{ gateLocation().gateNumber }}</p>
+      </div>
+      <button class="settings-btn" (click)="onSettings()" aria-label="Configuración">
+        <i class="bi bi-gear-fill"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- QR Scanner Section -->
+  <div class="scanner-section">
+    <div class="scanner-container" [class.scanning]="scanning()">
+      <div class="scanner-frame">
+        <div class="scanner-corners">
+          <div class="corner top-left"></div>
+          <div class="corner top-right"></div>
+          <div class="corner bottom-left"></div>
+          <div class="corner bottom-right"></div>
+        </div>
+        
+        <div class="scanner-content">
+          <i class="bi bi-qr-code-scan scanner-icon"></i>
+          <p class="scanner-text">Apunta al Código QR</p>
+        </div>
+
+        @if (scanning()) {
+          <div class="scanning-line"></div>
+        }
+      </div>
+
+      <button class="scan-trigger-btn" (click)="onScanQR()" [disabled]="scanning()">
+        <i class="bi bi-upc-scan"></i>
+      </button>
+    </div>
+  </div>
+
+  @if (recentEntry()) {
+    <div class="valid-entry-card">
+      <div class="card-header">
+        <div class="status-indicator">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Acceso Válido</span>
+        </div>
+        <span class="entry-time">{{ recentEntry().timestamp | date:'shortTime' }}</span>
+      </div>
+
+      <div class="entry-info">
+        <div class="entry-avatar">
+          @if (recentEntry().avatarUrl) {
+            <img [src]="recentEntry().avatarUrl" [alt]="recentEntry().visitorName">
+          } @else {
+            <i class="bi bi-person-circle"></i>
+          }
+        </div>
+        <div class="entry-details">
+          <h3 class="entry-name">{{ recentEntry().visitorName }}</h3>
+          <p class="entry-unit">{{ recentEntry().unit }} • {{ recentEntry().verified ? 'Verificado Ahora' : 'Pendiente' }}</p>
+        </div>
+      </div>
+
+      <div class="entry-metadata">
+        @if (recentEntry().plate) {
+          <div class="metadata-item">
+            <i class="bi bi-car-front-fill"></i>
+            <span>Placa: {{ recentEntry().plate }}</span>
+          </div>
+        }
+        @if (recentEntry().guestCount) {
+          <div class="metadata-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Invitados: {{ recentEntry().guestCount }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Recent Entries Section -->
+  <div class="recent-entries-section">
+    <div class="section-header">
+      <h2 class="section-title">Entradas Recientes</h2>
+      <button class="view-all-btn" (click)="onViewLogs()">
+        Ver Todo
+      </button>
+    </div>
+
+    <div class="recent-entry-preview">
+      <div class="preview-icon">
+        <i class="bi bi-truck"></i>
+      </div>
+      <div class="preview-details">
+        <h4 class="preview-title">Entrega Amazon</h4>
+        <p class="preview-subtitle">Entrega para Unidad 105</p>
+      </div>
+      <span class="preview-time">10:15 AM</span>
+    </div>
+  </div>
+
+  <app-doorman-bottom-nav [activeTab]="'scan'" />
+
+  <app-access-granted-modal
+    [visible]="showAccessModal()"
+    [scanResult]="scanResult()"
+    (dismiss)="onDismissModal()"
+    (openGate)="onOpenGate()" />
+</div>

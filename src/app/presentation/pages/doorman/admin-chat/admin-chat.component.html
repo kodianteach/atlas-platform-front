@@ -1,0 +1,71 @@
+<div class="admin-chat-page">
+  <!-- Header -->
+  <header class="chat-header">
+    <button class="back-btn" (click)="onBack()" aria-label="Volver">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    
+    <div class="chat-info">
+      <div class="admin-avatar">
+        <i class="bi bi-person-circle"></i>
+        <span class="online-indicator"></span>
+      </div>
+      <div class="admin-details">
+        <h1 class="admin-name">Administración</h1>
+        <p class="admin-status">En línea</p>
+      </div>
+    </div>
+
+    <button class="more-btn" aria-label="Más opciones">
+      <i class="bi bi-three-dots-vertical"></i>
+    </button>
+  </header>
+
+  <!-- Messages Container -->
+  <div class="messages-container" #messagesContainer>
+    <div class="messages-content">
+      <ng-container *ngFor="let message of messages; let i = index">
+        <!-- Date Separator -->
+        <div class="date-separator" *ngIf="shouldShowDateSeparator(i)">
+          <span class="date-label">{{ getDateLabel(message.timestamp) }}</span>
+        </div>
+
+        <!-- Message Bubble -->
+        <div class="message-wrapper" [class.own-message]="message.senderRole === 'doorman'">
+          <div class="message-bubble" [class.admin-bubble]="message.senderRole === 'admin'" [class.doorman-bubble]="message.senderRole === 'doorman'">
+            <p class="message-text">{{ message.message }}</p>
+            <div class="message-meta">
+              <span class="message-time">{{ message.timestamp | date:'shortTime' }}</span>
+              <i *ngIf="message.senderRole === 'doorman'" class="bi" [class.bi-check-all]="message.read" [class.bi-check]="!message.read"></i>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <button class="attach-btn" aria-label="Adjuntar">
+      <i class="bi bi-paperclip"></i>
+    </button>
+    
+    <div class="input-wrapper">
+      <input 
+        type="text" 
+        class="message-input" 
+        placeholder="Escribe un mensaje..."
+        [(ngModel)]="newMessage"
+        (keyup.enter)="onSendMessage()"
+        [disabled]="sending">
+    </div>
+
+    <button 
+      class="send-btn" 
+      (click)="onSendMessage()"
+      [disabled]="!newMessage.trim() || sending"
+      aria-label="Enviar">
+      <i class="bi bi-send-fill"></i>
+    </button>
+  </div>
+</div>

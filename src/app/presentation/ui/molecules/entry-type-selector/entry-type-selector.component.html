@@ -1,0 +1,21 @@
+<div class="entry-type-container">
+  <div 
+    class="type-card" 
+    [class.selected]="selectedType() === 'visitor'"
+    (click)="onTypeChange('visitor')">
+    <div class="icon-circle">
+      <i class="bi bi-person-fill"></i>
+    </div>
+    <span class="type-label">GUEST</span>
+  </div>
+
+  <div 
+    class="type-card" 
+    [class.selected]="selectedType() === 'courier'"
+    (click)="onTypeChange('courier')">
+    <div class="icon-circle">
+      <i class="bi bi-truck-front-fill"></i>
+    </div>
+    <span class="type-label">DELIVERY</span>
+  </div>
+</div>

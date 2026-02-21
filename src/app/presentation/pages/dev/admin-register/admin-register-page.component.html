@@ -1,0 +1,18 @@
+<app-auth-template
+  title="Pre-registro de Administrador"
+  subtitle="Herramienta de desarrollo — Registra un nuevo administrador">
+
+  @if (successMessage()) {
+    <div class="success-state">
+      <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: #16a34a;"></i>
+      <p class="success-text">{{ successMessage() }}</p>
+      <button class="btn-new" (click)="resetForm()">Registrar otro administrador</button>
+    </div>
+  } @else {
+    <app-admin-register-form
+      [isSubmitting]="isSubmitting()"
+      [generalError]="generalError()"
+      (submitForm)="handleRegister($event)" />
+  }
+
+</app-auth-template>

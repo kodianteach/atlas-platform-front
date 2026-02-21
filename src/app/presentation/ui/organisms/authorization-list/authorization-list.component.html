@@ -1,0 +1,22 @@
+<div class="authorization-list" role="region" aria-labelledby="auth-list-title">
+  <app-list-header
+    title="Active Authorizations"
+    [count]="activeCount()" />
+
+  @if (isEmpty()) {
+    <div class="empty-state" role="status" aria-live="polite">
+      <p class="empty-message">No authorizations yet. Create your first authorization to get started.</p>
+    </div>
+  } @else {
+    <ul class="authorization-items" role="list" aria-label="List of authorizations">
+      @for (authorization of authorizations(); track authorization.id) {
+        <li role="listitem">
+          <app-authorization-item
+            [authorization]="authorization"
+            [isActive]="authorization.status === 'ACTIVE'"
+            (toggle)="onToggleAuthorization(authorization.id)" />
+        </li>
+      }
+    </ul>
+  }
+</div>

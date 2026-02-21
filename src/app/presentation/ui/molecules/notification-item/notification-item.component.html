@@ -1,0 +1,29 @@
+<div class="notification-item" 
+     [class.unread]="!notification().read"
+     [class.notification-info]="notification().type === 'info'"
+     [class.notification-warning]="notification().type === 'warning'"
+     [class.notification-success]="notification().type === 'success'"
+     [class.notification-announcement]="notification().type === 'announcement'"
+     (click)="onClick()"
+     role="button"
+     tabindex="0"
+     [attr.aria-label]="notification().title + ': ' + notification().message">
+  
+  <div class="notification-icon" aria-hidden="true">
+    <i [class]="notification().icon || 'bi-bell'"></i>
+  </div>
+
+  <div class="notification-content">
+    <div class="notification-header">
+      <h4 class="notification-title">{{ notification().title }}</h4>
+      <span class="notification-time">{{ timeAgo() }}</span>
+    </div>
+    <p class="notification-message">{{ notification().message }}</p>
+  </div>
+
+  @if (!notification().read) {
+    <div class="notification-indicator" aria-hidden="true">
+      <span class="unread-dot"></span>
+    </div>
+  }
+</div>

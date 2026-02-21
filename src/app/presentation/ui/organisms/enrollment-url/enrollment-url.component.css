@@ -1,0 +1,128 @@
+.enrollment-url {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.enrollment-url__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.enrollment-url__modal {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enrollment-url__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.enrollment-url__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.enrollment-url__title i {
+  color: #FF7A59;
+}
+
+.enrollment-url__close {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.125rem;
+}
+
+.enrollment-url__description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 1rem;
+}
+
+.enrollment-url__url-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+}
+
+.enrollment-url__url-text {
+  font-size: 0.8125rem;
+  color: #374151;
+  word-break: break-all;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.enrollment-url__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.enrollment-url__btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.enrollment-url__btn--copy {
+  background: #FF7A59;
+  color: white;
+}
+
+.enrollment-url__btn--copy:hover {
+  background: #e86a4a;
+}
+
+.enrollment-url__btn--close {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.enrollment-url__btn--close:hover {
+  background: #e5e7eb;
+}

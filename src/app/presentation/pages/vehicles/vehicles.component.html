@@ -1,0 +1,35 @@
+<div class="vehicles-page">
+  <!-- Header -->
+  <header class="vehicles-header">
+    <h1 class="page-title">Mis Vehículos</h1>
+  </header>
+
+  <!-- Description -->
+  <p class="page-description">
+    Gestiona los vehículos registrados para tu unidad y su estado de acceso.
+  </p>
+
+  <!-- Register Vehicle Button -->
+  <div class="register-section">
+    <button class="register-vehicle-btn" (click)="onRegisterVehicle()">
+      <i class="bi bi-plus-lg"></i>
+      <span>Registrar Vehículo</span>
+    </button>
+  </div>
+
+  <!-- Vehicles List -->
+  <div class="vehicles-list">
+    @for (vehicle of vehicles(); track vehicle.id) {
+      <app-vehicle-card
+        [vehicle]="vehicle"
+        (toggleStatus)="onToggleVehicle($event)" />
+    }
+  </div>
+
+  <app-bottom-nav />
+
+  <app-vehicle-registration-form
+    [visible]="showFormOverlay()"
+    (formSubmit)="onFormSubmit($event)"
+    (formCancel)="onFormCancel()" />
+</div>

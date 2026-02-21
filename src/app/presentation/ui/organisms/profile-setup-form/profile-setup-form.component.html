@@ -1,0 +1,58 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="profile-setup-form">
+  <div class="form-fields">
+    <!-- Full Name Field -->
+    <div class="form-field-wrapper">
+      <label for="fullName" class="field-label">Nombre Completo</label>
+      <app-text-input
+        [value]="form.get('fullName')?.value"
+        placeholder="ej. Marco Aurelio"
+        [error]="hasError('fullName')"
+        (valueChange)="form.get('fullName')?.setValue($event); form.get('fullName')?.markAsTouched()"
+        (blurred)="form.get('fullName')?.markAsTouched()" />
+      @if (hasError('fullName')) {
+        <span class="error-message">{{ getErrorMessage('fullName') }}</span>
+      }
+    </div>
+
+    <!-- Phone Number Field -->
+    <div class="form-field-wrapper">
+      <label for="phoneNumber" class="field-label">Número de Teléfono</label>
+      <app-text-input
+        [value]="form.get('phoneNumber')?.value"
+        placeholder="+57 (300) 000-0000"
+        [error]="hasError('phoneNumber')"
+        (valueChange)="form.get('phoneNumber')?.setValue($event); form.get('phoneNumber')?.markAsTouched()"
+        (blurred)="form.get('phoneNumber')?.markAsTouched()" />
+      @if (hasError('phoneNumber')) {
+        <span class="error-message">{{ getErrorMessage('phoneNumber') }}</span>
+      }
+    </div>
+
+    <!-- Admin ID Field -->
+    <div class="form-field-wrapper">
+      <label for="adminId" class="field-label">ID de Administrador</label>
+      <app-text-input
+        [value]="form.get('adminId')?.value"
+        placeholder="ID-883492"
+        [error]="hasError('adminId')"
+        (valueChange)="form.get('adminId')?.setValue($event); form.get('adminId')?.markAsTouched()"
+        (blurred)="form.get('adminId')?.markAsTouched()" />
+      @if (hasError('adminId')) {
+        <span class="error-message">{{ getErrorMessage('adminId') }}</span>
+      }
+    </div>
+  </div>
+
+  <!-- Save Profile Button -->
+  <div class="form-actions">
+    <app-button
+      [label]="isSubmitting() ? '' : 'Guardar Perfil'"
+      type="submit"
+      variant="primary"
+      [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        <span class="loading-spinner"></span>
+      }
+    </app-button>
+  </div>
+</form>

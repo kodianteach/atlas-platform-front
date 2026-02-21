@@ -1,0 +1,113 @@
+.button {
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #FF6B6B;
+  color: #ffffff;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #FF5252;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(255, 107, 107, 0.3);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #CCCCCC;
+}
+
+/* Focus indicator for keyboard navigation */
+.button:focus {
+  outline: 2px solid #007BFF;
+  outline-offset: 2px;
+}
+
+.button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid #007BFF;
+  outline-offset: 2px;
+}
+
+/* Secondary variant */
+.button.button-secondary {
+  background-color: #6C757D;
+  color: #ffffff;
+}
+
+.button.button-secondary:hover:not(:disabled) {
+  background-color: #5A6268;
+}
+
+.button.button-secondary:focus-visible {
+  outline-color: #007BFF;
+}
+
+/* White variant */
+.button.button-white {
+  background-color: #FFFFFF;
+  color: #FF6B6B;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button.button-white:hover:not(:disabled) {
+  background-color: #F8F9FA;
+  color: #FF5252;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.button.button-white:focus-visible {
+  outline-color: #007BFF;
+}
+
+/* Icon-only variant */
+.button-icon-only {
+  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.button-icon {
+  font-size: 1.25rem;
+}
+
+/* Loading spinner animation */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .button:focus-visible {
+    outline-width: 4px;
+  }
+}

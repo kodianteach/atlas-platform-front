@@ -1,0 +1,62 @@
+# Netlify Configuration for Atlas Platform PWA
+
+[build]
+  # Directorio de salida del build de Angular
+  publish = "dist/atlas-platform/browser"
+  
+  # Comando de build para producción
+  command = "npm run build"
+
+# Redirección para SPA (Single Page Application)
+# Todas las rutas deben servir index.html para que Angular Router funcione
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Configuración de MIME type para el manifest de PWA
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+# Configuración de MIME type para ngsw-worker (Service Worker de Angular)
+[[headers]]
+  for = "/ngsw-worker.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+    Cache-Control = "no-cache"
+
+# Configuración de MIME type para ngsw.json
+[[headers]]
+  for = "/ngsw.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "no-cache"
+
+# Cache-Control para assets estáticos con hash
+# Los archivos en /assets/ pueden tener cache largo porque tienen hash en el nombre
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "max-age=31536000, immutable"
+
+# Cache-Control para archivos JavaScript y CSS con hash
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "max-age=31536000, immutable"
+
+# Headers de seguridad recomendados
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"

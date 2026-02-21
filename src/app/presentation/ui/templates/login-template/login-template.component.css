@@ -1,0 +1,117 @@
+.login-template {
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--color-background);
+  /* Create the split background effect */
+  background: white;
+  z-index: 1;
+}
+
+.login-template::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Adjust height to match the orange section in the mockup (approx 40-45%) */
+  height: 45vh;
+  background: var(--gradient-primary);
+  /* Add a subtle curve at the bottom if desired, or keep it straight for now 
+     as exact curves are tricky without SVG. 
+     Border-radius can maintain a 'pill' look for the bottom if needed. 
+     Let's try a large border-radius for the bottom corners to mimic a curve. */
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  z-index: -1;
+}
+
+.h-100 {
+  min-height: 100vh;
+}
+
+/* Logo Circle */
+.logo-circle {
+  width: 90px;
+  height: 90px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.logo-circle svg {
+  color: var(--color-primary);
+  width: 40px;
+  height: 40px;
+}
+
+/* Brand Section */
+.brand-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0;
+  text-shadow: none;
+}
+
+.brand-subtitle {
+  font-size: var(--font-size-md);
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: var(--spacing-xs);
+  font-weight: 400;
+}
+
+/* Login Card */
+.login-card {
+  background: white;
+  /* Large border radius as per mockup */
+  border-radius: 2.5rem;
+  padding: var(--spacing-xl);
+  /* Soft shadow */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  margin-top: var(--spacing-md);
+}
+
+.card-header-custom {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.signin-title {
+  font-size: var(--font-size-xxl);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+  /* Usually 'Sign in' not strictly lowercase in titles, but mockup has Title Case 'Sign in' */
+  text-transform: none; 
+}
+
+.signin-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .login-template::before {
+    height: 40vh;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+  }
+
+  .login-card {
+    padding: var(--spacing-lg);
+    border-radius: 2rem;
+  }
+}
+
+/* Desktop - High resolution */
+@media (min-width: 768px) {
+  .login-card {
+    padding: 3rem 2.5rem;
+  }
+}

@@ -1,0 +1,81 @@
+<form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()" class="onboarding-form">
+  @if (generalError()) {
+    <div class="alert alert-error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ generalError() }}
+    </div>
+  }
+
+  <app-form-field
+    id="organizationName"
+    label="Nombre de la organización"
+    [errorMessage]="getOrganizationNameError()"
+    type="text"
+    placeholder="ej. Torres del Parque"
+    [value]="onboardingForm.get('organizationName')?.value || ''"
+    (valueChange)="updateField('organizationName', $event)"
+    (blurred)="markFieldTouched('organizationName')" />
+
+  <app-form-field
+    id="address"
+    label="Dirección"
+    [errorMessage]="getAddressError()"
+    type="text"
+    placeholder="ej. Calle 100 #15-20"
+    [value]="onboardingForm.get('address')?.value || ''"
+    (valueChange)="updateField('address', $event)"
+    (blurred)="markFieldTouched('address')" />
+
+  <app-form-field
+    id="orgEmail"
+    label="Correo electrónico de la organización (opcional)"
+    [errorMessage]="getEmailError()"
+    type="email"
+    placeholder="ej. contacto@torresdelparque.co"
+    [value]="onboardingForm.get('email')?.value || ''"
+    (valueChange)="updateField('email', $event)"
+    (blurred)="markFieldTouched('email')" />
+
+  <app-form-field
+    id="nit"
+    label="NIT"
+    [errorMessage]="getNitError()"
+    type="text"
+    placeholder="ej. 900123456-1"
+    [value]="onboardingForm.get('nit')?.value || ''"
+    (valueChange)="updateField('nit', $event)"
+    (blurred)="markFieldTouched('nit')" />
+
+  <app-form-field
+    id="phone"
+    label="Teléfono"
+    [errorMessage]="getPhoneError()"
+    type="tel"
+    placeholder="ej. 3001234567"
+    [value]="onboardingForm.get('phone')?.value || ''"
+    (valueChange)="updateField('phone', $event)"
+    (blurred)="markFieldTouched('phone')" />
+
+  <div class="select-field-wrapper">
+    <label class="field-label">Tipo de propiedad</label>
+    <app-select-input
+      id="organizationType"
+      [value]="onboardingForm.get('organizationType')?.value"
+      placeholder="Selecciona el tipo de propiedad"
+      [options]="organizationTypeOptions"
+      [error]="!!getOrganizationTypeError()"
+      (valueChange)="updateField('organizationType', $event); markFieldTouched('organizationType')"
+      (blurred)="markFieldTouched('organizationType')" />
+    @if (getOrganizationTypeError()) {
+      <span class="error-message">{{ getOrganizationTypeError() }}</span>
+    }
+  </div>
+
+  <div class="form-actions">
+    <app-button
+      [label]="isSubmitting() ? 'Creando organización...' : 'Completar Registro'"
+      type="submit"
+      variant="primary"
+      [disabled]="isSubmitting()" />
+  </div>
+</form>

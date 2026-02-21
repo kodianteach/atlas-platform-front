@@ -1,0 +1,19 @@
+<div class="avatar-group" (click)="onGroupClick()" role="button" tabindex="0" (keydown.enter)="onGroupClick()" (keydown.space)="onGroupClick()">
+  <div class="avatars-container">
+    @for (user of visibleUsers(); track user.id) {
+      <div class="avatar-wrapper">
+        <app-avatar 
+          [imageUrl]="user.avatarUrl" 
+          [name]="user.name" 
+          size="small" />
+      </div>
+    }
+    @if (remainingCount() > 0) {
+      <div class="avatar-wrapper remaining-indicator">
+        <div class="remaining-count">
+          +{{ remainingCount() }}
+        </div>
+      </div>
+    }
+  </div>
+</div>

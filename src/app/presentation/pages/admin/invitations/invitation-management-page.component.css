@@ -1,0 +1,200 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-secondary);
+}
+
+.invitation-page {
+  padding: var(--spacing-lg) var(--spacing-md);
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.invitation-page__header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.invitation-page__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.invitation-page__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Card */
+.invitation-page__card {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.invitation-page__card--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+}
+
+.invitation-page__card--success {
+  border: 2px solid var(--color-success, #22c55e);
+}
+
+.invitation-page__card--error {
+  border: 2px solid var(--color-error, #ef4444);
+}
+
+.invitation-page__card-icon {
+  font-size: 3rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.invitation-page__card-icon--success {
+  color: var(--color-success, #22c55e);
+}
+
+.invitation-page__card-icon--error {
+  color: var(--color-error, #ef4444);
+}
+
+.invitation-page__card-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.invitation-page__card-desc {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-lg);
+  line-height: 1.5;
+}
+
+/* URL Box */
+.invitation-page__url-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  word-break: break-all;
+}
+
+.invitation-page__url-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+/* Buttons */
+.invitation-page__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.invitation-page__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.invitation-page__btn--primary {
+  background: var(--gradient-primary);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.invitation-page__btn--primary:hover {
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.4);
+  transform: translateY(-1px);
+}
+
+.invitation-page__btn--primary:active {
+  transform: translateY(0);
+}
+
+.invitation-page__btn--secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.invitation-page__btn--secondary:hover {
+  background: var(--bg-tertiary, var(--bg-secondary));
+}
+
+/* Spinner */
+.invitation-page__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.invitation-page__loading-text {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Dark theme */
+.theme-dark .invitation-page__card {
+  background: var(--dark-bg-primary);
+}
+
+.theme-dark .invitation-page__title {
+  color: var(--dark-text-primary);
+}
+
+.theme-dark .invitation-page__subtitle,
+.theme-dark .invitation-page__card-desc,
+.theme-dark .invitation-page__loading-text {
+  color: var(--dark-text-secondary);
+}
+
+.theme-dark .invitation-page__card-title {
+  color: var(--dark-text-primary);
+}
+
+.theme-dark .invitation-page__url-box {
+  background: var(--dark-bg-secondary);
+  border-color: var(--dark-border);
+}
+
+.theme-dark .invitation-page__url-text {
+  color: var(--dark-text-secondary);
+}
+
+.theme-dark .invitation-page__btn--secondary {
+  background: var(--dark-bg-secondary);
+  color: var(--dark-text-primary);
+  border-color: var(--dark-border);
+}

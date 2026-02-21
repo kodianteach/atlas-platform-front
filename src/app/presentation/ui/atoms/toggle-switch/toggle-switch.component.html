@@ -1,0 +1,15 @@
+<button
+  type="button"
+  role="switch"
+  [attr.aria-checked]="checked()"
+  [attr.aria-label]="ariaLabel()"
+  [disabled]="disabled()"
+  [class.checked]="checked()"
+  [class.disabled]="disabled()"
+  (click)="onToggle()"
+  (keydown)="onKeyDown($event)"
+  class="toggle-switch">
+  <span class="toggle-track">
+    <span class="toggle-thumb"></span>
+  </span>
+</button>

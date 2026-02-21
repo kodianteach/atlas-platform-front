@@ -1,0 +1,21 @@
+.success-state {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.success-text {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: #16a34a;
+  margin: 0;
+}
+
+.success-hint {
+  font-size: var(--font-size-md);
+  color: var(--color-text-light);
+  margin: 0;
+}

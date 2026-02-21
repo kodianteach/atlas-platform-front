@@ -1,0 +1,291 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PropertyRegistrationFormComponent } from './property-registration-form.component';
+import { TextInputComponent } from '../../atoms/text-input/text-input.component';
+import { SelectInputComponent } from '../../atoms/select-input/select-input.component';
+import { ButtonComponent } from '../../atoms/button/button.component';
+
+describe('PropertyRegistrationFormComponent', () => {
+  let component: PropertyRegistrationFormComponent;
+  let fixture: ComponentFixture<PropertyRegistrationFormComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        PropertyRegistrationFormComponent,
+        ReactiveFormsModule,
+        TextInputComponent,
+        SelectInputComponent,
+        ButtonComponent
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(PropertyRegistrationFormComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize form with empty values', () => {
+    expect(component.form.get('condominiumName')?.value).toBe('');
+    expect(component.form.get('taxId')?.value).toBe('');
+    expect(component.form.get('totalUnits')?.value).toBe('');
+    expect(component.form.get('propertyType')?.value).toBe('');
+  });
+
+  it('should initialize form with initial data when provided', () => {
+    const initialData = {
+      condominiumName: 'Sunset Towers',
+      taxId: '12.345.678/0001-90',
+      totalUnits: 48,
+      propertyType: 'condominio' as const
+    };
+    
+    component.initialData = initialData;
+    component.ngOnInit();
+    
+    expect(component.form.get('condominiumName')?.value).toBe('Sunset Towers');
+    expect(component.form.get('taxId')?.value).toBe('12.345.678/0001-90');
+    expect(component.form.get('totalUnits')?.value).toBe(48);
+    expect(component.form.get('propertyType')?.value).toBe('condominio');
+  });
+
+  it('should mark form as invalid when condominium name is empty', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['required']).toBe(true);
+  });
+
+  it('should mark form as invalid when condominium name is too short', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('A');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['minlength']).toBeTruthy();
+  });
+
+  it('should mark form as invalid when tax ID is empty', () => {
+    const control = component.form.get('taxId');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['required']).toBe(true);
+  });
+
+  it('should mark form as invalid when tax ID does not match format', () => {
+    const control = component.form.get('taxId');
+    control?.setValue('12345678000190');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['pattern']).toBeTruthy();
+  });
+
+  it('should mark form as valid when tax ID matches format', () => {
+    const control = component.form.get('taxId');
+    control?.setValue('12.345.678/0001-90');
+    control?.markAsTouched();
+    
+    expect(control?.errors?.['pattern']).toBeFalsy();
+  });
+
+  it('should mark form as invalid when total units is empty', () => {
+    const control = component.form.get('totalUnits');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['required']).toBe(true);
+  });
+
+  it('should mark form as invalid when total units is less than 1', () => {
+    const control = component.form.get('totalUnits');
+    control?.setValue('0');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['min']).toBeTruthy();
+  });
+
+  it('should mark form as invalid when total units contains non-numeric characters', () => {
+    const control = component.form.get('totalUnits');
+    control?.setValue('abc');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['pattern']).toBeTruthy();
+  });
+
+  it('should mark form as invalid when property type is empty', () => {
+    const control = component.form.get('propertyType');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(control?.invalid).toBe(true);
+    expect(control?.errors?.['required']).toBe(true);
+  });
+
+  it('should mark form as valid when all fields have valid data', () => {
+    component.form.get('condominiumName')?.setValue('Sunset Towers');
+    component.form.get('taxId')?.setValue('12.345.678/0001-90');
+    component.form.get('totalUnits')?.setValue('48');
+    component.form.get('propertyType')?.setValue('condominio');
+    
+    expect(component.form.valid).toBe(true);
+  });
+
+  it('should emit formSubmit event when form is valid and submitted', () => {
+    spyOn(component.formSubmit, 'emit');
+    
+    component.form.get('condominiumName')?.setValue('Sunset Towers');
+    component.form.get('taxId')?.setValue('12.345.678/0001-90');
+    component.form.get('totalUnits')?.setValue('48');
+    component.form.get('propertyType')?.setValue('condominio');
+    
+    component.onSubmit();
+    
+    expect(component.formSubmit.emit).toHaveBeenCalledWith({
+      condominiumName: 'Sunset Towers',
+      taxId: '12.345.678/0001-90',
+      totalUnits: 48,
+      propertyType: 'condominio'
+    });
+  });
+
+  it('should not emit formSubmit event when form is invalid', () => {
+    spyOn(component.formSubmit, 'emit');
+    
+    component.form.get('condominiumName')?.setValue('');
+    component.onSubmit();
+    
+    expect(component.formSubmit.emit).not.toHaveBeenCalled();
+  });
+
+  it('should emit formCancel event when cancel is called', () => {
+    spyOn(component.formCancel, 'emit');
+    
+    component.onCancel();
+    
+    expect(component.formCancel.emit).toHaveBeenCalled();
+  });
+
+  it('should return correct error message for condominium name required', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('condominiumName')).toBe('Condominium name is required');
+  });
+
+  it('should return correct error message for condominium name too short', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('A');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('condominiumName')).toBe('Name must be at least 2 characters');
+  });
+
+  it('should return correct error message for tax ID required', () => {
+    const control = component.form.get('taxId');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('taxId')).toBe('Tax ID is required');
+  });
+
+  it('should return correct error message for tax ID invalid format', () => {
+    const control = component.form.get('taxId');
+    control?.setValue('invalid');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('taxId')).toBe('Tax ID must match format XX.XXX.XXX/XXXX-XX');
+  });
+
+  it('should return correct error message for total units required', () => {
+    const control = component.form.get('totalUnits');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('totalUnits')).toBe('Total units is required');
+  });
+
+  it('should return correct error message for total units minimum value', () => {
+    const control = component.form.get('totalUnits');
+    control?.setValue('0');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('totalUnits')).toBe('Total units must be at least 1');
+  });
+
+  it('should return correct error message for total units non-numeric', () => {
+    const control = component.form.get('totalUnits');
+    control?.setValue('abc');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('totalUnits')).toBe('Total units must be a number');
+  });
+
+  it('should return correct error message for property type required', () => {
+    const control = component.form.get('propertyType');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(component.getErrorMessage('propertyType')).toBe('Property type is required');
+  });
+
+  it('should return empty string when field has no errors', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('Valid Name');
+    
+    expect(component.getErrorMessage('condominiumName')).toBe('');
+  });
+
+  it('should return true when field has error and is touched', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('');
+    control?.markAsTouched();
+    
+    expect(component.hasError('condominiumName')).toBe(true);
+  });
+
+  it('should return false when field has no error', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('Valid Name');
+    control?.markAsTouched();
+    
+    expect(component.hasError('condominiumName')).toBe(false);
+  });
+
+  it('should return false when field has error but is not touched', () => {
+    const control = component.form.get('condominiumName');
+    control?.setValue('');
+    
+    expect(component.hasError('condominiumName')).toBe(false);
+  });
+
+  it('should have property type options', () => {
+    expect(component.propertyTypeOptions).toEqual([
+      { value: 'conjunto', label: 'Conjunto' },
+      { value: 'ciudadela', label: 'Ciudadela' },
+      { value: 'condominio', label: 'Condominio' }
+    ]);
+  });
+
+  it('should cleanup subscriptions on destroy', () => {
+    spyOn(component['destroy$'], 'next');
+    spyOn(component['destroy$'], 'complete');
+    
+    component.ngOnDestroy();
+    
+    expect(component['destroy$'].next).toHaveBeenCalled();
+    expect(component['destroy$'].complete).toHaveBeenCalled();
+  });
+});

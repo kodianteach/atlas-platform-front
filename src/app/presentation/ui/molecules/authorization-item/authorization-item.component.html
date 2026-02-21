@@ -1,0 +1,23 @@
+<div class="authorization-item" [attr.aria-labelledby]="'auth-name-' + authorization().id">
+  <div class="authorization-content">
+    <div class="authorization-icon-container" [class]="iconBackgroundClass()" aria-hidden="true">
+      <app-icon name="person" size="1.5rem" />
+    </div>
+
+    <div class="authorization-info">
+      <div class="authorization-name" [id]="'auth-name-' + authorization().id">{{ authorization().personName }}</div>
+
+      <div class="authorization-details"
+        [attr.aria-label]="serviceTypeLabel() + ', ' + validityDisplay()">
+        <span class="detail-text">{{ serviceTypeLabel() }}</span>
+        <span class="detail-separator" aria-hidden="true">•</span>
+        <span class="detail-text">{{ validityDisplay() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="authorization-toggle">
+    <app-toggle-switch [checked]="isActive()" [ariaLabel]="'Toggle ' + authorization().personName + ' authorization'"
+      (toggled)="onToggle()" />
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<app-auth-template
+  [title]="pageTitle"
+  [subtitle]="pageSubtitle">
+
+  <!-- Loading State -->
+  @if (pageState() === 'loading') {
+    <div class="state-message">
+      <i class="bi bi-arrow-repeat spinning" style="font-size: 2rem; color: var(--color-primary);"></i>
+      <p class="state-text">Validando enlace de invitación...</p>
+    </div>
+  }
+
+  <!-- No Token State -->
+  @if (pageState() === 'no-token') {
+    <div class="state-message">
+      <i class="bi bi-exclamation-triangle" style="font-size: 2rem; color: #f59e0b;"></i>
+      <p class="state-text">No se proporcionó un token de invitación.</p>
+      <p class="state-hint">Accede al enlace que te fue compartido.</p>
+    </div>
+  }
+
+  <!-- Token Invalid State -->
+  @if (pageState() === 'token-invalid') {
+    <div class="state-message">
+      <i class="bi bi-x-circle" style="font-size: 2rem; color: #dc2626;"></i>
+      <p class="state-text">El enlace de invitación es inválido.</p>
+      <p class="state-hint">Verifica que el enlace sea correcto o contacta a quien te invitó.</p>
+    </div>
+  }
+
+  <!-- Token Expired State -->
+  @if (pageState() === 'token-expired') {
+    <div class="state-message">
+      <i class="bi bi-clock-history" style="font-size: 2rem; color: #dc2626;"></i>
+      <p class="state-text">El enlace de invitación ha expirado.</p>
+      <p class="state-hint">Solicita un nuevo enlace de invitación.</p>
+    </div>
+  }
+
+  <!-- Token Consumed State -->
+  @if (pageState() === 'token-consumed') {
+    <div class="state-message">
+      <i class="bi bi-check-circle" style="font-size: 2rem; color: #2563eb;"></i>
+      <p class="state-text">Este enlace de invitación ya fue utilizado.</p>
+      <p class="state-hint">Si ya te registraste, inicia sesión normalmente.</p>
+      <button class="btn-go-login" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+    </div>
+  }
+
+  <!-- Owner Registration Form -->
+  @if (pageState() === 'token-valid' && isOwnerRegistration) {
+    <app-owner-registration-form
+      [isSubmitting]="isSubmitting()"
+      [generalError]="generalError()"
+      (submitForm)="handleOwnerRegistration($event)" />
+  }
+
+  <!-- Resident Registration Form -->
+  @if (pageState() === 'token-valid' && !isOwnerRegistration) {
+    <app-resident-registration-form
+      [isSubmitting]="isSubmitting()"
+      [generalError]="generalError()"
+      (submitForm)="handleResidentRegistration($event)" />
+  }
+
+  <!-- Registration Success -->
+  @if (pageState() === 'registration-success') {
+    <div class="state-message success">
+      <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: #16a34a;"></i>
+      <p class="state-text success-text">¡Tu registro ha sido completado exitosamente!</p>
+      <p class="state-hint">Ya puedes iniciar sesión con tu nueva contraseña.</p>
+      @if (!showPwaModal()) {
+        <button class="btn-go-login" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+      }
+    </div>
+  }
+
+</app-auth-template>
+
+<!-- PWA Install Modal -->
+@if (showPwaModal()) {
+  <app-pwa-install-modal (dismiss)="dismissPwaModal()" />
+}

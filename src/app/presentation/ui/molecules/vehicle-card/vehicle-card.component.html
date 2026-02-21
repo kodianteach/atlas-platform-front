@@ -1,0 +1,25 @@
+<div class="vehicle-card">
+  <div class="vehicle-icon" [style.background-color]="vehicle().iconBackground || '#FFE5E5'">
+    <i [class]="vehicle().type === 'car' ? 'bi-car-front-fill' : 'bi-bicycle'" 
+       [style.color]="vehicle().iconColor || '#FF6B6B'"></i>
+  </div>
+  
+  <div class="vehicle-info">
+    <h3 class="vehicle-name">{{ vehicle().name }}</h3>
+    <p class="vehicle-plate">{{ vehicle().plate }}</p>
+  </div>
+
+  <div class="vehicle-toggle">
+    <label class="toggle-switch">
+      <input 
+        type="checkbox" 
+        [checked]="vehicle().enabled"
+        (change)="onToggle()"
+      >
+      <span class="slider"></span>
+    </label>
+    <span class="status-label" [class.enabled]="vehicle().enabled">
+      {{ vehicle().enabled ? 'ENABLED' : 'DISABLED' }}
+    </span>
+  </div>
+</div>

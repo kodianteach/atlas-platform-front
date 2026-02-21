@@ -1,0 +1,69 @@
+<div class="dist-result">
+  <!-- Status Header -->
+  <div class="dist-result__header">
+    <div class="dist-result__status-icon"
+         [class.dist-result__status-icon--success]="isFullSuccess"
+         [class.dist-result__status-icon--warning]="isPartial"
+         [class.dist-result__status-icon--error]="isFullRejection">
+      <i class="bi" [class]="statusIcon"></i>
+    </div>
+    <h3 class="dist-result__title">{{ result().message }}</h3>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="dist-result__stats-row">
+    <div class="dist-result__stat-card dist-result__stat-card--created">
+      <div class="dist-result__stat-value">{{ result().unitsCreated }}</div>
+      <div class="dist-result__stat-label">Creadas</div>
+    </div>
+    @if (result().rejectedCount > 0) {
+      <div class="dist-result__stat-card dist-result__stat-card--rejected">
+        <div class="dist-result__stat-value">{{ result().rejectedCount }}</div>
+        <div class="dist-result__stat-label">Rechazadas</div>
+      </div>
+    }
+  </div>
+
+  <!-- Created Codes Preview -->
+  @if (result().unitCodes.length > 0) {
+    <div class="dist-result__codes-section">
+      <h4 class="dist-result__section-label">
+        <i class="bi bi-check2"></i>
+        Códigos creados
+      </h4>
+      <div class="dist-result__codes-list">
+        @for (code of result().unitCodes; track code) {
+          <span class="dist-result__code-chip dist-result__code-chip--created">{{ code }}</span>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Rejected Units Table -->
+  @if (result().rejectedUnits.length > 0) {
+    <div class="dist-result__rejected-section">
+      <h4 class="dist-result__section-label">
+        <i class="bi bi-x-lg"></i>
+        Unidades rechazadas
+      </h4>
+      <div class="dist-result__table">
+        <div class="dist-result__table-header">
+          <span>Código</span>
+          <span>Motivo</span>
+        </div>
+        @for (unit of result().rejectedUnits; track unit.code) {
+          <div class="dist-result__table-row">
+            <span class="dist-result__code-chip dist-result__code-chip--rejected">{{ unit.code }}</span>
+            <span class="dist-result__reason">{{ unit.reason }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Action -->
+  <button class="dist-result__btn-more" (click)="onCreateMore()" type="button">
+    <i class="bi bi-plus-circle"></i>
+    Crear más unidades
+  </button>
+</div>

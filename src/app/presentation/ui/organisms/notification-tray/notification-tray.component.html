@@ -1,0 +1,55 @@
+@if (visible()) {
+  <div class="notification-tray-overlay"
+       (click)="onOverlayClick($event)"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="notification-tray-title">
+
+    <div class="notification-tray" (click)="$event.stopPropagation()">
+      <div class="tray-header">
+        <div class="header-top">
+          <h2 id="notification-tray-title" class="tray-title">
+            Notificaciones
+            @if (unreadCount() > 0) {
+              <span class="unread-badge">{{ unreadCount() }}</span>
+            }
+          </h2>
+          <button class="close-button"
+                  (click)="onClose()"
+                  aria-label="Cerrar notificaciones"
+                  type="button">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="header-actions">
+          <button class="mark-all-read-button"
+                  (click)="onMarkAllAsRead()"
+                  [disabled]="unreadCount() === 0"
+                  type="button">
+            Marcar todas como leídas
+          </button>
+        </div>
+      </div>
+
+      <div class="tray-content">
+        @if (notifications().length > 0) {
+          <div class="notifications-list">
+            @for (notification of notifications(); track notification.id) {
+              <app-notification-item
+                [notification]="notification"
+                (notificationClick)="onNotificationClick($event)" />
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <div class="empty-icon" aria-hidden="true">
+              <i class="bi bi-bell-slash"></i>
+            </div>
+            <h3 class="empty-title">No hay notificaciones</h3>
+            <p class="empty-message">Cuando recibas notificaciones, aparecerán aquí</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

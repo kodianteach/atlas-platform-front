@@ -1,0 +1,93 @@
+.doorman-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.2s ease;
+  min-width: 70px;
+  position: relative;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: #FF7A59;
+  border-radius: 0 0 3px 3px;
+  transition: width 0.3s ease;
+}
+
+.nav-item.active::before {
+  width: 40px;
+}
+
+.nav-item.active {
+  color: #FF7A59;
+}
+
+.nav-item:hover:not(.active) {
+  color: #6b7280;
+}
+
+.nav-item i {
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-item.active i {
+  transform: scale(1.1);
+}
+
+.nav-item span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Responsive */
+@media (max-width: 380px) {
+  .nav-item {
+    padding: 0.5rem 0.75rem;
+    min-width: 60px;
+  }
+
+  .nav-item i {
+    font-size: 1.35rem;
+  }
+
+  .nav-item span {
+    font-size: 0.7rem;
+  }
+}
+
+/* Support for devices with notch */
+@supports (padding: max(0px)) {
+  .doorman-bottom-nav {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}

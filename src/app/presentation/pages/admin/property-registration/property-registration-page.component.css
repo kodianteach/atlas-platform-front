@@ -1,0 +1,99 @@
+.property-registration-page {
+  min-height: 100vh;
+  padding: 24px;
+  background-color: #F5F5F5;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 24px;
+  color: #333333;
+  transition: opacity 0.2s;
+}
+
+.back-button:hover {
+  opacity: 0.7;
+}
+
+.back-button:focus {
+  outline: 2px solid #007BFF;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.back-icon {
+  display: inline-block;
+}
+
+.page-content {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.icon-container {
+  margin-bottom: 24px;
+}
+
+.building-icon {
+  font-size: 64px;
+  display: inline-block;
+  color: #333333;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333333;
+  margin: 0 0 8px 0;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #666666;
+  margin: 0 0 32px 0;
+}
+
+.general-error {
+  background-color: #FEE;
+  color: #DC3545;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  text-align: left;
+  border: 1px solid #DC3545;
+}
+
+.form-placeholder {
+  padding: 40px;
+  background-color: #FFFFFF;
+  border: 2px dashed #E0E0E0;
+  border-radius: 8px;
+  color: #999999;
+}
+
+@media (max-width: 768px) {
+  .property-registration-page {
+    padding: 16px;
+  }
+  
+  .page-title {
+    font-size: 20px;
+  }
+  
+  .page-subtitle {
+    font-size: 14px;
+  }
+  
+  .building-icon {
+    font-size: 48px;
+  }
+}

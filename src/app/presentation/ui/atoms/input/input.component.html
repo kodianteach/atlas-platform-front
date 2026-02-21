@@ -1,0 +1,16 @@
+<input
+  [type]="type()"
+  [id]="id()"
+  [placeholder]="placeholder()"
+  [disabled]="disabled()"
+  [attr.aria-invalid]="hasError()"
+  [attr.aria-describedby]="errorId()"
+  [attr.autocomplete]="autocomplete()"
+  [value]="value()"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+  (focus)="onFocus()"
+  class="input-field"
+  [class.input-error]="hasError()"
+  [class.input-focused]="isFocused()"
+/>

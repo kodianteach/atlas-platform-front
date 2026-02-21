@@ -1,0 +1,158 @@
+<div class="announcement-detail-page">
+  <!-- Header -->
+  <app-announcements-header 
+    [title]="'Detalle'" 
+    [showBackButton]="true" 
+    [showNotificationIcon]="false"
+    (backClick)="onBack()" />
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Cargando...</p>
+    </div>
+  }
+
+  @if (error() && !loading()) {
+    <div class="error-state">
+      <i class="bi bi-exclamation-triangle error-icon"></i>
+      <h2>{{ error() }}</h2>
+      <button class="btn-primary" (click)="onBack()">Volver</button>
+    </div>
+  }
+
+  @if (announcement() && !loading()) {
+    <div class="detail-content">
+      @if (isBroadcast()) {
+        <div class="announcement-card" [class.urgent]="getBroadcast().isUrgent">
+          @if (getBroadcast().isUrgent) {
+            <div class="urgent-badge">URGENTE</div>
+          }
+          <h1 class="announcement-title">{{ announcement()!.title }}</h1>
+          <div class="announcement-meta">
+            <span class="meta-item">
+              <i class="bi bi-calendar3"></i>
+              {{ announcement()!.createdAt | date:'dd/MM/yyyy' }}
+            </span>
+            <span class="meta-item">
+              <i class="bi bi-clock"></i>
+              {{ announcement()!.createdAt | date:'HH:mm' }}
+            </span>
+          </div>
+          <div class="announcement-description">
+            <p>{{ getBroadcast().description }}</p>
+          </div>
+          @if (getBroadcast().relatedUsers && getBroadcast().relatedUsers.length > 0) {
+            <div class="related-users">
+              <div class="users-avatars">
+                @for (user of getBroadcast().relatedUsers.slice(0, 3); track user.name) {
+                  <img [src]="user.avatarUrl" [alt]="user.name" class="user-avatar">
+                }
+              </div>
+              @if (getBroadcast().relatedUsers.length > 3) {
+                <span class="users-count">+{{ getBroadcast().relatedUsers.length - 3 }} más</span>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (isPoll()) {
+        <div class="announcement-card">
+          <h1 class="announcement-title">{{ announcement()!.title }}</h1>
+          <div class="announcement-meta">
+            <span class="meta-item">
+              <i class="bi bi-calendar3"></i>
+              {{ announcement()!.createdAt | date:'dd/MM/yyyy' }}
+            </span>
+            <span class="meta-item">
+              <i class="bi bi-clock"></i>
+              {{ announcement()!.createdAt | date:'HH:mm' }}
+            </span>
+          </div>
+          <div class="poll-section">
+            <p class="poll-question">{{ getPoll().question }}</p>
+            <div class="poll-options">
+              @for (option of getPoll().options; track option.id) {
+                <div class="poll-option">
+                  <div class="option-bar">
+                    <span class="option-text">{{ option.text }}</span>
+                    <span class="option-votes">{{ option.votes }} votos</span>
+                  </div>
+                  <div class="option-progress">
+                    <div class="progress-fill" [style.width.%]="(option.votes / getPoll().totalVotes) * 100"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Discussion Section -->
+      <div class="discussion-section">
+        <h2 class="discussion-title">
+          <i class="bi bi-chat-dots"></i>
+          Discusión ({{ comments().length }})
+        </h2>
+
+        <!-- Comment Form -->
+        <div class="comment-form">
+          <div class="form-avatar">
+            <i class="bi bi-person-circle"></i>
+          </div>
+          <div class="form-input-wrapper">
+            <textarea 
+              class="comment-input"
+              [value]="newComment()"
+              (input)="onCommentInput($any($event.target).value)"
+              placeholder="Escribe un comentario..."
+              rows="3"
+              maxlength="500"></textarea>
+            <div class="form-actions">
+              <span class="char-count">{{ newComment().length }}/500</span>
+              <button 
+                class="btn-submit"
+                [disabled]="!newComment().trim()"
+                (click)="onSubmitComment()">
+                <i class="bi bi-send-fill"></i>
+                Publicar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comments List -->
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+            <div class="comment-item">
+              <img [src]="comment.avatarUrl" [alt]="comment.author" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-author">{{ comment.author }}</span>
+                  <span class="comment-time">{{ getTimeAgo(comment.timestamp) }}</span>
+                </div>
+                <p class="comment-text">{{ comment.content }}</p>
+                <div class="comment-actions">
+                  <button class="action-btn" (click)="onLikeComment(comment.id)">
+                    <i class="bi bi-heart"></i>
+                    <span>{{ comment.likes }}</span>
+                  </button>
+                  <button class="action-btn">
+                    <i class="bi bi-reply"></i>
+                    Responder
+                  </button>
+                </div>
+              </div>
+            </div>
+          } @empty {
+            <div class="empty-comments">
+              <i class="bi bi-chat-square-text"></i>
+              <p>Sé el primero en comentar</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

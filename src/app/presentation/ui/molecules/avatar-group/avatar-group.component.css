@@ -1,0 +1,55 @@
+.avatar-group {
+  display: inline-flex;
+  cursor: pointer;
+  outline: none;
+}
+
+.avatar-group:focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  border-radius: 20px;
+}
+
+.avatars-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  border: 2px solid white;
+  border-radius: 50%;
+  background-color: white;
+  transition: transform 0.2s ease;
+}
+
+.avatar-wrapper:not(:first-child) {
+  margin-left: -12px;
+}
+
+.avatar-group:hover .avatar-wrapper {
+  transform: translateX(4px);
+}
+
+.avatar-group:hover .avatar-wrapper:first-child {
+  transform: translateX(0);
+}
+
+.remaining-indicator {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.remaining-count {
+  user-select: none;
+}

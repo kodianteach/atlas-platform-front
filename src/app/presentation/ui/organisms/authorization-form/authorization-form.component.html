@@ -1,0 +1,167 @@
+@if (visible()) {
+  <div class="authorization-form-overlay" (click)="onCancel()">
+    <div class="authorization-form-container" (click)="$event.stopPropagation()">
+      <div class="form-header">
+        <div class="header-content">
+          <button type="button" class="back-button" (click)="onCancel()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <span class="header-title">NUEVA AUTORIZACIÓN</span>
+        </div>
+
+        <h2>Autorización de Ingreso</h2>
+        <p class="header-subtitle">Completa los detalles del visitante autorizado</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="authorization-form">
+        <!-- Service Type Selector -->
+        <app-service-type-selector [selectedType]="form.get('serviceType')?.value"
+          (typeChange)="onServiceTypeChange($event)" />
+
+        <div class="form-content">
+          <!-- Person Name -->
+          <div class="form-group">
+            <label>NOMBRE COMPLETO</label>
+            <div class="input-wrapper">
+              <i class="bi bi-person-badge input-icon"></i>
+              <app-text-input [value]="form.get('personName')?.value" placeholder="Ingresa el nombre completo"
+                [error]="isFieldInvalid('personName')" (valueChange)="form.get('personName')?.setValue($event)"
+                (blurred)="form.get('personName')?.markAsTouched()" />
+            </div>
+            @if (isFieldInvalid('personName')) {
+              <span class="error-text">{{ getFieldError('personName') }}</span>
+            }
+          </div>
+
+          <!-- Person Document -->
+          <div class="form-group">
+            <label>DOCUMENTO DE IDENTIDAD</label>
+            <div class="input-wrapper">
+              <i class="bi bi-fingerprint input-icon"></i>
+              <app-text-input [value]="form.get('personDocument')?.value" placeholder="Número de documento"
+                [error]="isFieldInvalid('personDocument')" (valueChange)="form.get('personDocument')?.setValue($event)"
+                (blurred)="form.get('personDocument')?.markAsTouched()" />
+            </div>
+            @if (isFieldInvalid('personDocument')) {
+              <span class="error-text">{{ getFieldError('personDocument') }}</span>
+            }
+          </div>
+
+          <!-- Unit ID -->
+          <div class="form-group">
+            <label>UNIDAD</label>
+            <div class="input-wrapper">
+              <i class="bi bi-building input-icon"></i>
+              <app-text-input type="number" [value]="form.get('unitId')?.value" placeholder="ID de la unidad"
+                [error]="isFieldInvalid('unitId')" (valueChange)="form.get('unitId')?.setValue(+$event)"
+                (blurred)="form.get('unitId')?.markAsTouched()" />
+            </div>
+            @if (isFieldInvalid('unitId')) {
+              <span class="error-text">{{ getFieldError('unitId') }}</span>
+            }
+          </div>
+
+          <!-- Valid From -->
+          <div class="form-group">
+            <label>VÁLIDO DESDE</label>
+            <div class="input-wrapper">
+              <i class="bi bi-calendar-event input-icon"></i>
+              <app-text-input type="datetime-local" [value]="form.get('validFrom')?.value"
+                [error]="isFieldInvalid('validFrom')"
+                (valueChange)="form.get('validFrom')?.setValue($event)"
+                (blurred)="form.get('validFrom')?.markAsTouched()" />
+            </div>
+            @if (isFieldInvalid('validFrom')) {
+              <span class="error-text">{{ getFieldError('validFrom') }}</span>
+            }
+          </div>
+
+          <!-- Valid To -->
+          <div class="form-group">
+            <label>VÁLIDO HASTA</label>
+            <div class="input-wrapper">
+              <i class="bi bi-calendar-check input-icon"></i>
+              <app-text-input type="datetime-local" [value]="form.get('validTo')?.value"
+                [error]="isFieldInvalid('validTo')"
+                (valueChange)="form.get('validTo')?.setValue($event)"
+                (blurred)="form.get('validTo')?.markAsTouched()" />
+            </div>
+            @if (isFieldInvalid('validTo')) {
+              <span class="error-text">{{ getFieldError('validTo') }}</span>
+            }
+          </div>
+
+          <!-- Vehicle Section -->
+          <div class="vehicle-section">
+            <h3 class="section-subtitle">
+              <i class="bi bi-car-front"></i>
+              Vehículo <span class="optional-badge">Opcional</span>
+            </h3>
+
+            <!-- Vehicle Plate -->
+            <div class="form-group">
+              <label>PLACA</label>
+              <div class="input-wrapper">
+                <i class="bi bi-card-text input-icon"></i>
+                <app-text-input [value]="form.get('vehiclePlate')?.value" placeholder="ABC-123"
+                  [error]="isFieldInvalid('vehiclePlate')" (valueChange)="form.get('vehiclePlate')?.setValue($event)"
+                  (blurred)="form.get('vehiclePlate')?.markAsTouched()" />
+              </div>
+              @if (isFieldInvalid('vehiclePlate')) {
+                <span class="error-text">{{ getFieldError('vehiclePlate') }}</span>
+              }
+            </div>
+
+            <!-- Vehicle Type -->
+            <div class="form-group">
+              <label>TIPO</label>
+              <div class="input-wrapper">
+                <i class="bi bi-truck input-icon"></i>
+                <select class="form-select" formControlName="vehicleType">
+                  <option value="">Seleccionar tipo</option>
+                  @for (option of vehicleTypeOptions; track option.value) {
+                    <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <!-- Vehicle Color -->
+            <div class="form-group">
+              <label>COLOR</label>
+              <div class="input-wrapper">
+                <i class="bi bi-palette input-icon"></i>
+                <app-text-input [value]="form.get('vehicleColor')?.value" placeholder="Ej: Rojo, Azul"
+                  (valueChange)="form.get('vehicleColor')?.setValue($event)" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Document Upload -->
+          <div class="form-group">
+            <div class="label-row">
+              <label>DOCUMENTO DE IDENTIDAD (PDF)</label>
+              <span class="optional-badge">Opcional</span>
+            </div>
+            <div class="file-upload-wrapper">
+              <input type="file" accept=".pdf" class="file-input" id="documentFile"
+                (change)="onDocumentFileChange($event)" />
+              <label for="documentFile" class="file-label">
+                <i class="bi bi-cloud-upload"></i>
+                <span>{{ selectedDocument ? selectedDocument.name : 'Seleccionar archivo PDF' }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="form-actions">
+          <button type="submit" class="submit-button" [disabled]="form.invalid">
+            CREAR AUTORIZACIÓN
+            <i class="bi bi-qr-code"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

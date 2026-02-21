@@ -1,0 +1,68 @@
+<div class="porter-page">
+  <!-- Header -->
+  <header class="porter-page__header">
+    <div class="porter-page__header-content">
+      <h1 class="porter-page__title">
+        <i class="bi bi-person-badge"></i>
+        Gestión de Porteros
+      </h1>
+      <p class="porter-page__subtitle">Administra los porteros del conjunto residencial</p>
+    </div>
+    <button
+      class="porter-page__create-btn"
+      (click)="onToggleCreateForm()"
+      [disabled]="loading()"
+      type="button">
+      @if (showCreateForm()) {
+        <i class="bi bi-x-lg"></i>
+      } @else {
+        <i class="bi bi-plus-lg"></i>
+      }
+    </button>
+  </header>
+
+  <!-- Error Banner -->
+  @if (errorMessage()) {
+    <div class="porter-page__error" (click)="onDismissError()">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+      <button class="porter-page__error-close" type="button">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Create Form Overlay -->
+  @if (showCreateForm()) {
+    <div class="porter-page__form-overlay">
+      <app-porter-create-form
+        (submitForm)="onCreatePorter($event)"
+        (cancelForm)="onToggleCreateForm()" />
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="porter-page__loading">
+      <div class="porter-page__spinner"></div>
+      <span>Cargando...</span>
+    </div>
+  }
+
+  <!-- Porter List -->
+  <main class="porter-page__content">
+    <app-porter-list
+      [porters]="porters()"
+      (regenerateUrl)="onRegenerateUrl($event)" />
+  </main>
+
+  <!-- Enrollment URL Modal -->
+  @if (enrollmentUrl()) {
+    <app-enrollment-url
+      [enrollmentUrl]="enrollmentUrl()!"
+      (closeModal)="onCloseEnrollmentUrl()" />
+  }
+
+  <!-- Bottom Nav -->
+  <app-admin-bottom-nav activeTab="porters" />
+</div>

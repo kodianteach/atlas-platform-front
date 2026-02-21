@@ -1,0 +1,148 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form" aria-label="Formulario de registro de propietario">
+  @if (generalError()) {
+    <div class="alert alert-danger" role="alert" aria-live="assertive">
+      {{ generalError() }}
+    </div>
+  }
+
+  <app-form-field
+    id="names"
+    label="Nombres completos"
+    type="text"
+    placeholder="Ingresa tus nombres"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getError('names')"
+    [value]="registrationForm.get('names')?.value || ''"
+    autocomplete="name"
+    icon="person"
+    (valueChange)="updateField('names', $event)"
+    (blurred)="markFieldTouched('names')" />
+
+  <app-form-field
+    id="email"
+    label="Correo electrónico"
+    type="email"
+    placeholder="correo@ejemplo.com"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getError('email')"
+    [value]="registrationForm.get('email')?.value || ''"
+    autocomplete="email"
+    icon="envelope"
+    (valueChange)="updateField('email', $event)"
+    (blurred)="markFieldTouched('email')" />
+
+  <app-form-field
+    id="phone"
+    label="Teléfono"
+    type="tel"
+    placeholder="300 123 4567"
+    [required]="false"
+    [disabled]="isSubmitting()"
+    [value]="registrationForm.get('phone')?.value || ''"
+    autocomplete="tel"
+    icon="telephone"
+    (valueChange)="updateField('phone', $event)" />
+
+  <div class="document-row">
+    <div class="document-type">
+      <label class="field-label" for="documentType">Tipo de documento <span class="required">*</span></label>
+      <select
+        id="documentType"
+        class="select-input"
+        formControlName="documentType"
+        [disabled]="isSubmitting()"
+        (change)="onDocumentChange()">
+        @for (opt of documentTypeOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.label }}</option>
+        }
+      </select>
+    </div>
+    <div class="document-number">
+      <app-form-field
+        id="documentNumber"
+        label="Número de documento"
+        type="text"
+        placeholder="Ingresa tu número de documento"
+        [required]="true"
+        [disabled]="isSubmitting()"
+        [errorMessage]="getError('documentNumber')"
+        [value]="registrationForm.get('documentNumber')?.value || ''"
+        autocomplete="off"
+        (valueChange)="updateField('documentNumber', $event)"
+        (blurred)="markFieldTouched('documentNumber'); onDocumentChange()" />
+    </div>
+  </div>
+
+  <!-- Unit Autocomplete -->
+  <div class="unit-autocomplete">
+    <app-form-field
+      id="unitSearch"
+      label="Unidad / Apartamento"
+      type="text"
+      placeholder="Buscar por código de unidad"
+      [required]="false"
+      [disabled]="isSubmitting()"
+      [value]="registrationForm.get('unitSearch')?.value || ''"
+      icon="building"
+      (valueChange)="onUnitSearch($event)" />
+    @if (unitSuggestions().length > 0) {
+      <ul class="unit-suggestions" role="listbox" aria-label="Sugerencias de unidad">
+        @for (unit of unitSuggestions(); track unit.id) {
+          <li class="unit-suggestion-item" role="option" (click)="selectUnit(unit)">
+            <span class="unit-code">{{ unit.code }}</span>
+            @if (unit.type) {
+              <span class="unit-type">{{ unit.type }}</span>
+            }
+          </li>
+        }
+      </ul>
+    }
+    @if (selectedUnit()) {
+      <div class="selected-unit">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>Unidad seleccionada: {{ selectedUnit()!.code }}</span>
+      </div>
+    }
+  </div>
+
+  <app-form-field
+    id="password"
+    label="Contraseña"
+    type="password"
+    placeholder="Mínimo 8 caracteres"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getError('password')"
+    [value]="registrationForm.get('password')?.value || ''"
+    autocomplete="new-password"
+    icon="lock"
+    hint="Debe contener mayúscula, minúscula y número (mínimo 8 caracteres)"
+    (valueChange)="updateField('password', $event)"
+    (blurred)="markFieldTouched('password')" />
+
+  <app-form-field
+    id="confirmPassword"
+    label="Confirmar contraseña"
+    type="password"
+    placeholder="Repite tu contraseña"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getError('confirmPassword')"
+    [value]="registrationForm.get('confirmPassword')?.value || ''"
+    autocomplete="new-password"
+    icon="lock"
+    (valueChange)="updateField('confirmPassword', $event)"
+    (blurred)="markFieldTouched('confirmPassword')" />
+
+  <div class="form-actions">
+    <app-button
+      type="submit"
+      label="Completar Registro"
+      [disabled]="!registrationForm.valid || isSubmitting()"
+      [loading]="isSubmitting()"
+      variant="primary"
+      fullWidth="true" />
+  </div>
+</form>

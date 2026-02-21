@@ -1,0 +1,163 @@
+<app-auth-template
+  [title]="pageState() === 'token-valid' ? 'Enrolamiento de Dispositivo' :
+           pageState() === 'enrolling' ? 'Enrolando...' :
+           pageState() === 'enrollment-success' ? '¡Dispositivo Enrolado!' :
+           'Enrolamiento'"
+  [subtitle]="pageState() === 'token-valid' && tokenInfo() ? 'Confirma los datos para vincular este dispositivo' : ''">
+
+  <!-- Loading State -->
+  @if (pageState() === 'loading') {
+    <div class="state-message">
+      <i class="bi bi-arrow-repeat spinning" style="font-size: 2rem; color: var(--color-primary);"></i>
+      <p class="state-text">Validando enlace de enrolamiento...</p>
+    </div>
+  }
+
+  <!-- No Token State -->
+  @if (pageState() === 'no-token') {
+    <div class="state-message">
+      <i class="bi bi-exclamation-triangle" style="font-size: 2rem; color: #f59e0b;"></i>
+      <p class="state-text">No se proporcionó un enlace de enrolamiento.</p>
+      <p class="state-hint">Solicita a tu administrador que genere un nuevo enlace.</p>
+    </div>
+  }
+
+  <!-- Token Invalid State -->
+  @if (pageState() === 'token-invalid' || pageState() === 'token-expired') {
+    <div class="state-message">
+      <i class="bi bi-x-circle" style="font-size: 2rem; color: #dc2626;"></i>
+      <p class="state-text">El enlace de enrolamiento es inválido o ha expirado.</p>
+      <p class="state-hint">Solicita a tu administrador que genere un nuevo enlace de enrolamiento.</p>
+    </div>
+  }
+
+  <!-- Token Consumed State -->
+  @if (pageState() === 'token-consumed') {
+    <div class="state-message">
+      <i class="bi bi-check-circle" style="font-size: 2rem; color: #2563eb;"></i>
+      <p class="state-text">Este enlace de enrolamiento ya fue utilizado.</p>
+      <p class="state-hint">Si ya enrolaste tu dispositivo, inicia sesión normalmente.</p>
+      <button class="btn-primary" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+    </div>
+  }
+
+  <!-- Already Enrolled State -->
+  @if (pageState() === 'already-enrolled') {
+    <div class="state-message">
+      <i class="bi bi-shield-check" style="font-size: 2rem; color: #16a34a;"></i>
+      <p class="state-text">Este dispositivo ya está enrolado.</p>
+      <p class="state-hint">Las claves de verificación ya están almacenadas. Puedes iniciar sesión para comenzar.</p>
+      <button class="btn-primary" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+    </div>
+  }
+
+  <!-- Token Valid — Confirmation Step -->
+  @if (pageState() === 'token-valid' && tokenInfo()) {
+    <div class="enrollment-confirmation">
+      <div class="info-card">
+        <div class="info-row">
+          <i class="bi bi-person-badge"></i>
+          <div class="info-content">
+            <span class="info-label">Portero</span>
+            <span class="info-value">{{ tokenInfo()!.porterName }}</span>
+          </div>
+        </div>
+        <div class="info-row">
+          <i class="bi bi-building"></i>
+          <div class="info-content">
+            <span class="info-label">Organización</span>
+            <span class="info-value">{{ tokenInfo()!.organizationName }}</span>
+          </div>
+        </div>
+        <div class="info-row">
+          <i class="bi bi-clock"></i>
+          <div class="info-content">
+            <span class="info-label">Enlace válido hasta</span>
+            <span class="info-value">{{ tokenInfo()!.expiresAt }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="security-notice">
+        <i class="bi bi-shield-lock"></i>
+        <p>Al enrolar este dispositivo, se almacenará una clave criptográfica para verificar códigos QR de forma segura, incluso sin conexión a internet.</p>
+      </div>
+
+      <button
+        class="btn-enroll"
+        (click)="confirmEnrollment()"
+        [disabled]="isSubmitting()">
+        <i class="bi bi-phone"></i>
+        Enrolar Este Dispositivo
+      </button>
+    </div>
+  }
+
+  <!-- Enrolling State -->
+  @if (pageState() === 'enrolling') {
+    <div class="state-message">
+      <i class="bi bi-arrow-repeat spinning" style="font-size: 2rem; color: var(--color-primary);"></i>
+      <p class="state-text">Enrolando dispositivo...</p>
+      <p class="state-hint">Generando claves criptográficas y vinculando el dispositivo.</p>
+    </div>
+  }
+
+  <!-- Enrollment Error State -->
+  @if (pageState() === 'enrollment-error') {
+    <div class="state-message">
+      <i class="bi bi-exclamation-octagon" style="font-size: 2rem; color: #dc2626;"></i>
+      <p class="state-text">Error al enrolar el dispositivo</p>
+      @if (generalError()) {
+        <p class="state-hint error-detail">{{ generalError() }}</p>
+      }
+      <button class="btn-primary" (click)="retryEnrollment()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Enrollment Success -->
+  @if (pageState() === 'enrollment-success') {
+    <div class="state-message success">
+      <i class="bi bi-shield-fill-check" style="font-size: 3rem; color: #16a34a;"></i>
+      <p class="state-text success-text">¡Dispositivo enrolado exitosamente!</p>
+
+      @if (enrollmentResult()) {
+        <div class="success-details">
+          <div class="success-detail-item">
+            <i class="bi bi-person-check"></i>
+            <span>{{ enrollmentResult()!.porterDisplayName }}</span>
+          </div>
+          <div class="success-detail-item">
+            <i class="bi bi-building-check"></i>
+            <span>{{ enrollmentResult()!.organizationName }}</span>
+          </div>
+          <div class="success-detail-item">
+            <i class="bi bi-key"></i>
+            <span>Clave de verificación almacenada</span>
+          </div>
+        </div>
+      }
+
+      <p class="state-hint">Ya puedes verificar códigos QR de autorización, incluso sin conexión a internet.</p>
+
+      @if (canInstallPwa() && !isInstalledPwa()) {
+        <button class="btn-install" (click)="installPwa()">
+          <i class="bi bi-download"></i>
+          Instalar Aplicación
+        </button>
+      }
+
+      @if (!showPwaModal()) {
+        <button class="btn-primary" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+      }
+    </div>
+  }
+
+</app-auth-template>
+
+<!-- PWA Install Modal -->
+@if (showPwaModal()) {
+  <app-pwa-install-modal (dismiss)="dismissPwaModal()" />
+}

@@ -1,0 +1,55 @@
+<div class="access-permissions-page">
+  @if (toggleErrorMessage()) {
+    <div class="error-toast">
+      <span>{{ toggleErrorMessage() }}</span>
+      <button class="dismiss-button" (click)="dismissToggleError()" aria-label="Dismiss error">×</button>
+    </div>
+  }
+
+  <app-page-header
+    [title]="'Access Permissions'"
+    [showBackButton]="false"
+    [showHistoryButton]="false"
+    (backClick)="onBackClick()"
+    (historyClick)="onHistoryClick()" />
+
+  <div class="content">
+    <app-grant-authorization-card
+      [title]="'Grant New Authorization'"
+      [description]="'Create access permissions for visitors and authorized personnel'"
+      [icon]="'add-person'"
+      [attr.aria-disabled]="isLoading()"
+      [style.pointer-events]="isLoading() ? 'none' : 'auto'"
+      [style.opacity]="isLoading() ? '0.6' : '1'"
+      (createClick)="onCreateClick()" />
+
+    @if (isLoading()) {
+      <div class="loading-state" role="status" aria-live="polite">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <p>Loading authorizations...</p>
+      </div>
+    }
+
+    @if (error() && !isLoading()) {
+      <div class="error-state" role="alert">
+        <p>{{ error() }}</p>
+        <button 
+          (click)="loadAuthorizations()" 
+          (keydown)="handleRetryKeyDown($event)"
+          aria-label="Retry loading authorizations"
+          class="retry-button">
+          Retry
+        </button>
+      </div>
+    }
+
+    @if (!isLoading() && !error()) {
+      <app-authorization-list
+        [authorizations]="authorizations()"
+        [activeCount]="activeCount()"
+        (toggleAuthorization)="onToggleAuthorization($event)" />
+    }
+  </div>
+
+  <app-bottom-nav (centerAction)="onCenterAction()" />
+</div>

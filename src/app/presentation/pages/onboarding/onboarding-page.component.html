@@ -1,0 +1,18 @@
+<app-auth-template
+  [title]="isCompleted() ? '¡Registro Completado!' : 'Configura tu Organización'"
+  [subtitle]="isCompleted() ? '' : 'Completa los datos para finalizar la configuración'">
+
+  @if (isCompleted()) {
+    <div class="success-state">
+      <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: #16a34a;"></i>
+      <p class="success-text">Tu organización ha sido creada exitosamente.</p>
+      <p class="success-hint">Redirigiendo al panel principal...</p>
+    </div>
+  } @else {
+    <app-onboarding-form
+      [isSubmitting]="isSubmitting()"
+      [generalError]="generalError()"
+      (submitForm)="handleOnboarding($event)" />
+  }
+
+</app-auth-template>

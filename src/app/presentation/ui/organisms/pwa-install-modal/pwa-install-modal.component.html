@@ -1,0 +1,25 @@
+<div class="modal-overlay" (click)="skip()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-icon">
+      <i class="bi bi-download" style="font-size: 2.5rem; color: var(--color-primary);"></i>
+    </div>
+    <h2 class="modal-title">Descarga ATLAS en tu dispositivo para acceder fácilmente</h2>
+    <p class="modal-description">Instala la aplicación en tu dispositivo para tener acceso rápido y una mejor experiencia.</p>
+
+    @if (canInstall()) {
+      <button class="btn-install" (click)="install()">
+        <i class="bi bi-phone"></i>
+        Instalar aplicación
+      </button>
+    }
+
+    @if (isInstalled()) {
+      <p class="installed-message">
+        <i class="bi bi-check-circle-fill"></i>
+        ¡La aplicación ya está instalada!
+      </p>
+    }
+
+    <button class="btn-skip" (click)="skip()">Continuar en el navegador</button>
+  </div>
+</div>

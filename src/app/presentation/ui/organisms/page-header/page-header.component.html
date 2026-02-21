@@ -1,0 +1,25 @@
+<header class="page-header">
+  <div class="header-left">
+    @if (showBackButton()) {
+      <app-button
+        icon="arrow-left"
+        variant="secondary"
+        label=""
+        aria-label="Go back to previous page"
+        (clicked)="onBackClick()" />
+    }
+  </div>
+
+  <h1 class="header-title">{{ title() }}</h1>
+
+  <div class="header-right">
+    @if (showHistoryButton()) {
+      <app-button
+        icon="clock"
+        variant="secondary"
+        label=""
+        aria-label="View authorization history"
+        (clicked)="onHistoryClick()" />
+    }
+  </div>
+</header>

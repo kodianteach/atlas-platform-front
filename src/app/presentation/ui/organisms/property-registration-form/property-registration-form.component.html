@@ -1,0 +1,56 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="property-registration-form">
+  <div class="form-fields">
+    <div class="form-field-wrapper">
+      <label for="condominiumName" class="field-label">Nombre del Condominio</label>
+      <app-text-input
+        [value]="form.get('condominiumName')?.value"
+        placeholder="ej. Torres del Sol"
+        [error]="hasError('condominiumName')"
+        (valueChange)="form.get('condominiumName')?.setValue($event); form.get('condominiumName')?.markAsTouched()"
+        (blurred)="form.get('condominiumName')?.markAsTouched()" />
+      @if (hasError('condominiumName')) {
+        <span class="error-message">{{ getErrorMessage('condominiumName') }}</span>
+      }
+    </div>
+
+    <div class="form-field-wrapper">
+      <label for="totalUnits" class="field-label">Total de Unidades</label>
+      <app-text-input
+        [value]="form.get('totalUnits')?.value"
+        placeholder="ej. 48"
+        [error]="hasError('totalUnits')"
+        (valueChange)="form.get('totalUnits')?.setValue($event); form.get('totalUnits')?.markAsTouched()"
+        (blurred)="form.get('totalUnits')?.markAsTouched()" />
+      @if (hasError('totalUnits')) {
+        <span class="error-message">{{ getErrorMessage('totalUnits') }}</span>
+      }
+    </div>
+
+    <div class="form-field-wrapper">
+      <label for="propertyType" class="field-label">Tipo de Propiedad</label>
+      <app-select-input
+        id="propertyType"
+        [value]="form.get('propertyType')?.value"
+        placeholder="Selecciona el tipo de propiedad"
+        [options]="propertyTypeOptions"
+        [error]="hasError('propertyType')"
+        (valueChange)="form.get('propertyType')?.setValue($event); form.get('propertyType')?.markAsTouched()"
+        (blurred)="form.get('propertyType')?.markAsTouched()" />
+      @if (hasError('propertyType')) {
+        <span class="error-message">{{ getErrorMessage('propertyType') }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <app-button
+      [label]="isSubmitting() ? '' : 'Registrar Condominio'"
+      type="submit"
+      variant="primary"
+      [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        <span class="loading-spinner"></span>
+      }
+    </app-button>
+  </div>
+</form>

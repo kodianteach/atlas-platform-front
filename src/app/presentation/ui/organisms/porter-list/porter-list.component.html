@@ -1,0 +1,46 @@
+<div class="porter-list">
+  @if (porters().length === 0) {
+    <div class="porter-list__empty">
+      <i class="bi bi-person-badge porter-list__empty-icon"></i>
+      <p class="porter-list__empty-title">No hay porteros registrados</p>
+      <p class="porter-list__empty-description">Crea un nuevo portero para gestionar el acceso al conjunto.</p>
+    </div>
+  } @else {
+    @for (porter of porters(); track porter.id) {
+      <div class="porter-list__card">
+        <div class="porter-list__card-header">
+          <div class="porter-list__card-info">
+            <i class="bi {{ getPorterTypeIcon(porter.porterType) }} porter-list__card-icon"></i>
+            <div>
+              <h3 class="porter-list__card-name">{{ porter.names }}</h3>
+              <span class="porter-list__card-type porter-list__card-type--{{ porter.porterType.toLowerCase() }}">
+                {{ getPorterTypeLabel(porter.porterType) }}
+              </span>
+            </div>
+          </div>
+          <button
+            class="porter-list__action-btn"
+            (click)="onRegenerateUrl(porter.id)"
+            type="button"
+            title="Regenerar URL de enrolamiento">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+        <div class="porter-list__card-details">
+          <div class="porter-list__detail">
+            <i class="bi bi-envelope"></i>
+            <span>{{ porter.email }}</span>
+          </div>
+          <div class="porter-list__detail">
+            <i class="bi bi-circle-fill porter-list__status--{{ porter.status?.toLowerCase() }}"></i>
+            <span>{{ porter.status || 'PRE_REGISTERED' }}</span>
+          </div>
+          <div class="porter-list__detail">
+            <i class="bi bi-calendar-plus"></i>
+            <span>Creado: {{ formatDate(porter.createdAt) }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>

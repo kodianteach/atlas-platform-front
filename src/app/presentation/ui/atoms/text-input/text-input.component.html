@@ -1,0 +1,11 @@
+<input
+  [type]="type()"
+  [value]="value()"
+  [placeholder]="placeholder()"
+  [disabled]="disabled()"
+  [class.error]="error()"
+  (input)="onValueChange($any($event.target).value)"
+  (blur)="onBlur()"
+  (focus)="onFocus()"
+  class="text-input"
+/>

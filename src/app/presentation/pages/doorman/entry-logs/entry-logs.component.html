@@ -1,0 +1,176 @@
+<div class="entry-logs-page">
+  <!-- Header -->
+  <header class="page-header">
+    <button class="back-btn" (click)="onBack()" aria-label="Volver">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="header-content">
+      <h1 class="page-title">Bienvenido de nuevo,</h1>
+      <h2 class="page-subtitle">Registro de Entradas</h2>
+    </div>
+    <div class="user-avatar">
+      <i class="bi bi-person-circle"></i>
+      <span class="online-indicator"></span>
+    </div>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <i class="bi bi-search search-icon"></i>
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder="Buscar nombre, unidad o placa..."
+      [value]="searchQuery()"
+      (input)="onSearchChange($any($event.target).value)">
+    <button class="filter-btn" aria-label="Filtros">
+      <i class="bi bi-sliders"></i>
+    </button>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button 
+      class="tab-button"
+      [class.active]="activeFilter() === 'all'"
+      (click)="setFilter('all')">
+      Todas las Entradas
+    </button>
+    <button 
+      class="tab-button"
+      [class.active]="activeFilter() === 'valid'"
+      (click)="setFilter('valid')">
+      Válidas
+    </button>
+    <button 
+      class="tab-button"
+      [class.active]="activeFilter() === 'denied'"
+      (click)="setFilter('denied')">
+      No Autorizadas
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="logs-content">
+    @if (todayEntries().length > 0) {
+      <div class="logs-section">
+        <div class="section-header">
+          <h3 class="section-title">Hoy</h3>
+          <span class="section-date">{{ todayEntries()[0].timestamp | date:'MMM d, yyyy' }}</span>
+          <button class="view-all-link">Ver Todo</button>
+        </div>
+
+        <div class="entries-list">
+          @for (entry of todayEntries(); track entry.id) {
+            <div class="entry-item" [class]="getStatusClass(entry.status)">
+              <div class="entry-icon" [style.background-color]="getVisitorTypeColor(entry.visitorType) + '20'">
+                <i [class]="'bi ' + getVisitorTypeIcon(entry.visitorType)" [style.color]="getVisitorTypeColor(entry.visitorType)"></i>
+              </div>
+              <div class="entry-details">
+                <div class="entry-header">
+                  <h4 class="entry-name">{{ entry.visitorName }}</h4>
+                  <span class="entry-status" [class]="getStatusClass(entry.status)">
+                    {{ entry.status === 'valid' ? 'VÁLIDA' : 'DENEGADA' }}
+                  </span>
+                </div>
+                <div class="entry-meta">
+                  <span class="meta-item">
+                    <i class="bi bi-house-door"></i>
+                    {{ entry.unit }}
+                  </span>
+                  <span class="meta-separator">•</span>
+                  <span class="meta-item">{{ getVisitorTypeLabel(entry.visitorType) }}</span>
+                </div>
+                <div class="entry-footer">
+                  <span class="entry-access-type">
+                    <i class="bi bi-person-walking"></i>
+                    {{ getAccessTypeLabel(entry.accessType) }}
+                  </span>
+                  @if (entry.plate) {
+                    <span class="entry-plate">
+                      <i class="bi bi-car-front"></i>
+                      {{ entry.plate }}
+                    </span>
+                  }
+                </div>
+              </div>
+              <div class="entry-time">
+                {{ entry.timestamp | date:'shortTime' }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (olderEntries().length > 0) {
+      <div class="logs-section">
+        <div class="section-header">
+          <h3 class="section-title">Anteriores</h3>
+        </div>
+
+        <div class="entries-list">
+          @for (entry of olderEntries(); track entry.id) {
+            <div class="entry-item" [class]="getStatusClass(entry.status)">
+              <div class="entry-icon" [style.background-color]="getVisitorTypeColor(entry.visitorType) + '20'">
+                <i [class]="'bi ' + getVisitorTypeIcon(entry.visitorType)" [style.color]="getVisitorTypeColor(entry.visitorType)"></i>
+              </div>
+              <div class="entry-details">
+                <div class="entry-header">
+                  <h4 class="entry-name">{{ entry.visitorName }}</h4>
+                  <span class="entry-status" [class]="getStatusClass(entry.status)">
+                    {{ entry.status === 'valid' ? 'VÁLIDA' : 'DENEGADA' }}
+                  </span>
+                </div>
+                <div class="entry-meta">
+                  <span class="meta-item">
+                    <i class="bi bi-house-door"></i>
+                    {{ entry.unit }}
+                  </span>
+                  <span class="meta-separator">•</span>
+                  <span class="meta-item">{{ getVisitorTypeLabel(entry.visitorType) }}</span>
+                </div>
+                <div class="entry-footer">
+                  <span class="entry-access-type">
+                    <i class="bi bi-person-walking"></i>
+                    {{ getAccessTypeLabel(entry.accessType) }}
+                  </span>
+                  @if (entry.plate) {
+                    <span class="entry-plate">
+                      <i class="bi bi-car-front"></i>
+                      {{ entry.plate }}
+                    </span>
+                  }
+                </div>
+              </div>
+              <div class="entry-time">
+                {{ entry.timestamp | date:'shortTime' }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (filteredEntries().length === 0) {
+      <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No se encontraron entradas</h3>
+        <p>Intenta ajustar tus filtros o búsqueda</p>
+      </div>
+    }
+
+    @if (filteredEntries().length > 0) {
+      <div class="end-of-log">
+        <span>Fin del registro de hoy</span>
+      </div>
+    }
+  </div>
+
+  <!-- Floating Action Button -->
+  <button class="fab" aria-label="Agregar Entrada">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+
+  <app-doorman-bottom-nav [activeTab]="'history'" />
+</div>

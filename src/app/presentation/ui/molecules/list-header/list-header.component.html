@@ -1,0 +1,5 @@
+<div class="list-header">
+  <h2 class="list-header__title" id="auth-list-title">{{ title() }}</h2>
+  <app-badge [text]="count().toString()" variant="neutral"
+    [attr.aria-label]="count() + ' active authorizations'" />
+</div>

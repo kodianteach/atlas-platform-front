@@ -1,0 +1,25 @@
+<div 
+  class="poll-option" 
+  [class.selected]="isSelected()"
+  (click)="onOptionClick()"
+  role="button"
+  tabindex="0"
+  [attr.aria-pressed]="isSelected()"
+  [attr.aria-label]="'Vote for ' + option().text"
+  (keydown.enter)="onOptionClick()"
+  (keydown.space)="onOptionClick()">
+  
+  <div class="option-header">
+    <span class="option-text">{{ option().text }}</span>
+    <span class="option-percentage">{{ percentage() }}%</span>
+  </div>
+  
+  <app-progress-bar 
+    [percentage]="percentage()"
+    [color]="isSelected() ? '#007bff' : '#e0e0e0'"
+    height="8px" />
+  
+  <div class="option-votes">
+    {{ option().votes }} {{ option().votes === 1 ? 'vote' : 'votes' }}
+  </div>
+</div>

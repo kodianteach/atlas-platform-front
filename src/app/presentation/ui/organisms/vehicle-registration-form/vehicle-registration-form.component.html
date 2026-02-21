@@ -1,0 +1,89 @@
+@if (visible()) {
+  <div class="form-overlay" (click)="onOverlayClick($event)">
+    <div class="form-container">
+      <!-- Header -->
+      <div class="form-header">
+        <button class="back-btn" (click)="onCancel()" aria-label="Volver">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <h2 class="form-title">Registrar Nuevo Vehículo</h2>
+      </div>
+
+      <!-- Unit Info Card -->
+      <div class="unit-card">
+        <div class="unit-info">
+          <p class="unit-label">VINCULADO A LA UNIDAD</p>
+          <h3 class="unit-number">Unidad 402</h3>
+          <p class="unit-name">Sunset Valley Condos</p>
+        </div>
+        <div class="unit-icon">
+          <i class="bi bi-car-front-fill"></i>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <p class="form-description">
+        Por favor, proporciona los detalles del vehículo que deseas registrar para tu unidad residencial.
+      </p>
+
+      <!-- Form -->
+      <form class="vehicle-form" (ngSubmit)="onSubmit()">
+        <!-- Brand/Model Field -->
+        <div class="form-field">
+          <label for="brand" class="field-label">Marca / Modelo del Vehículo</label>
+          <input
+            type="text"
+            id="brand"
+            class="field-input"
+            placeholder="ej. Toyota Camry"
+            [(ngModel)]="formData.brand"
+            name="brand"
+            required
+          />
+        </div>
+
+        <!-- License Plate Field -->
+        <div class="form-field">
+          <label for="plate" class="field-label">Placa</label>
+          <input
+            type="text"
+            id="plate"
+            class="field-input"
+            placeholder="ABC-1234"
+            [(ngModel)]="formData.plate"
+            name="plate"
+            required
+          />
+        </div>
+
+        <!-- Color Field -->
+        <div class="form-field">
+          <label for="color" class="field-label">Color del Vehículo</label>
+          <select
+            id="color"
+            class="field-select"
+            [(ngModel)]="formData.color"
+            name="color"
+            required
+          >
+            <option value="" disabled selected>Seleccionar color</option>
+            @for (color of colors; track color) {
+              <option [value]="color">{{ color }}</option>
+            }
+          </select>
+          <i class="bi bi-chevron-down select-icon"></i>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" [disabled]="!formData.brand || !formData.plate || !formData.color">
+          Registrar Vehículo
+        </button>
+
+        <!-- Cancel Button -->
+        <button type="button" class="cancel-btn" (click)="onCancel()">
+          Cancelar
+        </button>
+      </form>
+    </div>
+  </div>
+}

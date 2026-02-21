@@ -1,0 +1,77 @@
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.toggle-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.toggle-track {
+  display: block;
+  width: 48px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 12px;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-switch.checked .toggle-track {
+  background-color: #4caf50;
+}
+
+.toggle-switch.disabled .toggle-track {
+  background-color: #e0e0e0;
+}
+
+.toggle-thumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.checked .toggle-thumb {
+  transform: translateX(24px);
+}
+
+/* Focus indicator for keyboard navigation */
+.toggle-switch:focus {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+
+.toggle-switch:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.toggle-switch:focus-visible {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .toggle-track {
+    border: 2px solid currentColor;
+  }
+  
+  .toggle-switch:focus {
+    outline-width: 3px;
+  }
+}

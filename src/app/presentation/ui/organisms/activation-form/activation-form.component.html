@@ -1,0 +1,71 @@
+<form [formGroup]="activationForm" (ngSubmit)="onSubmit()" class="activation-form" aria-label="Formulario de activación de cuenta">
+  @if (generalError()) {
+    <div class="alert alert-danger" role="alert" aria-live="assertive">
+      {{ generalError() }}
+    </div>
+  }
+
+  <app-form-field
+    id="email"
+    label="Correo electrónico"
+    type="email"
+    placeholder="correo@ejemplo.com"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getEmailError()"
+    [value]="activationForm.get('email')?.value || ''"
+    autocomplete="email"
+    icon="envelope"
+    (valueChange)="updateField('email', $event)"
+    (blurred)="markFieldTouched('email')" />
+
+  <app-form-field
+    id="currentPassword"
+    label="Contraseña temporal"
+    type="password"
+    placeholder="Contraseña recibida por correo"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getCurrentPasswordError()"
+    [value]="activationForm.get('currentPassword')?.value || ''"
+    autocomplete="current-password"
+    icon="key"
+    (valueChange)="updateField('currentPassword', $event)"
+    (blurred)="markFieldTouched('currentPassword')" />
+
+  <app-form-field
+    id="newPassword"
+    label="Nueva contraseña"
+    type="password"
+    placeholder="Mínimo 8 caracteres"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getNewPasswordError()"
+    [value]="activationForm.get('newPassword')?.value || ''"
+    autocomplete="new-password"
+    icon="lock"
+    hint="Debe contener mayúscula, minúscula y número (mínimo 8 caracteres)"
+    (valueChange)="updateField('newPassword', $event)"
+    (blurred)="markFieldTouched('newPassword')" />
+
+  <app-form-field
+    id="confirmNewPassword"
+    label="Confirmar nueva contraseña"
+    type="password"
+    placeholder="Repite tu nueva contraseña"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getConfirmPasswordError()"
+    [value]="activationForm.get('confirmNewPassword')?.value || ''"
+    autocomplete="new-password"
+    icon="lock"
+    (valueChange)="updateField('confirmNewPassword', $event)"
+    (blurred)="markFieldTouched('confirmNewPassword')" />
+
+  <app-button
+    type="submit"
+    variant="primary"
+    [disabled]="!activationForm.valid"
+    [loading]="isSubmitting()"
+    label="Activar Cuenta" />
+</form>

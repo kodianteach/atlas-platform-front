@@ -1,0 +1,81 @@
+@if (visible()) {
+  <div class="modal-overlay" (click)="onDismiss()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- Success Icon -->
+      <div class="success-icon">
+        <div class="icon-circle">
+          <i class="bi bi-check-lg"></i>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <h2 class="modal-title">Acceso Concedido</h2>
+      <p class="modal-subtitle">Escaneo exitoso a las {{ scanResult()?.timestamp | date:'shortTime' }}</p>
+
+      <!-- Visitor Info -->
+      @if (scanResult(); as result) {
+        <div class="visitor-info">
+          <div class="visitor-header">
+            <div class="visitor-avatar">
+              @if (result.avatarUrl) {
+                <img [src]="result.avatarUrl" [alt]="result.visitorName">
+              } @else {
+                <i class="bi bi-person-circle"></i>
+              }
+            </div>
+            <div class="visitor-details">
+              <h3 class="visitor-name">{{ result.visitorName }}</h3>
+              @if (result.badge) {
+                <p class="visitor-badge">{{ result.badge }}</p>
+              }
+            </div>
+            <span class="visitor-type-badge" [class]="visitorTypeBadgeClass()">
+              {{ visitorTypeLabel() }}
+            </span>
+          </div>
+
+          <!-- Destination & Duration -->
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">DESTINO</span>
+              <span class="info-value">{{ result.unit }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">DURACIÓN</span>
+              <span class="info-value">{{ result.duration }}</span>
+            </div>
+          </div>
+
+          <!-- Additional Info -->
+          @if (result.plate || result.guestCount) {
+            <div class="additional-info">
+              @if (result.plate) {
+                <div class="info-row">
+                  <i class="bi bi-car-front-fill"></i>
+                  <span>Placa: {{ result.plate }}</span>
+                </div>
+              }
+              @if (result.guestCount) {
+                <div class="info-row">
+                  <i class="bi bi-people-fill"></i>
+                  <span>Invitados: {{ result.guestCount }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="modal-actions">
+        <button class="btn-dismiss" (click)="onDismiss()">
+          Cerrar
+        </button>
+        <button class="btn-open-gate" (click)="onOpenGate()">
+          Abrir Puerta
+          <i class="bi bi-unlock-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+}

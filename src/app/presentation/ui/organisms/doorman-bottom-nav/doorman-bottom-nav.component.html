@@ -1,0 +1,37 @@
+<nav class="doorman-bottom-nav">
+  <button 
+    class="nav-item" 
+    [class.active]="isActive('scan')"
+    (click)="navigateTo('scan')"
+    type="button">
+    <i class="bi bi-qr-code-scan"></i>
+    <span>Escanear</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    [class.active]="isActive('history')"
+    (click)="navigateTo('history')"
+    type="button">
+    <i class="bi bi-clock-history"></i>
+    <span>Historial</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    [class.active]="isActive('residents')"
+    (click)="navigateTo('residents')"
+    type="button">
+    <i class="bi bi-chat-dots"></i>
+    <span>Administración</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    [class.active]="isActive('more')"
+    (click)="navigateTo('more')"
+    type="button">
+    <i class="bi bi-three-dots"></i>
+    <span>Más</span>
+  </button>
+</nav>

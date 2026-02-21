@@ -1,0 +1,50 @@
+.activation-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.alert {
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--border-radius);
+}
+
+.alert-danger {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+app-form-field {
+  margin-bottom: var(--spacing-md);
+}
+
+app-button {
+  width: 100%;
+  margin-top: var(--spacing-lg);
+}
+
+app-button ::ng-deep button {
+  width: 100%;
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  border-radius: 50rem !important;
+  padding: 0.875rem !important;
+  font-size: var(--font-size-md) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 10px 20px rgba(255, 140, 97, 0.3);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+app-button ::ng-deep button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(255, 140, 97, 0.4);
+}
+
+app-button ::ng-deep button:disabled {
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}

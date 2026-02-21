@@ -1,0 +1,65 @@
+<!-- Announcements Page Template -->
+<div class="announcements-page">
+  <!-- Header with notifications icon -->
+  <app-announcements-header [title]="'Anuncios'" [showBackButton]="false" [showNotificationIcon]="true"
+    (notificationClick)="onNotifications()" />
+
+  <!-- Main content area -->
+  <div class="announcements-content">
+    @if (loading()) {
+      <div class="loading-state" role="status" aria-live="polite">
+        <div class="loading-spinner" aria-label="Cargando anuncios"></div>
+        <p class="loading-text">Cargando anuncios...</p>
+      </div>
+    }
+
+    @if (error() && !loading()) {
+      <div class="error-state" role="alert" aria-live="assertive">
+        <div class="error-icon">⚠️</div>
+        <h2 class="error-title">¡Ups! Algo salió mal</h2>
+        <p class="error-message">{{ error() }}</p>
+        <button class="retry-button" (click)="retryLoad()" aria-label="Reintentar cargar anuncios">
+          Intentar de Nuevo
+        </button>
+      </div>
+    }
+
+    @if (announcements$ | async; as announcements) {
+      @if (announcements.length === 0 && !loading() && !error()) {
+        <div class="empty-state">
+          <div class="empty-icon">📢</div>
+          <h2 class="empty-title">Aún No Hay Anuncios</h2>
+          <p class="empty-message">
+            No hay anuncios o encuestas disponibles en este momento.
+            Vuelve más tarde para ver actualizaciones de la comunidad.
+          </p>
+        </div>
+      }
+
+      @if (announcements.length > 0 && !loading()) {
+        <div class="announcements-list" role="feed" aria-label="Feed de anuncios">
+          @for (announcement of announcements; track announcement.id) {
+            <div class="announcement-item">
+              @if (isBroadcast(announcement)) {
+                <app-broadcast-card [broadcast]="$any(announcement)" (readMoreClick)="onReadMore($event)" role="article"
+                  [attr.aria-label]="'Comunicado: ' + announcement.title" />
+              }
+              @if (isPoll(announcement)) {
+                <app-poll-card [poll]="$any(announcement)" (voteClick)="onVote($event)"
+                  (viewDiscussionClick)="onViewDiscussion($event)" role="article"
+                  [attr.aria-label]="'Encuesta: ' + announcement.title" />
+              }
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Bottom Navigation -->
+  <app-bottom-nav (centerAction)="onCenterAction()" />
+
+  <!-- Authorization Form Overlay -->
+  <app-authorization-form [visible]="showFormOverlay()" (formSubmit)="onFormSubmit($event)"
+    (formCancel)="onFormCancel()" />
+</div>

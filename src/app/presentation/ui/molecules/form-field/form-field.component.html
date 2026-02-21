@@ -1,0 +1,43 @@
+<div class="form-field">
+  <label class="form-label" [attr.for]="id()">
+    {{ label() }}
+    @if (required()) {
+      <span class="required-indicator">*</span>
+    }
+  </label>
+  
+  <div class="input-wrapper" [class.has-icon]="icon()">
+    @if (icon() && shouldRenderInternalInput()) {
+      <i [class]="'bi bi-' + icon()" class="input-icon"></i>
+    }
+    
+    @if (shouldRenderInternalInput()) {
+      <input
+        [id]="id()"
+        [type]="type()"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        [value]="value()"
+        [autocomplete]="autocomplete()"
+        [class.has-icon]="icon()"
+        [class.error]="errorMessage()"
+        (input)="onValueChange($any($event.target).value)"
+        (blur)="onBlur()"
+        (focus)="onFocus()"
+        class="form-input"
+      />
+    } @else {
+      <ng-content />
+    }
+  </div>
+  
+  @if (error() || errorMessage()) {
+    <div class="error-message" role="alert">
+      {{ error() || errorMessage() }}
+    </div>
+  } @else if (hint()) {
+    <div class="hint-text">
+      {{ hint() }}
+    </div>
+  }
+</div>

@@ -1,0 +1,585 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Bootstrap Icons */
+/* @import 'bootstrap-icons/font/bootstrap-icons.css'; */
+
+/* ============================================
+   CSS Variables - Design Tokens
+   ============================================ */
+
+:root {
+  /* ---- Light Theme (Default) ---- */
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Gray Scale */
+  --gray-50: #f8f9fa;
+  --gray-100: #f1f3f5;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+
+  /* Brand Colors */
+  --color-primary: #FF8C61;
+  --color-primary-light: #FFB399;
+  --color-primary-dark: #FF6B3D;
+  --color-primary-rgb: 255, 140, 97;
+
+  /* Semantic Colors */
+  --color-success: #28a745;
+  --color-success-light: #d4edda;
+  --color-success-dark: #1e7e34;
+  --color-error: #dc3545;
+  --color-error-light: #f8d7da;
+  --color-error-dark: #bd2130;
+  --color-warning: #ffc107;
+  --color-warning-light: #fff3cd;
+  --color-warning-dark: #e0a800;
+  --color-info: #17a2b8;
+  --color-info-light: #d1ecf1;
+  --color-info-dark: #0c5460;
+
+  /* Light Theme Semantic */
+  --bg-primary: var(--white);
+  --bg-secondary: var(--gray-50);
+  --bg-tertiary: var(--gray-100);
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-tertiary: var(--gray-500);
+  --border-color: var(--gray-200);
+  --border-hover: var(--gray-400);
+
+  /* Dark Theme Variables */
+  --dark-bg-primary: #0f172a;
+  --dark-bg-secondary: #1e293b;
+  --dark-bg-tertiary: #334155;
+  --dark-card-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --dark-bg-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --dark-text-primary: #f1f5f9;
+  --dark-text-secondary: #94a3b8;
+  --dark-border: rgba(255, 255, 255, 0.1);
+  --dark-border-hover: rgba(255, 255, 255, 0.2);
+
+  /* Gradient Background */
+  --gradient-primary: linear-gradient(135deg, #FF8C61 0%, #FFB399 100%);
+  
+  /* Spacing Variables */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-xxl: 3rem;     /* 48px */
+  
+  /* Typography Variables */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-md: 1rem;      /* 16px */
+  --font-size-lg: 1.25rem;   /* 20px */
+  --font-size-xl: 1.5rem;    /* 24px */
+  --font-size-xxl: 2rem;     /* 32px */
+  
+  /* Border and Transition Variables */
+  --border-radius-sm: 0.25rem;
+  --border-radius: 0.5rem;
+  --border-radius-md: 0.75rem;
+  --border-radius-lg: 1.5rem;
+  --border-radius-xl: 2rem;
+  --border-radius-full: 9999px;
+  --transition-fast: 0.15s ease;
+  --transition-speed: 0.2s;
+  --transition-normal: 0.3s ease;
+  
+  /* Z-index Variables */
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-fixed: 300;
+  --z-index-fab: 900;
+  --z-index-overlay: 999;
+  --z-index-modal: 1000;
+  --z-index-toast: 1100;
+  --z-index-notification: 9999;
+  
+  /* Accessibility - Focus Indicator */
+  --focus-outline-width: 3px;
+  --focus-outline-color: var(--color-primary);
+  --focus-outline-offset: 2px;
+
+  /* Shadow Variables */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   Global Resets and Base Styles
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  background: var(--gradient-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ============================================
+   Accessibility Styles
+   ============================================ */
+
+/* Focus Indicator - High Contrast for Keyboard Navigation */
+*:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* Remove default focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Visually Hidden Utility Class - For Screen Reader Only Content */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Minimum Touch Target Sizes - 44x44px for Mobile Accessibility */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[role="link"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Exception for inline text links */
+a:not([role="button"]) {
+  min-width: auto;
+  min-height: auto;
+}
+
+/* Ensure interactive elements have sufficient padding for touch targets */
+button,
+[role="button"] {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+/* Skip to main content link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+   Toast Notification Styles
+   ============================================ */
+
+.toast-container {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: var(--z-index-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 350px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-background);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out;
+  min-height: 44px;
+}
+
+.toast.toast-success {
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-light);
+}
+
+.toast.toast-error {
+  border-left: 4px solid var(--color-error);
+  background: var(--color-error-light);
+}
+
+.toast.toast-warning {
+  border-left: 4px solid var(--color-warning);
+  background: var(--color-warning-light);
+}
+
+.toast-icon {
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+  color: var(--color-success-dark);
+}
+
+.toast-error .toast-icon {
+  color: var(--color-error-dark);
+}
+
+.toast-warning .toast-icon {
+  color: var(--color-warning-dark);
+}
+
+.toast-message {
+  flex: 1;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  color: var(--color-text-light);
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  min-width: auto;
+  min-height: auto;
+  transition: color var(--transition-speed);
+}
+
+.toast-close:hover {
+  color: var(--color-text);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Modal and Overlay Styles
+   ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-overlay);
+  z-index: var(--z-index-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal {
+  background: var(--color-background);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  z-index: var(--z-index-modal);
+  animation: scaleIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  color: var(--color-text-light);
+  font-size: var(--font-size-xl);
+  line-height: 1;
+  transition: color var(--transition-speed);
+  border-radius: var(--border-radius);
+}
+
+.modal-close:hover {
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.modal-body {
+  padding: var(--spacing-lg);
+}
+
+.modal-footer {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Floating Action Button (FAB) Styles
+   ============================================ */
+
+.fab {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: var(--z-index-fab);
+  transition: all var(--transition-speed);
+  font-size: var(--font-size-xl);
+}
+
+.fab:hover {
+  background: var(--color-primary-dark);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab i {
+  line-height: 1;
+}
+
+/* FAB with label */
+.fab-extended {
+  width: auto;
+  padding: 0 var(--spacing-lg);
+  border-radius: var(--border-radius-xl);
+  gap: var(--spacing-sm);
+}
+
+.fab-label {
+  font-size: var(--font-size-md);
+  font-weight: 500;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .toast-container {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    left: var(--spacing-md);
+    max-width: none;
+  }
+  
+  .modal {
+    max-width: 95vw;
+    max-height: 95vh;
+    margin: var(--spacing-md);
+  }
+  
+  .fab {
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+  }
+}
+
+/* ============================================
+   Theme Support - Dark Mode
+   ============================================ */
+
+/** Dark theme class - applied to body or container */
+.theme-dark {
+  --bg-primary: var(--dark-bg-primary);
+  --bg-secondary: var(--dark-bg-secondary);
+  --bg-tertiary: var(--dark-bg-tertiary);
+  --text-primary: var(--dark-text-primary);
+  --text-secondary: var(--dark-text-secondary);
+  --border-color: var(--dark-border);
+  --border-hover: var(--dark-border-hover);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+  background-color: var(--dark-bg-primary);
+  color: var(--dark-text-primary);
+}
+
+/** Auto dark mode via prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  .theme-auto {
+    --bg-primary: var(--dark-bg-primary);
+    --bg-secondary: var(--dark-bg-secondary);
+    --bg-tertiary: var(--dark-bg-tertiary);
+    --text-primary: var(--dark-text-primary);
+    --text-secondary: var(--dark-text-secondary);
+    --border-color: var(--dark-border);
+    --border-hover: var(--dark-border-hover);
+
+    color-scheme: dark;
+    background-color: var(--dark-bg-primary);
+    color: var(--dark-text-primary);
+  }
+}
+
+/* ============================================
+   PWA Specific Styles
+   ============================================ */
+
+/* Safe area insets for notch devices */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Prevent pull-to-refresh on PWA */
+html {
+  overscroll-behavior-y: contain;
+}
+
+/* Smooth scrolling for all elements */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection on interactive elements for mobile */
+button, [role="button"], .no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Optimize font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Offline indicator bar */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-warning);
+  z-index: var(--z-index-notification);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* PWA install banner */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  z-index: var(--z-index-fixed);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+

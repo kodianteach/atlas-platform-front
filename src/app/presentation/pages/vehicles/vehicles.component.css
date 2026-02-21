@@ -1,0 +1,97 @@
+.vehicles-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: 6rem;
+}
+
+/* Header */
+.vehicles-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1.25rem 1rem;
+  background: white;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Description */
+.page-description {
+  padding: 1rem 1.25rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #666;
+  line-height: 1.5;
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Register Section */
+.register-section {
+  padding: 1.5rem 1.25rem;
+  background: white;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Register Vehicle Button */
+.register-vehicle-btn {
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.register-vehicle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.5);
+}
+
+.register-vehicle-btn:active {
+  transform: translateY(0);
+}
+
+.register-vehicle-btn i {
+  font-size: 1.25rem;
+}
+
+/* Vehicles List */
+.vehicles-list {
+  padding: 1rem 1.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 375px) {
+  .vehicles-header {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .page-title {
+    font-size: 1.375rem;
+  }
+
+  .vehicles-list {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .register-vehicle-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+}

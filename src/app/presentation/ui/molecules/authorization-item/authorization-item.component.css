@@ -1,0 +1,124 @@
+.authorization-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #F3F4F6;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.authorization-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.05);
+  border-color: #E5E7EB;
+}
+
+/* Focus indicator for keyboard navigation */
+.authorization-item:focus-within {
+  background-color: #ffffff;
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.authorization-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.authorization-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.icon-blue {
+  background-color: #DBEAFE;
+  color: #2563EB;
+}
+
+.icon-blue ::ng-deep svg {
+  fill: #3B82F6;
+}
+
+.icon-green {
+  background-color: #DCFCE7;
+  color: #16A34A;
+}
+
+.icon-green ::ng-deep svg {
+  fill: #22C55E;
+}
+
+.authorization-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.authorization-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.5;
+}
+
+.authorization-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+/* Override detail text and separator if needed */
+.detail-separator {
+  color: #D1D5DB;
+}
+
+.authorization-toggle {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 767px) {
+  .authorization-item {
+    padding: 0.875rem;
+  }
+
+  .authorization-content {
+    gap: 0.75rem;
+  }
+
+  .authorization-name {
+    font-size: 0.9375rem;
+  }
+
+  .authorization-details {
+    font-size: 0.8125rem;
+  }
+
+  .authorization-toggle {
+    margin-left: 0.5rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .authorization-item:focus-within {
+    outline-width: 3px;
+  }
+}

@@ -1,0 +1,51 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" aria-label="Formulario de inicio de sesión">
+  @if (generalError()) {
+    <div class="alert alert-danger" role="alert" aria-live="assertive">
+      {{ generalError() }}
+    </div>
+  }
+
+  <app-form-field
+    id="email"
+    label="Usuario o Correo"
+    type="email"
+    placeholder="Usuario o Correo"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getEmailError()"
+    [value]="loginForm.get('email')?.value || ''"
+    autocomplete="email"
+    icon="user"
+    (valueChange)="updateEmail($event)"
+    (blurred)="markEmailTouched()" />
+
+  <app-form-field
+    id="password"
+    label="Contraseña"
+    type="password"
+    placeholder="Contraseña"
+    [required]="true"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getPasswordError()"
+    [value]="loginForm.get('password')?.value || ''"
+    autocomplete="current-password"
+    icon="lock"
+    (valueChange)="updatePassword($event)"
+    (blurred)="markPasswordTouched()" />
+
+  <div class="text-end mb-3">
+    <a href="#" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+  </div>
+
+  <app-button
+    type="submit"
+    variant="primary"
+    [disabled]="!loginForm.valid"
+    [loading]="isSubmitting()"
+    label="Iniciar Sesión" />
+
+  <div class="register-section">
+    <span class="register-text">¿Aún no eres residente?</span>
+    <a href="#" class="register-link">Registrarse</a>
+  </div>
+</form>

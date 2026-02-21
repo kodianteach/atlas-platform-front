@@ -1,0 +1,79 @@
+<div class="invitation-page">
+  <header class="invitation-page__header">
+    <h1 class="invitation-page__title">{{ 'app.invitation.history.title' | translate }}</h1>
+    <p class="invitation-page__subtitle">Genera y gestiona invitaciones para propietarios</p>
+  </header>
+
+  <section class="invitation-page__content">
+    <!-- Idle State: Generate button -->
+    @if (state() === 'idle') {
+      <div class="invitation-page__card">
+        <div class="invitation-page__card-icon">
+          <i class="bi bi-envelope-paper"></i>
+        </div>
+        <h2 class="invitation-page__card-title">Invitar Propietario</h2>
+        <p class="invitation-page__card-desc">
+          Genera un enlace único de 24 horas para que un propietario se registre en tu organización.
+        </p>
+        <button class="invitation-page__btn invitation-page__btn--primary" (click)="generateOwnerInvitation()" type="button">
+          <i class="bi bi-link-45deg"></i>
+          {{ 'app.invitation.create.ownerButton' | translate }}
+        </button>
+      </div>
+    }
+
+    <!-- Generating State: Spinner -->
+    @if (state() === 'generating') {
+      <div class="invitation-page__card invitation-page__card--center">
+        <div class="invitation-page__spinner"></div>
+        <p class="invitation-page__loading-text">Generando enlace de invitación...</p>
+      </div>
+    }
+
+    <!-- Link Ready State -->
+    @if (state() === 'link-ready') {
+      <div class="invitation-page__card invitation-page__card--success">
+        <div class="invitation-page__card-icon invitation-page__card-icon--success">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <h2 class="invitation-page__card-title">{{ 'app.invitation.create.linkGenerated' | translate }}</h2>
+        <p class="invitation-page__card-desc">{{ 'app.invitation.create.shareHint' | translate }}</p>
+
+        <div class="invitation-page__url-box">
+          <span class="invitation-page__url-text">{{ invitationUrl() }}</span>
+        </div>
+
+        <div class="invitation-page__actions">
+          <button class="invitation-page__btn invitation-page__btn--primary" (click)="copyLink()" type="button">
+            <i class="bi" [class.bi-clipboard]="!linkCopied()" [class.bi-clipboard-check]="linkCopied()"></i>
+            @if (linkCopied()) {
+              {{ 'app.invitation.create.linkCopied' | translate }}
+            } @else {
+              Copiar Enlace
+            }
+          </button>
+          <button class="invitation-page__btn invitation-page__btn--secondary" (click)="generateAnother()" type="button">
+            <i class="bi bi-plus-lg"></i>
+            Generar Otro
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (state() === 'error') {
+      <div class="invitation-page__card invitation-page__card--error">
+        <div class="invitation-page__card-icon invitation-page__card-icon--error">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <h2 class="invitation-page__card-title">Error al generar invitación</h2>
+        <p class="invitation-page__card-desc">{{ errorMessage() }}</p>
+        <button class="invitation-page__btn invitation-page__btn--secondary" (click)="dismissError()" type="button">
+          Reintentar
+        </button>
+      </div>
+    }
+  </section>
+</div>
+
+<app-admin-bottom-nav [activeTab]="'more'" />

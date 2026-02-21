@@ -1,0 +1,209 @@
+/* ─── Base States ────────────────────────────────────── */
+.state-message {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.state-message.success {
+  padding: var(--spacing-xl) 0;
+}
+
+.state-text {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.success-text {
+  color: #16a34a;
+}
+
+.state-hint {
+  font-size: var(--font-size-md);
+  color: var(--color-text-light);
+  margin: 0;
+  max-width: 360px;
+}
+
+.error-detail {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ─── Confirmation Card ─────────────────────────────── */
+.enrollment-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+}
+
+.info-card {
+  background: var(--color-surface, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--border-radius-lg, 12px);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.info-row > i {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-label {
+  font-size: var(--font-size-sm, 0.75rem);
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* ─── Security Notice ───────────────────────────────── */
+.security-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--border-radius-md, 8px);
+  color: #1e40af;
+}
+
+.security-notice i {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.security-notice p {
+  font-size: var(--font-size-sm, 0.8125rem);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─── Buttons ────────────────────────────────────────── */
+.btn-primary,
+.btn-enroll,
+.btn-install {
+  margin-top: var(--spacing-sm);
+  padding: 0.75rem 2rem;
+  color: white;
+  border: none;
+  border-radius: 50rem;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  box-shadow: 0 10px 20px rgba(255, 140, 97, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(255, 140, 97, 0.4);
+}
+
+.btn-enroll {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  box-shadow: 0 10px 20px rgba(22, 163, 74, 0.3);
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.0625rem;
+}
+
+.btn-enroll:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(22, 163, 74, 0.4);
+}
+
+.btn-enroll:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-install {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+}
+
+.btn-install:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4);
+}
+
+/* ─── Success Details ───────────────────────────────── */
+.success-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--border-radius-md, 8px);
+  width: 100%;
+  max-width: 320px;
+}
+
+.success-detail-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+}
+
+.success-detail-item i {
+  color: #16a34a;
+  font-size: 1.125rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ─── Animations ────────────────────────────────────── */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

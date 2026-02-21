@@ -1,0 +1,48 @@
+<nav class="bottom-nav">
+  <!-- First two tabs -->
+  <a 
+    [routerLink]="navItems[0].route" 
+    routerLinkActive="active"
+    class="nav-item"
+    [attr.aria-label]="navItems[0].label"
+  >
+    <i [class]="'bi ' + navItems[0].icon"></i>
+    <span class="nav-label">{{ navItems[0].label }}</span>
+  </a>
+  
+  <a 
+    [routerLink]="navItems[1].route" 
+    routerLinkActive="active"
+    class="nav-item"
+    [attr.aria-label]="navItems[1].label"
+  >
+    <i [class]="'bi ' + navItems[1].icon"></i>
+    <span class="nav-label">{{ navItems[1].label }}</span>
+  </a>
+  
+  <!-- Center button -->
+  <button class="nav-item nav-item-center" (click)="onCenterAction()" aria-label="Registrar Visita">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+  
+  <!-- Last two tabs -->
+  <a 
+    [routerLink]="navItems[2].route" 
+    routerLinkActive="active"
+    class="nav-item"
+    [attr.aria-label]="navItems[2].label"
+  >
+    <i [class]="'bi ' + navItems[2].icon"></i>
+    <span class="nav-label">{{ navItems[2].label }}</span>
+  </a>
+  
+  <a 
+    [routerLink]="navItems[3].route" 
+    routerLinkActive="active"
+    class="nav-item"
+    [attr.aria-label]="navItems[3].label"
+  >
+    <i [class]="'bi ' + navItems[3].icon"></i>
+    <span class="nav-label">{{ navItems[3].label }}</span>
+  </a>
+</nav>

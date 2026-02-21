@@ -1,0 +1,5 @@
+<span [class.badge]="true" [class.badge-urgent]="variant() === 'urgent'" [class.badge-info]="variant() === 'info'"
+  [class.badge-success]="variant() === 'success'" [class.badge-neutral]="variant() === 'neutral'"
+  [attr.aria-label]="variant() === 'urgent' ? 'Urgent announcement' : text()">
+  {{ text() }}
+</span>

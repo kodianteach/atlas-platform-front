@@ -1,0 +1,15 @@
+<div class="grant-card" tabindex="0" role="region" aria-labelledby="grant-card-title">
+  <div class="grant-card__content">
+    <div class="grant-card__icon" aria-hidden="true">
+      <app-icon [name]="icon()" size="2rem" />
+    </div>
+
+    <div class="grant-card__text">
+      <h2 class="grant-card__title" id="grant-card-title">{{ title() }}</h2>
+      <p class="grant-card__description">{{ description() }}</p>
+    </div>
+  </div>
+
+  <app-button label="Create New Pass" variant="white" (clicked)="onCreateClick()" class="grant-card__button"
+    aria-label="Create new authorization pass" />
+</div>

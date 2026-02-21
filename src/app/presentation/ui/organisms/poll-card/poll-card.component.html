@@ -1,0 +1,39 @@
+<article class="poll-card" role="article">
+  <!-- Poll Header -->
+  <div class="poll-header">
+    <div class="poll-icon">
+      <span class="icon">{{ poll().icon }}</span>
+    </div>
+    <div class="poll-header-content">
+      <h3 class="poll-title">{{ poll().title }}</h3>
+      <span class="poll-time-remaining">{{ timeRemaining() }}</span>
+    </div>
+  </div>
+
+  <!-- Poll Question -->
+  <div class="poll-question">
+    <p>{{ poll().question }}</p>
+  </div>
+
+  <!-- Poll Options -->
+  <div class="poll-options" role="radiogroup" [attr.aria-labelledby]="'poll-title-' + poll().id">
+    @for (option of poll().options; track option.id) {
+      <app-poll-option
+        [option]="option"
+        [totalVotes]="poll().totalVotes"
+        [isSelected]="isOptionSelected(option.id)"
+        (optionClick)="onVote($event)" />
+    }
+  </div>
+
+  <!-- Poll Footer -->
+  <div class="poll-footer">
+    <span class="total-votes">{{ poll().totalVotes }} {{ poll().totalVotes === 1 ? 'voto' : 'votos' }}</span>
+    <button 
+      class="view-discussion-btn"
+      (click)="onViewDiscussion()"
+      aria-label="Ver discusión de esta encuesta">
+      Ver Discusión
+    </button>
+  </div>
+</article>

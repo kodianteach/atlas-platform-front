@@ -1,0 +1,47 @@
+<div class="authorization-card">
+  <div class="card-icon" [style.background-color]="getIconBackground()">
+    <i class="bi" [class]="'bi-' + getIconName()" [style.color]="getIconColor()"></i>
+  </div>
+
+  <div class="card-details">
+    <div class="header-row">
+      <h3 class="name">{{ record().fullName }}</h3>
+      <span class="status-badge" [class]="getEntryTypeBadgeClass()">
+        {{ getEntryTypeLabel() }}
+      </span>
+    </div>
+    
+    <div class="info-line">
+      <span class="label">ID:</span>
+      <span class="value">{{ record().idDocument }}</span>
+    </div>
+
+    <div class="date-row">
+      <i class="bi bi-calendar4 date-icon"></i>
+      <span class="date-text">{{ record().visitDate }} {{ record().visitTime }}</span>
+    </div>
+
+    @if (record().hasVehicle && record().licensePlate) {
+      <div class="date-row">
+        <i class="bi bi-car-front date-icon"></i>
+        <span class="date-text">{{ record().licensePlate }}</span>
+      </div>
+    }
+
+    @if (record().courierCompany) {
+      <div class="date-row">
+        <i class="bi bi-box-seam date-icon"></i>
+        <span class="date-text">{{ record().courierCompany }} - {{ record().orderType }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="card-actions">
+    <button class="delete-btn" (click)="onDeleteClick()" aria-label="Eliminar" type="button">
+      <i class="bi bi-trash3-fill"></i>
+    </button>
+    <button class="manage-btn" (click)="onManageClick()" type="button">
+      Manage
+    </button>
+  </div>
+</div>

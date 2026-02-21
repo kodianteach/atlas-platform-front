@@ -1,0 +1,485 @@
+{
+  "app": {
+    "common": {
+      "buttons": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "create": "Crear",
+        "search": "Buscar",
+        "back": "Volver",
+        "next": "Siguiente",
+        "previous": "Anterior",
+        "confirm": "Confirmar",
+        "close": "Cerrar",
+        "submit": "Enviar",
+        "login": "Iniciar Sesión",
+        "logout": "Cerrar Sesión",
+        "register": "Registrarse",
+        "retry": "Reintentar"
+      },
+      "labels": {
+        "loading": "Cargando...",
+        "noResults": "No se encontraron resultados",
+        "required": "Campo requerido",
+        "optional": "Opcional",
+        "all": "Todos",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "pending": "Pendiente",
+        "enabled": "Habilitado",
+        "disabled": "Deshabilitado"
+      },
+      "messages": {
+        "success": "Operación exitosa",
+        "error": "Ha ocurrido un error",
+        "confirmDelete": "¿Está seguro que desea eliminar este registro?",
+        "networkError": "Sin conexión a internet. Intente de nuevo.",
+        "sessionExpired": "Su sesión ha expirado. Inicie sesión nuevamente."
+      },
+      "validation": {
+        "required": "Este campo es requerido",
+        "email": "Formato de correo inválido",
+        "minLength": "Mínimo {{min}} caracteres",
+        "maxLength": "Máximo {{max}} caracteres",
+        "pattern": "Formato inválido",
+        "onlyLetters": "Solo se permiten letras",
+        "onlyNumbers": "Solo se permiten números",
+        "phoneNumber": "Número de teléfono inválido",
+        "futureDate": "La fecha no puede ser futura",
+        "mustMatch": "Los campos no coinciden",
+        "min": "Valor mínimo: {{min}}",
+        "max": "Valor máximo: {{max}}",
+        "licensePlate": "Formato de placa inválido",
+        "strongPassword": "Debe contener mayúscula, minúscula y número"
+      }
+    },
+    "auth": {
+      "login": {
+        "title": "Bienvenido",
+        "subtitle": "Inicia sesión para continuar",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "password": "Contraseña",
+        "passwordPlaceholder": "Ingrese su contraseña",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "rememberMe": "Recordarme",
+        "noAccount": "¿No tienes cuenta?",
+        "loginButton": "Iniciar Sesión",
+        "demoAccess": "Acceso Demo",
+        "errors": {
+          "invalidCredentials": "Correo o contraseña incorrectos",
+          "tooManyAttempts": "Demasiados intentos. Intente más tarde",
+          "connectionError": "Error de conexión. Intente nuevamente"
+        }
+      }
+    },
+    "home": {
+      "welcome": "¡Bienvenido!",
+      "quickActions": "Acciones rápidas",
+      "recentActivity": "Actividad reciente"
+    },
+    "authorization": {
+      "title": "Autorizaciones de Acceso",
+      "subtitle": "Gestiona los permisos de acceso a tu propiedad",
+      "newAuthorization": "Nueva Autorización",
+      "active": "Activas",
+      "expired": "Expiradas",
+      "all": "Todas",
+      "history": "Historial",
+      "noAuthorizations": "No hay autorizaciones registradas",
+      "noAuthorizationsDesc": "Crea tu primera autorización de acceso",
+      "loading": "Cargando autorizaciones...",
+      "validFrom": "Válida desde",
+      "validTo": "Válida hasta",
+      "vehicle": "Vehículo",
+      "viewDetail": "Ver detalle",
+      "form": {
+        "title": "Nueva Autorización",
+        "personName": "Nombre completo",
+        "personNamePlaceholder": "Ingrese el nombre completo",
+        "personDocument": "Documento de Identidad",
+        "personDocumentPlaceholder": "Número de documento",
+        "serviceType": "Tipo de Servicio",
+        "validFrom": "Válido desde",
+        "validTo": "Válido hasta",
+        "unitId": "Unidad",
+        "unitIdPlaceholder": "Seleccione la unidad",
+        "vehiclePlate": "Placa del Vehículo",
+        "vehiclePlatePlaceholder": "ABC123",
+        "vehicleType": "Tipo de Vehículo",
+        "vehicleTypePlaceholder": "Ej: Automóvil, Motocicleta",
+        "vehicleColor": "Color del Vehículo",
+        "vehicleColorPlaceholder": "Ej: Blanco, Negro",
+        "vehicleSection": "Información del Vehículo (Opcional)",
+        "document": "Documento de Soporte",
+        "documentPlaceholder": "Seleccionar archivo PDF",
+        "submit": "Crear Autorización"
+      },
+      "serviceTypes": {
+        "VISIT": "Visita",
+        "DELIVERY": "Domicilio",
+        "TECHNICIAN": "Técnico",
+        "OTHER": "Otro"
+      },
+      "status": {
+        "ACTIVE": "Activa",
+        "EXPIRED": "Expirada",
+        "REVOKED": "Revocada"
+      },
+      "detail": {
+        "title": "Detalle de Autorización",
+        "backToList": "Volver al listado",
+        "personInfo": "Información de la Persona",
+        "personName": "Nombre",
+        "personDocument": "Documento",
+        "serviceType": "Tipo de Servicio",
+        "validity": "Vigencia",
+        "validFrom": "Desde",
+        "validTo": "Hasta",
+        "currentStatus": "Estado actual",
+        "vehicleInfo": "Información del Vehículo",
+        "vehiclePlate": "Placa",
+        "vehicleType": "Tipo",
+        "vehicleColor": "Color",
+        "qrCode": "Código QR",
+        "qrDescription": "Presenta este código en portería para validar el acceso",
+        "share": "Compartir",
+        "shareWhatsapp": "Compartir por WhatsApp",
+        "copyLink": "Copiar enlace",
+        "linkCopied": "Enlace copiado al portapapeles",
+        "revoke": "Revocar Autorización",
+        "revokeConfirm": "¿Estás seguro de revocar esta autorización?",
+        "notFound": "Autorización no encontrada",
+        "loading": "Cargando detalle..."
+      },
+      "messages": {
+        "created": "Autorización creada exitosamente",
+        "revoked": "Autorización revocada exitosamente",
+        "errorLoading": "Error al cargar las autorizaciones",
+        "errorCreating": "Error al crear la autorización",
+        "errorRevoking": "Error al revocar la autorización"
+      }
+    },
+    "announcements": {
+      "title": "Anuncios",
+      "subtitle": "Mantente al día con las novedades de la comunidad",
+      "broadcasts": "Comunicados",
+      "polls": "Encuestas",
+      "all": "Todos",
+      "urgent": "Urgente",
+      "vote": "Votar",
+      "voted": "Votado",
+      "endsIn": "Termina en",
+      "discussion": "Discusión",
+      "noAnnouncements": "No hay anuncios disponibles",
+      "totalVotes": "{{count}} votos totales"
+    },
+    "vehicles": {
+      "title": "Vehículos",
+      "subtitle": "Gestiona tus vehículos registrados",
+      "addVehicle": "Agregar Vehículo",
+      "noVehicles": "No tienes vehículos registrados",
+      "types": {
+        "car": "Automóvil",
+        "motorcycle": "Motocicleta"
+      }
+    },
+    "admin": {
+      "profileSetup": {
+        "title": "Configuración de Perfil",
+        "subtitle": "Complete su información de administrador",
+        "fullName": "Nombre Completo",
+        "fullNamePlaceholder": "Ingrese su nombre completo",
+        "phoneNumber": "Número de Teléfono",
+        "phoneNumberPlaceholder": "+57 301 234 5678",
+        "adminId": "ID de Administrador",
+        "adminIdPlaceholder": "Ingrese su ID",
+        "submit": "Guardar Perfil"
+      },
+      "propertyRegistration": {
+        "title": "Registro de Propiedad",
+        "subtitle": "Registre su propiedad horizontal",
+        "condominiumName": "Nombre de la Propiedad",
+        "condominiumNamePlaceholder": "Ej: Conjunto Residencial Los Pinos",
+        "taxId": "NIT / RUT",
+        "taxIdPlaceholder": "Ingrese el NIT o RUT",
+        "totalUnits": "Total de Unidades",
+        "totalUnitsPlaceholder": "Número de apartamentos/casas",
+        "propertyType": "Tipo de Propiedad",
+        "propertyTypes": {
+          "conjunto": "Conjunto Residencial",
+          "ciudadela": "Ciudadela",
+          "condominio": "Condominio"
+        },
+        "submit": "Registrar Propiedad"
+      },
+      "onboarding": {
+        "title": "¡Registro Completo!",
+        "subtitle": "Su propiedad ha sido registrada exitosamente",
+        "goToDashboard": "Ir al Panel"
+      },
+      "units": {
+        "title": "Generación Masiva",
+        "subtitle": "Crea múltiples unidades de forma rápida",
+        "form": {
+          "codePrefix": "Prefijo del código",
+          "codePrefixPlaceholder": "Ej: APTO, CASA, LOCAL",
+          "rangeStart": "Desde",
+          "rangeEnd": "Hasta",
+          "unitType": "Tipo de unidad",
+          "vehiclesEnabled": "Habilitar vehículos",
+          "vehicleLimit": "Límite de vehículos por unidad",
+          "submit": "Generar unidades",
+          "cancel": "Cancelar",
+          "generating": "Generando..."
+        },
+        "preview": "Vista previa",
+        "unitCount": "Se crearán {{count}} unidades",
+        "maxAllowed": "Máximo permitido: {{max}} unidades por lote",
+        "result": {
+          "created": "Creadas",
+          "rejected": "Rechazadas",
+          "createdCodes": "Códigos creados",
+          "rejectedUnits": "Unidades rechazadas",
+          "createMore": "Crear más unidades",
+          "code": "Código",
+          "reason": "Motivo"
+        },
+        "types": {
+          "APARTMENT": "Apartamento",
+          "HOUSE": "Casa"
+        },
+        "errors": {
+          "prefixRequired": "El prefijo es obligatorio",
+          "prefixPattern": "Solo letras, números y guiones",
+          "rangeInvalid": "El rango final debe ser mayor o igual al inicial",
+          "exceedsLimit": "Se generarán {{count}} unidades, pero el máximo permitido es {{max}}"
+        }
+      },
+      "organizationConfig": {
+        "title": "Configuración",
+        "subtitle": "Ajustes de tu organización",
+        "sections": {
+          "units": "Generación de Unidades"
+        },
+        "maxUnitsPerDistribution": "Máximo de unidades por lote",
+        "maxUnitsDescription": "Número máximo de unidades que se pueden crear en una sola operación de generación masiva.",
+        "save": "Guardar cambios",
+        "saving": "Guardando...",
+        "saveSuccess": "Configuración guardada exitosamente",
+        "errors": {
+          "loadError": "Error al cargar la configuración",
+          "saveError": "Error al guardar. Inténtalo de nuevo",
+          "minValue": "El valor mínimo es 1",
+          "maxValue": "El valor máximo es 1000"
+        }
+      }
+    },
+    "doorman": {
+      "entryControl": {
+        "title": "Control de Acceso",
+        "scanQR": "Escanear QR",
+        "manualEntry": "Entrada Manual",
+        "recentEntries": "Entradas Recientes"
+      },
+      "entryLogs": {
+        "title": "Registro de Entradas",
+        "noEntries": "No hay registros de entrada"
+      },
+      "chat": {
+        "title": "Chat con Administración",
+        "placeholder": "Escriba su mensaje...",
+        "send": "Enviar"
+      }
+    },
+    "porter": {
+      "title": "Gestión de Porteros",
+      "subtitle": "Administra los porteros del conjunto residencial",
+      "createPorter": "Crear Portero",
+      "noPorters": "No hay porteros registrados",
+      "noPortersDescription": "Crea un nuevo portero para gestionar el acceso al conjunto.",
+      "list": {
+        "title": "Porteros",
+        "general": "Portero General",
+        "delivery": "Portero Delivery",
+        "lastAccess": "Último acceso",
+        "noDevice": "Sin dispositivo vinculado",
+        "enrollmentPending": "Enrolamiento pendiente"
+      },
+      "form": {
+        "title": "Nuevo Portero",
+        "displayName": "Nombre descriptivo",
+        "displayNamePlaceholder": "Ej: Carlos Portería Norte",
+        "porterType": "Tipo de portero",
+        "selectType": "Seleccione el tipo",
+        "general": "Portero General",
+        "delivery": "Portero Delivery"
+      },
+      "enrollmentUrl": {
+        "title": "URL de Enrolamiento",
+        "description": "Comparta esta URL con el portero para que configure su dispositivo. Válida por 24 horas.",
+        "copy": "Copiar URL",
+        "copied": "URL copiada al portapapeles",
+        "regenerate": "Regenerar URL",
+        "regenerateConfirm": "¿Está seguro de regenerar la URL? La URL anterior quedará invalidada."
+      },
+      "messages": {
+        "createSuccess": "Portero creado exitosamente",
+        "createError": "Error al crear el portero",
+        "regenerateSuccess": "URL de enrolamiento regenerada exitosamente",
+        "regenerateError": "Error al regenerar la URL",
+        "loadError": "Error al cargar los porteros"
+      }
+    },
+    "enrollment": {
+      "title": "Enrolamiento de Dispositivo",
+      "subtitle": "Confirma los datos para vincular este dispositivo",
+      "enrolling": "Enrolando...",
+      "successTitle": "¡Dispositivo Enrolado!",
+      "states": {
+        "loading": "Validando enlace de enrolamiento...",
+        "noToken": "No se proporcionó un enlace de enrolamiento.",
+        "noTokenHint": "Solicita a tu administrador que genere un nuevo enlace.",
+        "tokenInvalid": "El enlace de enrolamiento es inválido o ha expirado.",
+        "tokenInvalidHint": "Solicita a tu administrador que genere un nuevo enlace de enrolamiento.",
+        "tokenConsumed": "Este enlace de enrolamiento ya fue utilizado.",
+        "tokenConsumedHint": "Si ya enrolaste tu dispositivo, inicia sesión normalmente.",
+        "alreadyEnrolled": "Este dispositivo ya está enrolado.",
+        "alreadyEnrolledHint": "Las claves de verificación ya están almacenadas. Puedes iniciar sesión para comenzar.",
+        "enrollingMessage": "Enrolando dispositivo...",
+        "enrollingHint": "Generando claves criptográficas y vinculando el dispositivo.",
+        "error": "Error al enrolar el dispositivo",
+        "success": "¡Dispositivo enrolado exitosamente!",
+        "successHint": "Ya puedes verificar códigos QR de autorización, incluso sin conexión a internet."
+      },
+      "confirmation": {
+        "porter": "Portero",
+        "organization": "Organización",
+        "validUntil": "Enlace válido hasta",
+        "securityNotice": "Al enrolar este dispositivo, se almacenará una clave criptográfica para verificar códigos QR de forma segura, incluso sin conexión a internet.",
+        "enrollButton": "Enrolar Este Dispositivo"
+      },
+      "success": {
+        "keyStored": "Clave de verificación almacenada",
+        "installApp": "Instalar Aplicación",
+        "goToLogin": "Ir a Iniciar Sesión"
+      },
+      "actions": {
+        "retry": "Reintentar",
+        "goToLogin": "Ir a Iniciar Sesión"
+      }
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "noNotifications": "No hay notificaciones",
+      "markAllRead": "Marcar todas como leídas"
+    },
+    "nav": {
+      "home": "Inicio",
+      "authorizations": "Autorizaciones",
+      "announcements": "Anuncios",
+      "notifications": "Notificaciones",
+      "vehicles": "Vehículos",
+      "profile": "Perfil"
+    },
+    "pwa": {
+      "updateAvailable": "Nueva versión disponible",
+      "updateMessage": "Hay una actualización disponible. ¿Desea actualizar ahora?",
+      "update": "Actualizar",
+      "later": "Más tarde",
+      "offline": "Sin conexión",
+      "offlineMessage": "Estás trabajando sin conexión. Algunos datos pueden no estar actualizados."
+    },
+    "invitation": {
+      "register": {
+        "title": "Registro",
+        "ownerTitle": "Registro de Propietario",
+        "residentTitle": "Registro de Residente",
+        "subtitle": "Completa tus datos para registrarte",
+        "success": "¡Registro completado exitosamente!",
+        "successHint": "Ya puedes iniciar sesión con tu nueva contraseña.",
+        "goToLogin": "Ir a Iniciar Sesión"
+      },
+      "token": {
+        "validating": "Validando enlace de invitación...",
+        "noToken": "No se proporcionó un token de invitación.",
+        "noTokenHint": "Accede al enlace que te fue compartido.",
+        "invalid": "El enlace de invitación es inválido.",
+        "invalidHint": "Verifica que el enlace sea correcto o contacta a quien te invitó.",
+        "expired": "El enlace de invitación ha expirado.",
+        "expiredHint": "Solicita un nuevo enlace de invitación.",
+        "consumed": "Este enlace de invitación ya fue utilizado.",
+        "consumedHint": "Si ya te registraste, inicia sesión normalmente."
+      },
+      "form": {
+        "names": "Nombres completos",
+        "namesPlaceholder": "Ingresa tus nombres",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "phone": "Teléfono",
+        "phonePlaceholder": "300 123 4567",
+        "documentType": "Tipo de documento",
+        "documentNumber": "Número de documento",
+        "documentNumberPlaceholder": "Ingresa tu número de documento",
+        "password": "Contraseña",
+        "passwordPlaceholder": "Mínimo 8 caracteres",
+        "passwordHint": "Debe contener mayúscula, minúscula y número (mínimo 8 caracteres)",
+        "confirmPassword": "Confirmar contraseña",
+        "confirmPasswordPlaceholder": "Repite tu contraseña",
+        "unit": "Unidad / Apartamento",
+        "unitPlaceholder": "Buscar por código de unidad",
+        "submitOwner": "Completar Registro",
+        "submitResident": "Completar Registro"
+      },
+      "errors": {
+        "namesRequired": "Los nombres son obligatorios",
+        "emailRequired": "El correo electrónico es obligatorio",
+        "emailInvalid": "Ingresa un correo electrónico válido",
+        "phoneInvalid": "Número de teléfono inválido",
+        "documentTypeRequired": "El tipo de documento es obligatorio",
+        "documentNumberRequired": "El número de documento es obligatorio",
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordWeak": "Debe contener mayúscula, minúscula y número (mínimo 8 caracteres)",
+        "confirmPasswordRequired": "Confirma tu contraseña",
+        "passwordsMismatch": "Las contraseñas no coinciden",
+        "unitRequired": "Selecciona una unidad"
+      },
+      "documentTypes": {
+        "CC": "Cédula de Ciudadanía",
+        "CE": "Cédula de Extranjería",
+        "NIT": "NIT",
+        "PP": "Pasaporte",
+        "TI": "Tarjeta de Identidad"
+      },
+      "history": {
+        "title": "Historial de Invitaciones",
+        "filterByType": "Tipo",
+        "filterByStatus": "Estado",
+        "filterBySearch": "Buscar por email",
+        "noResults": "No se encontraron invitaciones",
+        "types": {
+          "OWNER_SELF_REGISTER": "Propietario",
+          "RESIDENT_INVITE": "Residente",
+          "OWNER": "Propietario",
+          "RESIDENT": "Residente",
+          "ADMIN": "Administrador"
+        },
+        "statuses": {
+          "PENDING": "Pendiente",
+          "ACCEPTED": "Aceptada",
+          "EXPIRED": "Expirada",
+          "CANCELLED": "Cancelada"
+        }
+      },
+      "create": {
+        "ownerButton": "Generar Enlace de Propietario",
+        "residentButton": "Invitar Residente",
+        "linkCopied": "Enlace copiado al portapapeles",
+        "linkGenerated": "Enlace generado exitosamente",
+        "shareHint": "Comparte este enlace con el propietario/residente"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": [
+      "jasmine"
+    ]
+  },
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/app/app.component.spec.ts",
+    "src/app/infrastructure/adapters/porter/porter.adapter.spec.ts",
+    "src/app/presentation/pages/access-permissions/access-permissions.component.spec.ts",
+    "src/app/presentation/pages/activate/activate-page.component.spec.ts",
+    "src/app/presentation/pages/admin/profile-setup/profile-setup-page.component.spec.ts",
+    "src/app/presentation/pages/admin/property-registration/property-registration-page.component.spec.ts",
+    "src/app/presentation/pages/announcements/announcements.component.spec.ts",
+    "src/app/presentation/pages/authorization/authorization.component.spec.ts",
+    "src/app/presentation/pages/dev/admin-register/admin-register-page.component.spec.ts",
+    "src/app/presentation/pages/login/login-page.component.spec.ts",
+    "src/app/presentation/pages/onboarding/onboarding-page.component.spec.ts",
+    "src/app/presentation/ui/atoms/avatar/avatar.component.spec.ts",
+    "src/app/presentation/ui/atoms/badge/badge.component.spec.ts",
+    "src/app/presentation/ui/atoms/button/button.component.spec.ts",
+    "src/app/presentation/ui/atoms/input/input.component.spec.ts",
+    "src/app/presentation/ui/atoms/progress-bar/progress-bar.component.spec.ts",
+    "src/app/presentation/ui/atoms/select-input/select-input.component.spec.ts",
+    "src/app/presentation/ui/atoms/toggle-switch/toggle-switch.component.spec.ts",
+    "src/app/presentation/ui/molecules/authorization-item/authorization-item.component.spec.ts",
+    "src/app/presentation/ui/molecules/avatar-group/avatar-group.component.spec.ts",
+    "src/app/presentation/ui/molecules/form-field/form-field.component.spec.ts",
+    "src/app/presentation/ui/molecules/list-header/list-header.component.spec.ts",
+    "src/app/presentation/ui/molecules/poll-option/poll-option.component.spec.ts",
+    "src/app/presentation/ui/molecules/timestamp-display/timestamp-display.component.spec.ts",
+    "src/app/presentation/ui/organisms/announcements-header/announcements-header.component.spec.ts",
+    "src/app/presentation/ui/organisms/authorization-form/authorization-form.component.spec.ts",
+    "src/app/presentation/ui/organisms/authorization-list/authorization-list.component.spec.ts",
+    "src/app/presentation/ui/organisms/broadcast-card/broadcast-card.component.spec.ts",
+    "src/app/presentation/ui/organisms/grant-authorization-card/grant-authorization-card.component.spec.ts",
+    "src/app/presentation/ui/organisms/page-header/page-header.component.spec.ts",
+    "src/app/presentation/ui/organisms/poll-card/poll-card.component.spec.ts",
+    "src/app/presentation/ui/organisms/profile-setup-form/profile-setup-form.component.spec.ts",
+    "src/app/services/mock/index.ts"
+  ]
+}

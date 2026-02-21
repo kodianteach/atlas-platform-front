@@ -1,0 +1,14 @@
+<div 
+  class="progress-bar" 
+  [style.height]="height()"
+  role="progressbar"
+  [attr.aria-valuenow]="clampedPercentage()"
+  [attr.aria-valuemin]="0"
+  [attr.aria-valuemax]="100"
+  [attr.aria-label]="'Progress: ' + clampedPercentage() + '%'">
+  <div 
+    class="progress-bar__fill"
+    [style.width.%]="clampedPercentage()"
+    [style.background-color]="color()">
+  </div>
+</div>

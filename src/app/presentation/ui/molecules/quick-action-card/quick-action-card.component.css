@@ -1,0 +1,54 @@
+.quick-action-card {
+  background: white;
+  border-radius: 1.5rem;
+  /* Larger radius */
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  height: 100%;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.quick-action-card:active {
+  transform: translateY(-2px);
+}
+
+.icon-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  /* Align icon to start, no auto margin */
+}
+
+.icon-container i {
+  font-size: 1.5rem;
+  /* Color will be handled by inline style or default inheritance if needed */
+}
+
+.card-title {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.25rem;
+  line-height: 1.2;
+}
+
+.card-subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  margin: 0;
+  font-weight: 500;
+}

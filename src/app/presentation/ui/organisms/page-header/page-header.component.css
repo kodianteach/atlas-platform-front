@@ -1,0 +1,47 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  min-height: 64px;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  min-width: 48px;
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 767px) {
+  .page-header {
+    padding: 0.75rem;
+    min-height: 56px;
+  }
+
+  .header-title {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .page-header {
+    padding: 1.25rem 2rem;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+  }
+}

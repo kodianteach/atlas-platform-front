@@ -1,0 +1,66 @@
+<app-auth-template
+  [title]="pageState() === 'token-valid' ? 'Activar Cuenta' : pageState() === 'activation-success' ? '¡Cuenta Activada!' : 'Activación'"
+  [subtitle]="pageState() === 'token-valid' ? 'Establece tu contraseña definitiva' : ''">
+
+  <!-- Loading State -->
+  @if (pageState() === 'loading') {
+    <div class="state-message">
+      <i class="bi bi-arrow-repeat spinning" style="font-size: 2rem; color: var(--color-primary);"></i>
+      <p class="state-text">Validando enlace de activación...</p>
+    </div>
+  }
+
+  <!-- No Token State -->
+  @if (pageState() === 'no-token') {
+    <div class="state-message">
+      <i class="bi bi-exclamation-triangle" style="font-size: 2rem; color: #f59e0b;"></i>
+      <p class="state-text">No se proporcionó un token de activación.</p>
+      <p class="state-hint">Accede al enlace enviado a tu correo electrónico.</p>
+    </div>
+  }
+
+  <!-- Token Invalid State -->
+  @if (pageState() === 'token-invalid' || pageState() === 'token-expired') {
+    <div class="state-message">
+      <i class="bi bi-x-circle" style="font-size: 2rem; color: #dc2626;"></i>
+      <p class="state-text">El enlace de activación es inválido o ha expirado.</p>
+      <p class="state-hint">Contacta al equipo de soporte para solicitar un nuevo enlace.</p>
+    </div>
+  }
+
+  <!-- Token Consumed State -->
+  @if (pageState() === 'token-consumed') {
+    <div class="state-message">
+      <i class="bi bi-check-circle" style="font-size: 2rem; color: #2563eb;"></i>
+      <p class="state-text">Este enlace de activación ya fue utilizado.</p>
+      <p class="state-hint">Si ya activaste tu cuenta, inicia sesión normalmente.</p>
+      <button class="btn-go-login" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+    </div>
+  }
+
+  <!-- Activation Form -->
+  @if (pageState() === 'token-valid') {
+    <app-activation-form
+      [isSubmitting]="isSubmitting()"
+      [generalError]="generalError()"
+      (submitForm)="handleActivation($event)" />
+  }
+
+  <!-- Activation Success -->
+  @if (pageState() === 'activation-success') {
+    <div class="state-message success">
+      <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: #16a34a;"></i>
+      <p class="state-text success-text">¡Tu cuenta ha sido activada exitosamente!</p>
+      <p class="state-hint">Ya puedes iniciar sesión con tu nueva contraseña.</p>
+      @if (!showPwaModal()) {
+        <button class="btn-go-login" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+      }
+    </div>
+  }
+
+</app-auth-template>
+
+<!-- PWA Install Modal -->
+@if (showPwaModal()) {
+  <app-pwa-install-modal (dismiss)="dismissPwaModal()" />
+}

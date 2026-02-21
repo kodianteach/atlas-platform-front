@@ -1,0 +1,41 @@
+<article 
+  class="broadcast-card" 
+  [style.backgroundColor]="broadcast().backgroundColor"
+  role="article"
+  [attr.aria-label]="'Comunicado: ' + broadcast().title">
+  
+  <!-- Header section with badge and timestamp -->
+  <div class="broadcast-card__header">
+    @if (broadcast().isUrgent) {
+      <app-badge 
+        text="Urgente" 
+        variant="urgent"
+        aria-label="Anuncio urgente" />
+    }
+    <app-timestamp-display 
+      [timestamp]="broadcast().createdAt"
+      class="broadcast-card__timestamp" />
+  </div>
+
+  <!-- Content section -->
+  <div class="broadcast-card__content">
+    <h3 class="broadcast-card__title">{{ broadcast().title }}</h3>
+    <p class="broadcast-card__preview">{{ broadcast().previewText }}</p>
+  </div>
+
+  <!-- Footer section with avatars and read more button -->
+  <div class="broadcast-card__footer">
+    <app-avatar-group 
+      [users]="broadcast().relatedUsers"
+      [maxVisible]="4"
+      class="broadcast-card__avatars" />
+    
+    <button 
+      class="broadcast-card__read-more"
+      (click)="onReadMoreClick()"
+      type="button"
+      aria-label="Leer más sobre este anuncio">
+      Leer Más
+    </button>
+  </div>
+</article>

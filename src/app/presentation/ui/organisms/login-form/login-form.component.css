@@ -1,0 +1,161 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.alert {
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--border-radius);
+}
+
+/* Form Fields Spacing */
+app-form-field {
+  margin-bottom: var(--spacing-md);
+}
+
+.forgot-password-link {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  transition: color var(--transition-speed);
+  font-weight: 500;
+}
+
+.forgot-password-link:hover {
+  color: var(--color-primary);
+}
+
+/* Submit Button Customization */
+app-button {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+}
+
+/* Deep selector to style the inner button of app-button component */
+app-button ::ng-deep button {
+  width: 100%;
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  border-radius: 50rem !important;
+  /* Pill shape */
+  padding: 0.875rem !important;
+  font-size: var(--font-size-md) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 10px 20px rgba(255, 140, 97, 0.3);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+app-button ::ng-deep button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(255, 140, 97, 0.4);
+}
+
+app-button ::ng-deep button:disabled {
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Add arrow icon to button if needed via CSS or leave as text */
+app-button ::ng-deep button::after {
+  content: '→';
+  font-family: monospace;
+  /* Simple arrow */
+  margin-left: 0.5rem;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.divider-section {
+  position: relative;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.divider-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #f0f0f0;
+}
+
+.divider-text {
+  position: relative;
+  background-color: white;
+  padding: 0 var(--spacing-lg);
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+}
+
+.social-login-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.social-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #f0f0f0;
+  background-color: white;
+  transition: all var(--transition-speed);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.social-btn:hover {
+  background-color: white;
+  border-color: var(--color-primary-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn svg {
+  color: var(--color-text);
+  width: 24px;
+  height: 24px;
+}
+
+.register-section {
+  text-align: center;
+  margin-top: var(--spacing-sm);
+}
+
+.register-text {
+  color: var(--color-text-light);
+  font-size: var(--font-size-md);
+  margin-right: var(--spacing-xs);
+}
+
+.register-link {
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color var(--transition-speed);
+}
+
+.register-link:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .social-btn {
+    width: 45px;
+    height: 45px;
+  }
+}

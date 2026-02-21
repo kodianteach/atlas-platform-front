@@ -1,0 +1,159 @@
+<div class="home-page">
+  <!-- Header -->
+  <header class="home-header">
+    <div class="user-greeting">
+      <div class="avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="greeting-text">
+        <p class="greeting">{{ greeting() }},</p>
+        <h1 class="user-name">{{ userName() }}</h1>
+      </div>
+    </div>
+    <button class="notification-btn" aria-label="Notificaciones" (click)="onNotificationClick()">
+      <i class="bi bi-bell"></i>
+      @if (unreadCount() > 0) {
+        <span class="notification-badge">{{ unreadCount() }}</span>
+      }
+    </button>
+  </header>
+
+  @if (isAdmin()) {
+    <!-- Admin Dashboard -->
+    <div class="admin-card">
+      <div class="admin-card__content">
+        <p class="admin-card__label">PANEL ADMINISTRATIVO</p>
+        <h2 class="admin-card__title">Administrador</h2>
+        <p class="admin-card__org">Tu organización</p>
+        <span class="admin-card__badge">
+          <i class="bi bi-shield-check"></i>
+          Admin Atlas
+        </span>
+      </div>
+      <div class="admin-card__icon">
+        <i class="bi bi-gear"></i>
+      </div>
+    </div>
+
+    <section class="quick-actions">
+      <h2 class="section-title">Gestión</h2>
+      <div class="actions-grid">
+        <app-quick-action-card
+          title="Crear Unidades"
+          subtitle="Generación masiva"
+          icon="bi-buildings"
+          backgroundColor="#E3F2FD"
+          iconColor="#2196F3"
+          (cardClick)="onManageUnits()" />
+
+        <app-quick-action-card
+          title="Configuración"
+          subtitle="Ajustes de organización"
+          icon="bi-gear"
+          backgroundColor="#F3E5F5"
+          iconColor="#9C27B0"
+          (cardClick)="onOrganizationConfig()" />
+
+        <app-quick-action-card
+          title="Tablón de Anuncios"
+          subtitle="Comunicados"
+          icon="bi-megaphone"
+          backgroundColor="#FFF3E0"
+          iconColor="#FF9800"
+          (cardClick)="onNoticeBoard()" />
+
+        <app-quick-action-card
+          title="Vehículos"
+          subtitle="Gestionar vehículos"
+          icon="bi-car-front"
+          backgroundColor="#E8F5E9"
+          iconColor="#4CAF50"
+          (cardClick)="onRegisterVehicle()" />
+      </div>
+    </section>
+
+    <app-admin-bottom-nav [activeTab]="'home'" />
+  } @else {
+    <!-- Resident View -->
+    <div class="residence-card">
+      <div class="residence-content">
+        <p class="residence-label">TU RESIDENCIA</p>
+        <h2 class="residence-unit">Unidad 402</h2>
+        <p class="residence-name">Condominios Valle del Sol</p>
+        <span class="status-badge">
+          <i class="bi bi-circle-fill"></i>
+          Residente Activo
+        </span>
+      </div>
+      <div class="residence-icon">
+        <i class="bi bi-building"></i>
+      </div>
+    </div>
+
+    <section class="quick-actions">
+      <h2 class="section-title">Acciones Rápidas</h2>
+      <div class="actions-grid">
+        <app-quick-action-card
+          title="Registrar Visita"
+          subtitle="Código de acceso"
+          icon="bi-person-plus"
+          backgroundColor="#E3F2FD"
+          iconColor="#2196F3"
+          (cardClick)="onRegisterVisit()" />
+
+        <app-quick-action-card
+          title="Tablón de Anuncios"
+          subtitle="3 Nuevas actualizaciones"
+          icon="bi-megaphone"
+          backgroundColor="#F3E5F5"
+          iconColor="#9C27B0"
+          (cardClick)="onNoticeBoard()" />
+
+        <app-quick-action-card
+          title="Registrar Vehículos"
+          subtitle="Gestionar vehículos"
+          icon="bi-car-front"
+          backgroundColor="#E8F5E9"
+          iconColor="#4CAF50"
+          (cardClick)="onRegisterVehicle()" />
+
+        <app-quick-action-card
+          title="Mantenimiento"
+          subtitle="Reportar problemas"
+          icon="bi-wrench"
+          backgroundColor="#FFF3E0"
+          iconColor="#FF9800"
+          (cardClick)="onMaintenance()" />
+      </div>
+    </section>
+
+    @if (isOwner()) {
+    <section class="quick-actions">
+      <h2 class="section-title">Gestión de Propietario</h2>
+      <div class="actions-grid">
+        <app-quick-action-card
+          title="Invitar Residente"
+          subtitle="Generar enlace de invitación"
+          icon="bi-person-plus-fill"
+          backgroundColor="#E8EAF6"
+          iconColor="#3F51B5"
+          (cardClick)="onInviteResident()" />
+      </div>
+    </section>
+    }
+
+    <app-bottom-nav (centerAction)="onRegisterVisit()" />
+  }
+
+  <!-- Authorization Form Overlay -->
+  <app-authorization-form
+    [visible]="showFormOverlay()"
+    (formSubmit)="onFormSubmit($event)"
+    (formCancel)="onFormCancel()" />
+
+  <!-- Notification Tray -->
+  <app-notification-tray
+    [visible]="showNotificationTray()"
+    (close)="onNotificationTrayClose()"
+    (notificationSelected)="onNotificationSelected($event)" />
+</div>

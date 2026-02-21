@@ -1,0 +1,15 @@
+<select
+  [id]="id()"
+  [value]="value()"
+  [disabled]="disabled()"
+  [class.error]="error()"
+  (change)="onValueChange($any($event.target).value)"
+  (blur)="onBlur()"
+  (focus)="onFocus()"
+  class="select-input"
+>
+  <option value="" disabled selected>{{ placeholder() }}</option>
+  @for (option of options(); track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+  }
+</select>

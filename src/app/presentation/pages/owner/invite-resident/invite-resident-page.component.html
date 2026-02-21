@@ -1,0 +1,149 @@
+<app-page-header
+  title="Invitar Residente"
+  [showBackButton]="true"
+  (backClick)="goBack()" />
+
+<div class="invite-page">
+  <section class="invite-page__content">
+    <!-- Loading State -->
+    @if (state() === 'loading') {
+      <div class="invite-page__card invite-page__card--center">
+        <div class="invite-page__spinner"></div>
+        <p class="invite-page__loading-text">Cargando...</p>
+      </div>
+    }
+
+    <!-- Idle State -->
+    @if (state() === 'idle') {
+      <div class="invite-page__card">
+        <div class="invite-page__card-icon">
+          <i class="bi bi-person-plus-fill"></i>
+        </div>
+        <h2 class="invite-page__card-title">Invitar Residente</h2>
+        <p class="invite-page__card-desc">
+          Genera un enlace único de 24 horas para que un residente se registre y se una a tu unidad.
+        </p>
+        <ul class="invite-page__feature-list">
+          <li><i class="bi bi-check2-circle"></i> El enlace es de un solo uso</li>
+          <li><i class="bi bi-check2-circle"></i> Expira en 24 horas</li>
+          <li><i class="bi bi-check2-circle"></i> Se vincula automáticamente a tu unidad</li>
+          @if (permissionManagementEnabled()) {
+            <li><i class="bi bi-shield-check"></i> Podrás elegir los permisos del residente</li>
+          }
+        </ul>
+        <button class="invite-page__btn invite-page__btn--primary" (click)="onGenerateClick()" type="button">
+          <i class="bi bi-link-45deg"></i>
+          Generar enlace de invitación
+        </button>
+      </div>
+    }
+
+    <!-- Select Permissions State (Scenario 12) -->
+    @if (state() === 'select-permissions') {
+      <div class="invite-page__card">
+        <div class="invite-page__card-icon">
+          <i class="bi bi-shield-lock"></i>
+        </div>
+        <h2 class="invite-page__card-title">Permisos del Residente</h2>
+        <p class="invite-page__card-desc">
+          Selecciona los permisos que tendrá el residente en tu unidad.
+        </p>
+
+        <div class="invite-page__permissions">
+          @for (perm of permissions(); track perm.key) {
+            <label class="invite-page__permission-item" [class.invite-page__permission-item--checked]="perm.checked">
+              <div class="invite-page__permission-check">
+                <input
+                  type="checkbox"
+                  [checked]="perm.checked"
+                  (change)="togglePermission(perm.key)"
+                  class="invite-page__permission-input" />
+                <span class="invite-page__permission-checkbox">
+                  @if (perm.checked) {
+                    <i class="bi bi-check-lg"></i>
+                  }
+                </span>
+              </div>
+              <div class="invite-page__permission-info">
+                <div class="invite-page__permission-label">
+                  <i class="bi" [class]="perm.icon"></i>
+                  {{ perm.label }}
+                </div>
+                <p class="invite-page__permission-desc">{{ perm.description }}</p>
+              </div>
+            </label>
+          }
+        </div>
+
+        <div class="invite-page__actions">
+          <button class="invite-page__btn invite-page__btn--primary" (click)="generateWithPermissions()" type="button">
+            <i class="bi bi-link-45deg"></i>
+            Generar con permisos seleccionados
+          </button>
+          <button class="invite-page__btn invite-page__btn--secondary" (click)="backToIdle()" type="button">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Generating State -->
+    @if (state() === 'generating') {
+      <div class="invite-page__card invite-page__card--center">
+        <div class="invite-page__spinner"></div>
+        <p class="invite-page__loading-text">Generando enlace de invitación...</p>
+      </div>
+    }
+
+    <!-- Link Ready State -->
+    @if (state() === 'link-ready') {
+      <div class="invite-page__card invite-page__card--success">
+        <div class="invite-page__card-icon invite-page__card-icon--success">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <h2 class="invite-page__card-title">¡Enlace generado!</h2>
+        <p class="invite-page__card-desc">Comparte este enlace con el residente que deseas invitar a tu unidad.</p>
+
+        <div class="invite-page__url-box">
+          <span class="invite-page__url-text">{{ invitationUrl() }}</span>
+        </div>
+
+        <div class="invite-page__actions">
+          <button class="invite-page__btn invite-page__btn--primary" (click)="copyLink()" type="button">
+            <i class="bi" [class.bi-clipboard]="!linkCopied()" [class.bi-clipboard-check]="linkCopied()"></i>
+            @if (linkCopied()) {
+              Enlace copiado
+            } @else {
+              Copiar enlace
+            }
+          </button>
+          <button class="invite-page__btn invite-page__btn--whatsapp" (click)="shareViaWhatsApp()" type="button">
+            <i class="bi bi-whatsapp"></i>
+            Compartir por WhatsApp
+          </button>
+          <button class="invite-page__btn invite-page__btn--secondary" (click)="generateAnother()" type="button">
+            <i class="bi bi-plus-lg"></i>
+            Generar otro enlace
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (state() === 'error') {
+      <div class="invite-page__card invite-page__card--error">
+        <div class="invite-page__card-icon invite-page__card-icon--error">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <h2 class="invite-page__card-title">Error al generar invitación</h2>
+        <p class="invite-page__card-desc">{{ errorMessage() }}</p>
+        <button class="invite-page__btn invite-page__btn--secondary" (click)="dismissError()" type="button">
+          Reintentar
+        </button>
+      </div>
+    }
+  </section>
+</div>
+
+<app-bottom-nav />

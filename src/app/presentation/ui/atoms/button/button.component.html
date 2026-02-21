@@ -1,0 +1,17 @@
+<button [type]="type()" [disabled]="disabled() || loading()" [attr.aria-disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading()" [attr.tabindex]="disabled() || loading() ? -1 : 0" (click)="handleClick()"
+  (keydown)="handleKeyDown($event)" class="button" [class.button-secondary]="variant() === 'secondary'"
+  [class.button-white]="variant() === 'white'" [class.button-icon-only]="icon() && !label()">
+  @if (icon() && !loading()) {
+    <i [class]="icon()" class="button-icon" aria-hidden="true"></i>
+  }
+  @if (loading()) {
+    <i class="bi bi-arrow-repeat button-icon spinning" aria-hidden="true"></i>
+  }
+  @if (!label()) {
+    <ng-content />
+  }
+  @if (label()) {
+    <span>{{ label() }}</span>
+  }
+</button>

@@ -1,0 +1,52 @@
+<div class="porter-form">
+  <div class="porter-form__header">
+    <h3 class="porter-form__title">Nuevo Portero</h3>
+    <button class="porter-form__close" (click)="onCancel()" type="button">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="porter-form__body">
+    <div class="porter-form__field">
+      <label for="displayName" class="porter-form__label">Nombre descriptivo</label>
+      <input
+        id="displayName"
+        type="text"
+        class="porter-form__input"
+        [(ngModel)]="displayName"
+        name="displayName"
+        placeholder="Ej: Carlos Portería Norte"
+        maxlength="100"
+        required />
+    </div>
+
+    <div class="porter-form__field">
+      <label for="porterType" class="porter-form__label">Tipo de portero</label>
+      <select
+        id="porterType"
+        class="porter-form__select"
+        [(ngModel)]="porterType"
+        name="porterType"
+        required>
+        <option value="" disabled>Seleccione el tipo</option>
+        <option value="PORTERO_GENERAL">Portero General</option>
+        <option value="PORTERO_DELIVERY">Portero Delivery</option>
+      </select>
+    </div>
+
+    <div class="porter-form__actions">
+      <button
+        type="button"
+        class="porter-form__btn porter-form__btn--cancel"
+        (click)="onCancel()">
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="porter-form__btn porter-form__btn--submit"
+        [disabled]="!isValid">
+        Crear Portero
+      </button>
+    </div>
+  </form>
+</div>

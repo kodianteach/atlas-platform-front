@@ -1,0 +1,27 @@
+<div class="property-registration-page">
+  <div class="page-header">
+    <button class="back-button" (click)="handleBack()" aria-label="Volver">
+      <span class="back-icon">←</span>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="icon-container">
+      <i class="bi bi-building building-icon"></i>
+    </div>
+
+    <h1 class="page-title">Nuevo Condominio</h1>
+    <p class="page-subtitle">Registra una nueva propiedad para administrar</p>
+
+    @if (generalError()) {
+      <div class="general-error" role="alert">
+        {{ generalError() }}
+      </div>
+    }
+
+    <app-property-registration-form
+      [isSubmitting]="isSubmitting()"
+      (formSubmit)="handleSubmit($event)"
+      (formCancel)="handleBack()" />
+  </div>
+</div>

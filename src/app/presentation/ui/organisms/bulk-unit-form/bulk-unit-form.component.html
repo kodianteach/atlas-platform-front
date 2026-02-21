@@ -1,0 +1,152 @@
+<form class="bulk-unit-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Code Prefix -->
+  <div class="bulk-unit-form__group">
+    <label for="codePrefix" class="bulk-unit-form__label">
+      <i class="bi bi-tag"></i>
+      Prefijo del código
+    </label>
+    <input
+      id="codePrefix"
+      formControlName="codePrefix"
+      type="text"
+      class="bulk-unit-form__input"
+      placeholder="Ej: APTO, CASA, LOCAL"
+      [class.bulk-unit-form__input--error]="form.get('codePrefix')?.touched && form.get('codePrefix')?.invalid" />
+    @if (getErrorMessage('codePrefix')) {
+      <span class="bulk-unit-form__field-error">{{ getErrorMessage('codePrefix') }}</span>
+    }
+  </div>
+
+  <!-- Range Start / End -->
+  <div class="bulk-unit-form__row">
+    <div class="bulk-unit-form__group">
+      <label for="rangeStart" class="bulk-unit-form__label">
+        <i class="bi bi-arrow-right-circle"></i>
+        Desde
+      </label>
+      <input
+        id="rangeStart"
+        formControlName="rangeStart"
+        type="number"
+        class="bulk-unit-form__input"
+        min="1"
+        max="9999"
+        [class.bulk-unit-form__input--error]="form.get('rangeStart')?.touched && form.get('rangeStart')?.invalid" />
+      @if (getErrorMessage('rangeStart')) {
+        <span class="bulk-unit-form__field-error">{{ getErrorMessage('rangeStart') }}</span>
+      }
+    </div>
+
+    <div class="bulk-unit-form__group">
+      <label for="rangeEnd" class="bulk-unit-form__label">
+        <i class="bi bi-arrow-left-circle"></i>
+        Hasta
+      </label>
+      <input
+        id="rangeEnd"
+        formControlName="rangeEnd"
+        type="number"
+        class="bulk-unit-form__input"
+        min="1"
+        max="9999"
+        [class.bulk-unit-form__input--error]="form.get('rangeEnd')?.touched && form.get('rangeEnd')?.invalid" />
+      @if (getErrorMessage('rangeEnd')) {
+        <span class="bulk-unit-form__field-error">{{ getErrorMessage('rangeEnd') }}</span>
+      }
+    </div>
+  </div>
+
+  <!-- Range Error -->
+  @if (rangeError) {
+    <div class="bulk-unit-form__range-error" role="alert">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ rangeError }}
+    </div>
+  }
+
+  <!-- Unit Count Badge -->
+  @if (unitCount > 0 && !rangeError) {
+    <div class="bulk-unit-form__count-badge">
+      <i class="bi bi-buildings"></i>
+      Se crearán <strong>{{ unitCount }}</strong> unidades
+    </div>
+  }
+
+  <!-- Code Preview -->
+  @if (previewCodes().length > 0) {
+    <div class="bulk-unit-form__code-preview">
+      <span class="bulk-unit-form__preview-label">Vista previa:</span>
+      <div class="bulk-unit-form__preview-tags">
+        @for (code of previewCodes(); track code) {
+          <span class="bulk-unit-form__preview-tag" [class.bulk-unit-form__preview-tag--ellipsis]="code === '...'">{{ code }}</span>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Unit Type -->
+  <div class="bulk-unit-form__group">
+    <label for="unitType" class="bulk-unit-form__label">
+      <i class="bi bi-house-door"></i>
+      Tipo de unidad
+    </label>
+    <select id="unitType" formControlName="unitType" class="bulk-unit-form__input">
+      @for (type of unitTypes; track type) {
+        <option [value]="type">{{ type === 'APARTMENT' ? 'Apartamento' : 'Casa' }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Vehicles Toggle -->
+  <div class="bulk-unit-form__group bulk-unit-form__toggle-group">
+    <label class="bulk-unit-form__toggle-label">
+      <input type="checkbox" formControlName="vehiclesEnabled" class="bulk-unit-form__toggle-input" />
+      <span class="bulk-unit-form__toggle-switch"></span>
+      <span class="bulk-unit-form__toggle-text">
+        <i class="bi bi-car-front"></i>
+        Habilitar vehículos
+      </span>
+    </label>
+  </div>
+
+  <!-- Vehicle Limit -->
+  @if (vehiclesEnabled()) {
+    <div class="bulk-unit-form__group bulk-unit-form__vehicle-limit">
+      <label for="vehicleLimit" class="bulk-unit-form__label">
+        <i class="bi bi-speedometer2"></i>
+        Límite de vehículos por unidad
+      </label>
+      <input
+        id="vehicleLimit"
+        formControlName="vehicleLimit"
+        type="number"
+        class="bulk-unit-form__input"
+        min="0"
+        max="10"
+        [class.bulk-unit-form__input--error]="form.get('vehicleLimit')?.touched && form.get('vehicleLimit')?.invalid" />
+      @if (getErrorMessage('vehicleLimit')) {
+        <span class="bulk-unit-form__field-error">{{ getErrorMessage('vehicleLimit') }}</span>
+      }
+    </div>
+  }
+
+  <!-- Actions -->
+  <div class="bulk-unit-form__actions">
+    <button type="button" class="bulk-unit-form__btn-cancel" (click)="onCancel()" [disabled]="isSubmitting()">
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      class="bulk-unit-form__btn-submit"
+      [disabled]="isSubmitting() || exceedsLimit"
+      [class.loading]="isSubmitting()">
+      @if (isSubmitting()) {
+        <span class="bulk-unit-form__spinner"></span>
+        Generando...
+      } @else {
+        <i class="bi bi-plus-circle"></i>
+        Generar unidades
+      }
+    </button>
+  </div>
+</form>

@@ -1,0 +1,112 @@
+<div class="authorization-page">
+  <!-- Header -->
+  <header class="page-header">
+    <h1>Autorizaciones</h1>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <i class="bi bi-search search-icon"></i>
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder="Buscar por nombre o documento..."
+      [value]="searchQuery()"
+      (input)="onSearchChange($any($event.target).value)">
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button 
+      class="tab-button"
+      [class.active]="activeFilter() === 'all'"
+      (click)="setFilter('all')">
+      Todas
+    </button>
+    <button 
+      class="tab-button"
+      [class.active]="activeFilter() === 'active'"
+      (click)="setFilter('active')">
+      Activas
+    </button>
+    <button 
+      class="tab-button"
+      [class.active]="activeFilter() === 'expired'"
+      (click)="setFilter('expired')">
+      Vencidas
+    </button>
+  </div>
+
+  <!-- Main content area -->
+  <main class="page-content">
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando autorizaciones...</p>
+      </div>
+    }
+
+    @if (!loading() && filteredAuthorizations().length > 0 && !showForm()) {
+      <div class="authorization-list">
+        @for (auth of filteredAuthorizations(); track auth.id) {
+          <div class="auth-card" [class.auth-inactive]="!isValid(auth)" (click)="onViewDetail(auth)">
+            <div class="auth-card-header">
+              <div class="auth-person-info">
+                <span class="person-name">{{ auth.personName }}</span>
+                <span class="person-document">{{ auth.personDocument }}</span>
+              </div>
+              <span class="status-badge" [class]="'status-' + auth.status.toLowerCase()">
+                {{ getStatusLabel(auth.status) }}
+              </span>
+            </div>
+            <div class="auth-card-body">
+              <div class="auth-detail">
+                <i class="bi bi-tag"></i>
+                <span>{{ getServiceTypeLabel(auth.serviceType) }}</span>
+              </div>
+              <div class="auth-detail">
+                <i class="bi bi-clock"></i>
+                <span>{{ formatDate(auth.validFrom) }} - {{ formatDate(auth.validTo) }}</span>
+              </div>
+              @if (auth.vehiclePlate) {
+                <div class="auth-detail">
+                  <i class="bi bi-car-front"></i>
+                  <span>{{ auth.vehiclePlate }}</span>
+                </div>
+              }
+            </div>
+            <div class="auth-card-footer">
+              <i class="bi bi-chevron-right"></i>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!loading() && filteredAuthorizations().length === 0 && !showForm()) {
+      <div class="welcome-message">
+        <i class="bi bi-shield-check" style="font-size: 4rem; color: #6c757d;"></i>
+        <h2>No hay autorizaciones</h2>
+        <p>Presiona el botón + para crear una nueva autorización de ingreso</p>
+      </div>
+    }
+  </main>
+
+  <!-- Authorization Form Organism -->
+  <app-authorization-form
+    [visible]="showForm()"
+    (formSubmit)="onFormSubmit($event)"
+    (formCancel)="onFormCancel()" />
+
+  <!-- Toast Messages -->
+  @if (showSuccessToast()) {
+    <div class="toast toast-success">{{ toastMessage() }}</div>
+  }
+  @if (showErrorToast()) {
+    <div class="toast toast-error">{{ toastMessage() }}</div>
+  }
+
+  @if (!showForm()) {
+    <app-bottom-nav (centerAction)="onPlusButtonClick()" />
+  }
+</div>
