@@ -8,6 +8,7 @@ import { EnrollmentUrlComponent } from '../../../ui/organisms/enrollment-url/enr
 import { ListPortersUseCase } from '@domain/use-cases/porter/list-porters.use-case';
 import { CreatePorterUseCase } from '@domain/use-cases/porter/create-porter.use-case';
 import { RegeneratePorterUrlUseCase } from '@domain/use-cases/porter/regenerate-porter-url.use-case';
+import { TogglePorterStatusUseCase } from '@domain/use-cases/porter/toggle-porter-status.use-case';
 import { Porter, CreatePorterRequest } from '@domain/models/porter/porter.model';
 
 @Component({
@@ -28,6 +29,7 @@ export class PorterManagementPageComponent implements OnInit {
   private readonly listPortersUseCase = inject(ListPortersUseCase);
   private readonly createPorterUseCase = inject(CreatePorterUseCase);
   private readonly regenerateUrlUseCase = inject(RegeneratePorterUrlUseCase);
+  private readonly toggleStatusUseCase = inject(TogglePorterStatusUseCase);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly porters = signal<Porter[]>([]);
@@ -84,6 +86,22 @@ export class PorterManagementPageComponent implements OnInit {
       this.loading.set(false);
       if (result.success) {
         this.enrollmentUrl.set(result.data.enrollmentUrl);
+      } else {
+        this.errorMessage.set(result.error.message);
+      }
+    });
+  }
+
+  onToggleStatus(porterId: number): void {
+    this.loading.set(true);
+    this.errorMessage.set(null);
+
+    this.toggleStatusUseCase.execute(porterId).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(result => {
+      this.loading.set(false);
+      if (result.success) {
+        this.loadPorters();
       } else {
         this.errorMessage.set(result.error.message);
       }

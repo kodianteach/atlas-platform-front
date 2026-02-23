@@ -143,6 +143,36 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
       }
 
       <app-bottom-nav />
+
+      <!-- Revoke Confirmation Modal -->
+      @if (showRevokeModal()) {
+        <div class="modal-backdrop" (click)="onCancelRevoke()">
+          <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h2 class="modal-title">Revocar Autorización</h2>
+            <p class="modal-message">
+              ¿Está seguro de revocar esta autorización?<br>
+              <strong>Esta acción no se puede deshacer.</strong>
+            </p>
+            @if (authorization()) {
+              <div class="modal-detail">
+                <span class="modal-person">{{ authorization()!.personName }}</span>
+                <span class="modal-doc">{{ authorization()!.personDocument }}</span>
+              </div>
+            }
+            <div class="modal-actions">
+              <button class="modal-btn modal-btn-cancel" (click)="onCancelRevoke()">
+                Cancelar
+              </button>
+              <button class="modal-btn modal-btn-confirm" (click)="onConfirmRevoke()">
+                <i class="bi bi-x-circle"></i> Sí, revocar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -311,6 +341,133 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
     }
 
     .retry-btn:hover { background: #e9ecef; }
+
+    /* Revoke Confirmation Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.25s ease;
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff3cd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .modal-icon i {
+      font-size: 32px;
+      color: #e67e22;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 8px;
+    }
+
+    .modal-message {
+      font-size: 0.9375rem;
+      color: #64748b;
+      margin: 0 0 16px;
+      line-height: 1.5;
+    }
+
+    .modal-message strong {
+      color: #dc3545;
+    }
+
+    .modal-detail {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .modal-person {
+      font-weight: 600;
+      color: #1a1a2e;
+      font-size: 0.9375rem;
+    }
+
+    .modal-doc {
+      font-size: 0.8125rem;
+      color: #94a3b8;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn-cancel {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .modal-btn-cancel:hover {
+      background: #e2e8f0;
+    }
+
+    .modal-btn-confirm {
+      background: #dc3545;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .modal-btn-confirm:hover {
+      background: #c82333;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -325,6 +482,7 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   readonly loading = signal(true);
   readonly error = signal<string>('');
   readonly revoking = signal(false);
+  readonly showRevokeModal = signal(false);
 
   private authorizationId = 0;
   private destroy$ = new Subject<void>();
@@ -380,10 +538,11 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   }
 
   onRevoke(): void {
-    if (!confirm('¿Está seguro de revocar esta autorización? Esta acción no se puede deshacer.')) {
-      return;
-    }
+    this.showRevokeModal.set(true);
+  }
 
+  onConfirmRevoke(): void {
+    this.showRevokeModal.set(false);
     this.revoking.set(true);
     this.revokeUseCase.execute(this.authorizationId)
       .pipe(takeUntil(this.destroy$))
@@ -393,6 +552,10 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
           this.authorization.set(result.data);
         }
       });
+  }
+
+  onCancelRevoke(): void {
+    this.showRevokeModal.set(false);
   }
 
   goBack(): void {

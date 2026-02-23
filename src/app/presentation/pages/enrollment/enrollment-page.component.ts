@@ -16,6 +16,7 @@ import { EnrollmentGateway } from '@domain/gateways/enrollment/enrollment.gatewa
 import { EnrollmentTokenValidation, EnrollmentResult } from '@domain/models/enrollment/enrollment.model';
 import { CryptoStorageService, StoredKeyMetadata } from '@infrastructure/services/crypto-storage.service';
 import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 type PageState =
   | 'loading'
@@ -43,12 +44,16 @@ export class EnrollmentPageComponent implements OnInit {
   private readonly enrollmentGateway = inject(EnrollmentGateway);
   private readonly cryptoStorage = inject(CryptoStorageService);
   private readonly pwaService = inject(PwaUpdateService);
+  private readonly authService = inject(AuthenticationService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly pageState = signal<PageState>('loading');
   readonly isSubmitting = signal(false);
   readonly generalError = signal<string | undefined>(undefined);
   readonly showPwaModal = signal(false);
+
+  /** Track which field was just copied for visual feedback */
+  readonly copiedField = signal<string | null>(null);
 
   /** Token validation result — porter info for confirmation step */
   readonly tokenInfo = signal<EnrollmentTokenValidation | null>(null);
@@ -65,7 +70,10 @@ export class EnrollmentPageComponent implements OnInit {
   private token = '';
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.paramMap.get('token') || '';
+    // Support both /enroll/:token (path param) and /porter-enroll?token=xxx (query param)
+    this.token = this.route.snapshot.paramMap.get('token')
+      || this.route.snapshot.queryParamMap.get('token')
+      || '';
 
     if (!this.token) {
       this.pageState.set('no-token');
@@ -119,6 +127,33 @@ export class EnrollmentPageComponent implements OnInit {
 
   goToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  /** Navigate to doorman entry control after successful enrollment */
+  goToDoorman(): void {
+    const route = this.enrollmentResult()?.defaultRoute || '/doorman/entry-control';
+    this.router.navigate([route]);
+  }
+
+  /** Copy text to clipboard with visual feedback */
+  copyToClipboard(text: string, field: string): void {
+    this.fallbackCopy(text);
+    this.copiedField.set(field);
+    setTimeout(() => this.copiedField.set(null), 2000);
+  }
+
+  private fallbackCopy(text: string): void {
+    // Use input element for maximum compatibility (works on HTTP too)
+    const input = document.createElement('input');
+    input.setAttribute('value', text);
+    input.style.position = 'fixed';
+    input.style.left = '-9999px';
+    input.style.opacity = '0';
+    document.body.appendChild(input);
+    input.select();
+    input.setSelectionRange(0, text.length);
+    document.execCommand('copy'); // eslint-disable-line
+    input.remove();
   }
 
   // ─── Private ───────────────────────────────────────────────
@@ -176,6 +211,32 @@ export class EnrollmentPageComponent implements OnInit {
       await this.cryptoStorage.storeVerificationKey(data.verificationKeyJwk, metadata);
     } catch {
       console.warn('Could not store verification key in IndexedDB — offline verification may not work');
+    }
+
+    // Store JWT for automatic session if provided
+    if (data.accessToken) {
+      localStorage.setItem('auth_token', JSON.stringify(data.accessToken));
+
+      // Decode JWT and store user info
+      try {
+        const parts = data.accessToken.split('.');
+        if (parts.length === 3) {
+          const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+          const user = {
+            id: payload.sub || '',
+            email: payload.email || '',
+            name: payload.names || data.porterDisplayName,
+            role: payload.roles?.[0] || '',
+            roles: payload.roles || [],
+            permissions: payload.permissions || [],
+            organizationId: payload.organizationId ? String(payload.organizationId) : undefined,
+            defaultRoute: payload.defaultRoute || '/doorman/entry-control'
+          };
+          localStorage.setItem('auth_user', JSON.stringify(user));
+        }
+      } catch {
+        console.warn('Could not decode JWT payload');
+      }
     }
 
     this.pageState.set('enrollment-success');

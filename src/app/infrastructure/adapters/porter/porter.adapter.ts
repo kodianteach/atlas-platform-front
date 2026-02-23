@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, timeout, retry } from 'rxjs/operators';
 import { PorterGateway } from '@domain/gateways/porter/porter.gateway';
-import { Porter, CreatePorterRequest, RegenerateUrlResponse } from '@domain/models/porter/porter.model';
+import { Porter, CreatePorterRequest, RegenerateUrlResponse, ToggleStatusResponse } from '@domain/models/porter/porter.model';
 import { Result, success, failure } from '@domain/models/common/api-response.model';
 import { environment } from '@env/environment';
 
@@ -41,6 +41,15 @@ export class PorterAdapter extends PorterGateway {
       timeout(this.TIMEOUT_MS),
       map(response => success<RegenerateUrlResponse>(response.data, response.message)),
       catchError(error => of(this.handleError<RegenerateUrlResponse>(error)))
+    );
+  }
+
+  override togglePorterStatus(porterId: number): Observable<Result<ToggleStatusResponse>> {
+    const url = `${this.PORTERS_ENDPOINT}/${porterId}/toggle-status`;
+    return this.http.put<{ data: ToggleStatusResponse; message: string }>(url, {}).pipe(
+      timeout(this.TIMEOUT_MS),
+      map(response => success<ToggleStatusResponse>(response.data, response.message)),
+      catchError(error => of(this.handleError<ToggleStatusResponse>(error)))
     );
   }
 

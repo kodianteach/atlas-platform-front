@@ -292,6 +292,66 @@
         "title": "Chat con Administración",
         "placeholder": "Escriba su mensaje...",
         "send": "Enviar"
+      },
+      "scan": {
+        "title": "Escanear QR",
+        "subtitle": "Apunte la cámara al código QR del visitante",
+        "startCamera": "Activar Cámara",
+        "pause": "Pausar",
+        "retry": "Reintentar",
+        "cameraError": "Error al iniciar la cámara",
+        "searchByDocument": "Buscar por Documento",
+        "documentPlaceholder": "Número de documento...",
+        "search": "Buscar",
+        "searching": "Buscando...",
+        "noResults": "No se encontraron autorizaciones vigentes"
+      },
+      "validation": {
+        "valid": "Autorización VÁLIDA",
+        "invalid": "Autorización INVÁLIDA",
+        "expired": "Autorización EXPIRADA",
+        "revoked": "Autorización REVOCADA",
+        "formatError": "QR No Reconocido",
+        "accessAllowed": "Acceso permitido",
+        "qrNotRecognized": "QR no reconocido o manipulado",
+        "outOfDateRange": "Fuera del rango de fechas autorizado",
+        "cancelledByAdmin": "Cancelada por el administrador",
+        "notAtlasAuth": "El código escaneado no es una autorización válida de ATLAS",
+        "confirmEntry": "Confirmar Ingreso",
+        "denyAccess": "Rechazar Acceso"
+      },
+      "vehicleConfirmation": {
+        "title": "Datos del Vehículo",
+        "question": "¿El vehículo coincide con los datos autorizados?",
+        "matches": "Sí, coincide",
+        "noMatch": "No coincide",
+        "plate": "Placa",
+        "type": "Tipo",
+        "color": "Color"
+      },
+      "vehicleExit": {
+        "title": "Registrar Salida",
+        "subtitle": "Registro de salida de vehículo",
+        "platePlaceholder": "ABC123",
+        "personPlaceholder": "Nombre completo",
+        "submit": "Registrar Salida",
+        "submitting": "Registrando...",
+        "success": "Salida Registrada",
+        "errorPlate": "Ingrese la placa del vehículo",
+        "errorPerson": "Ingrese el nombre de la persona",
+        "errorServer": "Error al registrar la salida"
+      },
+      "sync": {
+        "connected": "Conectado",
+        "offline": "Modo Offline",
+        "pending": "pendientes",
+        "syncing": "Sincronizando..."
+      },
+      "errors": {
+        "cameraPermissionDenied": "Permiso de cámara denegado. Active el permiso en la configuración del navegador.",
+        "noCameraFound": "No se encontró ninguna cámara en el dispositivo.",
+        "syncFailed": "Error al sincronizar eventos. Se reintentará automáticamente.",
+        "offlineNoKey": "Sin clave de verificación. El dispositivo debe estar enrolado."
       }
     },
     "porter": {

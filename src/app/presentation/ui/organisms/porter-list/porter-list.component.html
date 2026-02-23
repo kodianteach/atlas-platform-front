@@ -18,13 +18,24 @@
               </span>
             </div>
           </div>
-          <button
-            class="porter-list__action-btn"
-            (click)="onRegenerateUrl(porter.id)"
-            type="button"
-            title="Regenerar URL de enrolamiento">
-            <i class="bi bi-arrow-clockwise"></i>
-          </button>
+          <div class="porter-list__actions">
+            <button
+              class="porter-list__action-btn"
+              (click)="onRegenerateUrl(porter.id)"
+              type="button"
+              title="Regenerar URL de enrolamiento">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+            <button
+              class="porter-list__action-btn"
+              [class.porter-list__action-btn--inactive]="isActive(porter.status)"
+              [class.porter-list__action-btn--activate]="!isActive(porter.status)"
+              (click)="onToggleStatus(porter.id)"
+              type="button"
+              [title]="isActive(porter.status) ? 'Inactivar portero' : 'Activar portero'">
+              <i class="bi" [class.bi-toggle-on]="isActive(porter.status)" [class.bi-toggle-off]="!isActive(porter.status)"></i>
+            </button>
+          </div>
         </div>
         <div class="porter-list__card-details">
           <div class="porter-list__detail">

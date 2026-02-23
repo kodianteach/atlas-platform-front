@@ -198,6 +198,113 @@
   flex-shrink: 0;
 }
 
+/* ─── Credentials Card ───────────────────────────────── */
+.credentials-card {
+  width: 100%;
+  max-width: 360px;
+  background: #fffbeb;
+  border: 2px solid #f59e0b;
+  border-radius: var(--border-radius-lg, 12px);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.credentials-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  color: #92400e;
+}
+
+.credentials-header i {
+  font-size: 1.25rem;
+}
+
+.credentials-warning {
+  font-size: var(--font-size-sm, 0.8125rem);
+  color: #b45309;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.credential-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+}
+
+.credential-label {
+  font-size: var(--font-size-sm, 0.8125rem);
+  color: #78716c;
+  font-weight: 600;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.credential-value {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-md);
+  background: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.credential-value.password {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.btn-copy {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-copy:hover {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.btn-copy.copied {
+  background: #dcfce7;
+  border-color: #15803d;
+  color: #15803d;
+  gap: 2px;
+}
+
+.copied-text {
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.credentials-hint {
+  font-size: var(--font-size-sm, 0.75rem);
+  color: #78716c;
+  margin: 0;
+  text-align: center;
+}
+
 /* ─── Animations ────────────────────────────────────── */
 .spinning {
   animation: spin 1s linear infinite;

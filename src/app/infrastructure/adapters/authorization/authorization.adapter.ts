@@ -46,6 +46,10 @@ export class AuthorizationAdapter extends AuthorizationGateway {
   }
 
   override createAuthorization(formValue: AuthorizationFormValue, document?: File): Observable<Result<Authorization>> {
+    console.log('[AuthorizationAdapter] createAuthorization LLAMADO');
+    console.log('[AuthorizationAdapter] URL:', this.BASE_URL);
+    console.log('[AuthorizationAdapter] FormValue:', formValue);
+
     const formData = new FormData();
     formData.append('data', new Blob([JSON.stringify(formValue)], { type: 'application/json' }));
 
@@ -53,9 +57,11 @@ export class AuthorizationAdapter extends AuthorizationGateway {
       formData.append('document', document, document.name);
     }
 
+    console.log('[AuthorizationAdapter] Enviando HTTP POST...');
     return this.http.post<ApiResponse<Authorization>>(this.BASE_URL, formData).pipe(
       timeout(this.TIMEOUT_MS),
       map(response => {
+        console.log('[AuthorizationAdapter] Respuesta recibida:', response);
         if (response.success) {
           return success(response.data, response.message);
         }
@@ -65,7 +71,10 @@ export class AuthorizationAdapter extends AuthorizationGateway {
           timestamp: new Date()
         });
       }),
-      catchError(error => of(this.handleError<Authorization>(error)))
+      catchError(error => {
+        console.error('[AuthorizationAdapter] Error HTTP:', error);
+        return of(this.handleError<Authorization>(error));
+      })
     );
   }
 
@@ -125,8 +134,12 @@ export class AuthorizationAdapter extends AuthorizationGateway {
   }
 
   private handleError<T>(error: unknown): Result<T> {
-    const httpError = error as { status?: number; name?: string; error?: { message?: string } };
+    const httpError = error as { status?: number; name?: string; error?: { message?: string; errorCode?: string } };
+    const backendMessage = httpError.error?.message;
 
+    if (httpError.status === 400) {
+      return failure({ code: httpError.error?.errorCode || 'BAD_REQUEST', message: backendMessage || 'Datos inválidos', timestamp: new Date() });
+    }
     if (httpError.status === 404) {
       return failure({ code: 'NOT_FOUND', message: 'Autorización no encontrada', timestamp: new Date() });
     }
@@ -138,7 +151,7 @@ export class AuthorizationAdapter extends AuthorizationGateway {
     }
     return failure({
       code: 'UNKNOWN_ERROR',
-      message: httpError.error?.message || 'Error inesperado. Intente nuevamente',
+      message: backendMessage || 'Error inesperado. Intente nuevamente',
       timestamp: new Date()
     });
   }

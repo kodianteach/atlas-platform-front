@@ -60,6 +60,6 @@
   <app-bottom-nav (centerAction)="onCenterAction()" />
 
   <!-- Authorization Form Overlay -->
-  <app-authorization-form [visible]="showFormOverlay()" (formSubmit)="onFormSubmit($event)"
-    (formCancel)="onFormCancel()" />
+  <app-authorization-form [visible]="showFormOverlay()" (authorizationCreated)="onAuthorizationCreated($event)"
+    (errorOccurred)="onFormError($event)" (formCancel)="onFormCancel()" />
 </div>

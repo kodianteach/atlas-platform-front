@@ -46,8 +46,11 @@
     <div class="state-message">
       <i class="bi bi-shield-check" style="font-size: 2rem; color: #16a34a;"></i>
       <p class="state-text">Este dispositivo ya está enrolado.</p>
-      <p class="state-hint">Las claves de verificación ya están almacenadas. Puedes iniciar sesión para comenzar.</p>
-      <button class="btn-primary" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+      <p class="state-hint">Las claves de verificación ya están almacenadas. Inicia sesión con tu usuario y PIN para acceder a la portería.</p>
+      <button class="btn-enroll" (click)="goToLogin()">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Iniciar Sesión
+      </button>
     </div>
   }
 
@@ -142,6 +145,33 @@
 
       <p class="state-hint">Ya puedes verificar códigos QR de autorización, incluso sin conexión a internet.</p>
 
+      @if (enrollmentResult()?.porterUsername && enrollmentResult()?.porterPassword) {
+        <div class="credentials-card">
+          <div class="credentials-header">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>Credenciales de acceso</span>
+          </div>
+          <p class="credentials-warning">⚠️ Guarda estas credenciales. <strong>No se mostrarán de nuevo.</strong></p>
+          <div class="credential-row">
+            <span class="credential-label">Usuario:</span>
+            <code class="credential-value">{{ enrollmentResult()!.porterUsername }}</code>
+            <button class="btn-copy" [class.copied]="copiedField() === 'user'" (click)="copyToClipboard(enrollmentResult()!.porterUsername!, 'user')" title="Copiar">
+              <i [class]="copiedField() === 'user' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
+              @if (copiedField() === 'user') { <span class="copied-text">Copiado</span> }
+            </button>
+          </div>
+          <div class="credential-row">
+            <span class="credential-label">Contraseña:</span>
+            <code class="credential-value password">{{ enrollmentResult()!.porterPassword }}</code>
+            <button class="btn-copy" [class.copied]="copiedField() === 'pass'" (click)="copyToClipboard(enrollmentResult()!.porterPassword!, 'pass')" title="Copiar">
+              <i [class]="copiedField() === 'pass' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
+              @if (copiedField() === 'pass') { <span class="copied-text">Copiado</span> }
+            </button>
+          </div>
+          <p class="credentials-hint">Usa estas credenciales para iniciar sesión en el futuro.</p>
+        </div>
+      }
+
       @if (canInstallPwa() && !isInstalledPwa()) {
         <button class="btn-install" (click)="installPwa()">
           <i class="bi bi-download"></i>
@@ -150,7 +180,14 @@
       }
 
       @if (!showPwaModal()) {
-        <button class="btn-primary" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+        @if (enrollmentResult()?.accessToken) {
+          <button class="btn-enroll" (click)="goToDoorman()">
+            <i class="bi bi-qr-code-scan"></i>
+            Ir a Portería
+          </button>
+        } @else {
+          <button class="btn-primary" (click)="goToLogin()">Ir a Iniciar Sesión</button>
+        }
       }
     </div>
   }
