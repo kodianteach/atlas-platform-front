@@ -26,6 +26,33 @@
   overflow: hidden;
 }
 
+.org-config__back-btn {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-full);
+  color: white;
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+  z-index: 2;
+}
+
+.org-config__back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.org-config__back-btn:active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 .org-config__header::before {
   content: '';
   position: absolute;

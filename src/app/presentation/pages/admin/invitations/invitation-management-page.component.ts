@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit, DestroyRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminBottomNavComponent } from '../../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
@@ -18,6 +19,7 @@ type PageState = 'idle' | 'generating' | 'link-ready' | 'error';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationManagementPageComponent implements OnInit {
+  private readonly router = inject(Router);
   private readonly createOwnerInvitationUseCase = inject(CreateOwnerInvitationUseCase);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -78,5 +80,9 @@ export class InvitationManagementPageComponent implements OnInit {
   dismissError(): void {
     this.state.set('idle');
     this.errorMessage.set(null);
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin/more']);
   }
 }

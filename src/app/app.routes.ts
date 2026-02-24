@@ -122,6 +122,11 @@ export const routes: Routes = [
         path: 'invitations',
         loadComponent: () => import('@presentation/pages/admin/invitations/invitation-management-page.component').then(m => m.InvitationManagementPageComponent),
         canActivate: [authGuard]
+      },
+      {
+        path: 'more',
+        loadComponent: () => import('@presentation/pages/admin/more/admin-more-page.component').then(m => m.AdminMorePageComponent),
+        canActivate: [authGuard]
       }
     ]
   },

@@ -1,6 +1,9 @@
 <div class="org-config">
   <!-- Header -->
   <header class="org-config__header">
+    <button class="org-config__back-btn" (click)="goBack()" type="button" aria-label="Volver">
+      <i class="bi bi-arrow-left"></i>
+    </button>
     <div class="org-config__header-content">
       <div class="org-config__icon-container">
         <i class="bi bi-gear"></i>
@@ -110,5 +113,5 @@
   </div>
 
   <!-- Bottom Navigation -->
-  <app-admin-bottom-nav [activeTab]="'config'" />
+  <app-admin-bottom-nav [activeTab]="'more'" />
 </div>

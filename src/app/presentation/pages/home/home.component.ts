@@ -42,6 +42,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     const roles = this.userRoles();
     return role === 'OWNER' || roles.includes('OWNER');
   });
+  readonly userInitial = computed(() => {
+    const name = this.userName();
+    return name ? name.charAt(0).toUpperCase() : 'U';
+  });
   readonly greeting = computed(() => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Buenos días';

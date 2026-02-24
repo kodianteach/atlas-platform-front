@@ -1,7 +1,12 @@
 <div class="invitation-page">
   <header class="invitation-page__header">
-    <h1 class="invitation-page__title">{{ 'app.invitation.history.title' | translate }}</h1>
-    <p class="invitation-page__subtitle">Genera y gestiona invitaciones para propietarios</p>
+    <button class="invitation-page__back-btn" (click)="goBack()" type="button" aria-label="Volver">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="invitation-page__header-content">
+      <h1 class="invitation-page__title">{{ 'app.invitation.history.title' | translate }}</h1>
+      <p class="invitation-page__subtitle">Genera y gestiona invitaciones para propietarios</p>
+    </div>
   </header>
 
   <section class="invitation-page__content">
