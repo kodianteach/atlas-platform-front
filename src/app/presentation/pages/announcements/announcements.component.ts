@@ -10,7 +10,6 @@ import { BroadcastCardComponent } from '../../ui/organisms/broadcast-card/broadc
 import { PollCardComponent } from '../../ui/organisms/poll-card/poll-card.component';
 import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.component';
 import { AuthorizationFormComponent } from '../../ui/organisms/authorization-form/authorization-form.component';
-import { AuthorizationFormValue } from '@domain/models/authorization/authorization.model';
 
 @Component({
   selector: 'app-announcements',
@@ -94,8 +93,12 @@ export class AnnouncementsComponent implements OnInit {
     this.showFormOverlay.set(false);
   }
 
-  onFormSubmit(_formValue: AuthorizationFormValue): void {
+  onAuthorizationCreated(_authorization: any): void {
     this.showFormOverlay.set(false);
+  }
+
+  onFormError(_errorMessage: string): void {
+    // Error handled by the form component toast
   }
 
   retryLoad(): void {

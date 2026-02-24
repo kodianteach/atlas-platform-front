@@ -6,6 +6,7 @@ import { Authorization, SERVICE_TYPE_LABELS, STATUS_LABELS } from '@domain/model
 import { GetAuthorizationByIdUseCase } from '@domain/use-cases/authorization/get-authorization-by-id.use-case';
 import { RevokeAuthorizationUseCase } from '@domain/use-cases/authorization/revoke-authorization.use-case';
 import { AuthorizationGateway } from '@domain/gateways/authorization/authorization.gateway';
+import { AuthorizationPdfService } from '../../../infrastructure/services/authorization-pdf.service';
 import { QrDisplayComponent } from '../../ui/molecules/qr-display/qr-display.component';
 import { ShareActionsComponent } from '../../ui/molecules/share-actions/share-actions.component';
 import { ButtonComponent } from '../../ui/atoms/button/button.component';
@@ -130,6 +131,19 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
             </div>
           }
 
+          <!-- Download PDF -->
+          <div class="actions-section">
+            <button class="download-pdf-btn" (click)="onDownloadPdf()" [disabled]="generatingPdf()">
+              @if (generatingPdf()) {
+                <div class="btn-spinner"></div>
+                Generando PDF...
+              } @else {
+                <i class="bi bi-file-earmark-pdf"></i>
+                Descargar Invitación PDF
+              }
+            </button>
+          </div>
+
           <!-- Revoke Action -->
           @if (authorization()!.status === 'ACTIVE') {
             <div class="actions-section">
@@ -143,6 +157,36 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
       }
 
       <app-bottom-nav />
+
+      <!-- Revoke Confirmation Modal -->
+      @if (showRevokeModal()) {
+        <div class="modal-backdrop" (click)="onCancelRevoke()">
+          <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h2 class="modal-title">Revocar Autorización</h2>
+            <p class="modal-message">
+              ¿Está seguro de revocar esta autorización?<br>
+              <strong>Esta acción no se puede deshacer.</strong>
+            </p>
+            @if (authorization()) {
+              <div class="modal-detail">
+                <span class="modal-person">{{ authorization()!.personName }}</span>
+                <span class="modal-doc">{{ authorization()!.personDocument }}</span>
+              </div>
+            }
+            <div class="modal-actions">
+              <button class="modal-btn modal-btn-cancel" (click)="onCancelRevoke()">
+                Cancelar
+              </button>
+              <button class="modal-btn modal-btn-confirm" (click)="onConfirmRevoke()">
+                <i class="bi bi-x-circle"></i> Sí, revocar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -311,6 +355,179 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
     }
 
     .retry-btn:hover { background: #e9ecef; }
+
+    /* Download PDF Button */
+    .download-pdf-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border: none;
+      background: linear-gradient(135deg, #FF8C61, #FF6B3D);
+      color: white;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255, 107, 61, 0.3);
+    }
+
+    .download-pdf-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 107, 61, 0.4);
+    }
+
+    .download-pdf-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .download-pdf-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .download-pdf-btn i {
+      font-size: 1.125rem;
+    }
+
+    .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Revoke Confirmation Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.25s ease;
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff3cd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .modal-icon i {
+      font-size: 32px;
+      color: #e67e22;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 8px;
+    }
+
+    .modal-message {
+      font-size: 0.9375rem;
+      color: #64748b;
+      margin: 0 0 16px;
+      line-height: 1.5;
+    }
+
+    .modal-message strong {
+      color: #dc3545;
+    }
+
+    .modal-detail {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .modal-person {
+      font-weight: 600;
+      color: #1a1a2e;
+      font-size: 0.9375rem;
+    }
+
+    .modal-doc {
+      font-size: 0.8125rem;
+      color: #94a3b8;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn-cancel {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .modal-btn-cancel:hover {
+      background: #e2e8f0;
+    }
+
+    .modal-btn-confirm {
+      background: #dc3545;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .modal-btn-confirm:hover {
+      background: #c82333;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -320,11 +537,14 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   private readonly getByIdUseCase = inject(GetAuthorizationByIdUseCase);
   private readonly revokeUseCase = inject(RevokeAuthorizationUseCase);
   private readonly authorizationGateway = inject(AuthorizationGateway);
+  private readonly pdfService = inject(AuthorizationPdfService);
 
   readonly authorization = signal<Authorization | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string>('');
   readonly revoking = signal(false);
+  readonly showRevokeModal = signal(false);
+  readonly generatingPdf = signal(false);
 
   private authorizationId = 0;
   private destroy$ = new Subject<void>();
@@ -380,10 +600,11 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   }
 
   onRevoke(): void {
-    if (!confirm('¿Está seguro de revocar esta autorización? Esta acción no se puede deshacer.')) {
-      return;
-    }
+    this.showRevokeModal.set(true);
+  }
 
+  onConfirmRevoke(): void {
+    this.showRevokeModal.set(false);
     this.revoking.set(true);
     this.revokeUseCase.execute(this.authorizationId)
       .pipe(takeUntil(this.destroy$))
@@ -393,6 +614,23 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
           this.authorization.set(result.data);
         }
       });
+  }
+
+  onCancelRevoke(): void {
+    this.showRevokeModal.set(false);
+  }
+
+  async onDownloadPdf(): Promise<void> {
+    const auth = this.authorization();
+    if (!auth) return;
+
+    this.generatingPdf.set(true);
+    try {
+      const qrUrl = this.qrImageUrl();
+      await this.pdfService.generatePdf(auth, qrUrl);
+    } finally {
+      this.generatingPdf.set(false);
+    }
   }
 
   goBack(): void {

@@ -13,6 +13,7 @@ import { Porter } from '@domain/models/porter/porter.model';
 export class PorterListComponent {
   readonly porters = input.required<Porter[]>();
   readonly regenerateUrl = output<number>();
+  readonly toggleStatus = output<number>();
 
   getPorterTypeLabel(type: string): string {
     const labels: Record<string, string> = {
@@ -28,6 +29,14 @@ export class PorterListComponent {
 
   onRegenerateUrl(porterId: number): void {
     this.regenerateUrl.emit(porterId);
+  }
+
+  onToggleStatus(porterId: number): void {
+    this.toggleStatus.emit(porterId);
+  }
+
+  isActive(status: string): boolean {
+    return status === 'ACTIVE';
   }
 
   formatDate(date?: string): string {

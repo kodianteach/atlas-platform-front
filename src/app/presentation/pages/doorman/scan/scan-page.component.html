@@ -1,0 +1,105 @@
+<div class="scan-page">
+  <!-- Connection Status -->
+  <app-connection-status-bar />
+
+  <!-- Header -->
+  <header class="scan-header">
+    <div class="header-left">
+      <h1>Escanear QR</h1>
+      <p class="header-subtitle">Apunte la cámara al código QR del visitante</p>
+    </div>
+    <div class="header-right">
+      <app-sync-status-badge [pendingCount]="pendingCount()" />
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="scan-content">
+    <!-- QR Scanner (always visible) -->
+    <app-qr-scanner
+      [active]="scannerActive()"
+      (qrScanned)="onQrScanned($event)"
+      (scanError)="onScanError($event)" />
+
+    <!-- Divider -->
+    <div class="section-divider">
+      <span class="divider-line"></span>
+      <span class="divider-text">o buscar por documento</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <!-- Document Search (always visible below scanner) -->
+    <div class="document-search-section">
+      <div class="search-input-container">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Número de documento..."
+          class="search-input"
+          #docInput
+          (keyup.enter)="searchByDocument(docInput.value)"
+          autocomplete="off" />
+        <button class="btn-search" (click)="searchByDocument(docInput.value)" type="button">
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+
+      @if (documentSearching()) {
+        <div class="search-loading">
+          <i class="bi bi-arrow-repeat spinning"></i>
+          Buscando...
+        </div>
+      }
+
+      @if (documentSearchResults().length > 0) {
+        <div class="search-results">
+          @for (auth of documentSearchResults(); track auth.id) {
+            <button class="result-card" (click)="selectAuthorization(auth)" type="button">
+              <div class="result-card-left">
+                <div class="result-avatar">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+              </div>
+              <div class="result-card-body">
+                <div class="result-name">{{ auth.personName }}</div>
+                <div class="result-doc">{{ auth.personDocument }}</div>
+                <div class="result-meta">
+                  <span class="result-type">{{ auth.serviceType }}</span>
+                  @if (auth.vehiclePlate) {
+                    <span class="result-plate">
+                      <i class="bi bi-car-front-fill"></i> {{ auth.vehiclePlate }}
+                    </span>
+                  }
+                </div>
+              </div>
+              <div class="result-card-right">
+                <i class="bi bi-chevron-right"></i>
+              </div>
+            </button>
+          }
+        </div>
+      }
+
+      @if (!documentSearching() && documentSearchResults().length === 0 && docInput.value.length > 2) {
+        <div class="search-empty">
+          <i class="bi bi-person-x"></i>
+          <p>No se encontraron autorizaciones vigentes</p>
+        </div>
+      }
+    </div>
+  </main>
+
+  <!-- Validation Result Overlay -->
+  <app-validation-result
+    [visible]="showResult()"
+    [resultType]="validationResult()"
+    [qrPayload]="currentPayload()"
+    [vehicleConfirmationNeeded]="vehicleConfirmNeeded()"
+    (dismiss)="onDismissResult()"
+    (confirmEntry)="onConfirmEntry()"
+    (denyEntry)="onDenyEntry()"
+    (vehicleConfirmed)="onVehicleConfirmed($event)" />
+
+  <!-- Bottom Navigation -->
+  <app-doorman-bottom-nav activeTab="scan" />
+</div>

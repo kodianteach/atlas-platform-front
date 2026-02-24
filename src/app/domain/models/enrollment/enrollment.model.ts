@@ -41,4 +41,14 @@ export interface EnrollmentResult {
   keyId: string;
   /** Maximum clock skew in minutes for offline validation */
   maxClockSkewMinutes: number;
+  /** JWT access token for automatic porter session */
+  accessToken?: string;
+  /** JWT refresh token */
+  refreshToken?: string;
+  /** Default route for the porter */
+  defaultRoute?: string;
+  /** Username generado para futuros inicios de sesión */
+  porterUsername?: string;
+  /** Contraseña generada para futuros inicios de sesión (solo se muestra una vez) */
+  porterPassword?: string;
 }

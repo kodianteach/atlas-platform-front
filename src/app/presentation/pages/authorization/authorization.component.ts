@@ -2,9 +2,8 @@ import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, O
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
-import { Authorization, AuthorizationFormValue, SERVICE_TYPE_LABELS, STATUS_LABELS, isAuthorizationValid } from '@domain/models/authorization/authorization.model';
+import { Authorization, SERVICE_TYPE_LABELS, STATUS_LABELS, isAuthorizationValid } from '@domain/models/authorization/authorization.model';
 import { GetAuthorizationsUseCase } from '@domain/use-cases/authorization/get-authorizations.use-case';
-import { CreateAuthorizationUseCase } from '@domain/use-cases/authorization/create-authorization.use-case';
 import { AuthorizationFormComponent } from '../../ui/organisms/authorization-form/authorization-form.component';
 import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.component';
 
@@ -25,7 +24,6 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
 })
 export class AuthorizationComponent implements OnInit, OnDestroy {
   private readonly getAuthorizationsUseCase = inject(GetAuthorizationsUseCase);
-  private readonly createAuthorizationUseCase = inject(CreateAuthorizationUseCase);
   private readonly router = inject(Router);
 
   @ViewChild(AuthorizationFormComponent) formComponent?: AuthorizationFormComponent;
@@ -94,24 +92,21 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
     this.showForm.set(true);
   }
 
-  onFormSubmit(formValue: AuthorizationFormValue): void {
-    const document = this.formComponent?.getSelectedDocument() ?? undefined;
-    this.createAuthorizationUseCase.execute(formValue, document)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result.success) {
-          this.showForm.set(false);
-          this.displaySuccessToast('Autorización creada exitosamente');
-          this.loadAuthorizations();
-          // Navigate to detail to show QR
-          this.router.navigate(['/authorization', result.data.id]);
-        } else {
-          this.displayErrorToast(result.error.message);
-        }
-      });
+  onAuthorizationCreated(authorization: Authorization): void {
+    console.log('[AuthorizationPage] Autorización creada:', authorization);
+    this.showForm.set(false);
+    this.displaySuccessToast('Autorización creada exitosamente');
+    this.loadAuthorizations();
+    this.router.navigate(['/authorization', authorization.id]);
+  }
+
+  onFormError(errorMessage: string): void {
+    console.error('[AuthorizationPage] Error desde form:', errorMessage);
+    this.displayErrorToast(errorMessage);
   }
 
   onFormCancel(): void {
+    console.log('[AuthorizationPage] onFormCancel LLAMADO');
     this.showForm.set(false);
   }
 
@@ -147,7 +142,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
   private displayErrorToast(message: string): void {
     this.toastMessage.set(message);
     this.showErrorToast.set(true);
-    setTimeout(() => this.showErrorToast.set(false), 3000);
+    setTimeout(() => this.showErrorToast.set(false), 5000);
   }
 }
 

@@ -148,7 +148,8 @@
   <!-- Authorization Form Overlay -->
   <app-authorization-form
     [visible]="showFormOverlay()"
-    (formSubmit)="onFormSubmit($event)"
+    (authorizationCreated)="onAuthorizationCreated($event)"
+    (errorOccurred)="onFormError($event)"
     (formCancel)="onFormCancel()" />
 
   <!-- Notification Tray -->

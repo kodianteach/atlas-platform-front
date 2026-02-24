@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, output, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,15 +15,25 @@ export class EnrollmentUrlComponent {
 
   readonly copied = signal(false);
 
+  /** Build full URL with current domain */
+  readonly fullUrl = computed(() => {
+    const path = this.enrollmentUrl();
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    const origin = globalThis.location?.origin ?? '';
+    return origin + path;
+  });
+
   async copyUrl(): Promise<void> {
     try {
-      await navigator.clipboard.writeText(this.enrollmentUrl());
+      await navigator.clipboard.writeText(this.fullUrl());
       this.copied.set(true);
       setTimeout(() => this.copied.set(false), 2000);
     } catch {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
-      textArea.value = this.enrollmentUrl();
+      textArea.value = this.fullUrl();
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand('copy');

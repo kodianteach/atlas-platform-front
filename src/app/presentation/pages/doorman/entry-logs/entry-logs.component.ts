@@ -1,62 +1,83 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { EntryControlService } from '../../../../services/entry-control.service';
-import { EntryRecord } from '@domain/models/entry/entry.model';
+import { EntryGateway } from '@domain/gateways/entry/entry.gateway';
+import { AccessEvent } from '@domain/models/entry/entry.model';
+import { OfflineEventQueueService } from '@infrastructure/services/offline-event-queue.service';
 import { DoormanBottomNavComponent } from '../../../ui/organisms/doorman-bottom-nav/doorman-bottom-nav.component';
+import { ConnectionStatusBarComponent } from '../../../ui/atoms/connection-status-bar/connection-status-bar.component';
+import { SyncStatusBadgeComponent } from '../../../ui/atoms/sync-status-badge/sync-status-badge.component';
 
 @Component({
   selector: 'app-entry-logs',
   standalone: true,
-  imports: [DatePipe, DoormanBottomNavComponent],
+  imports: [DatePipe, DoormanBottomNavComponent, ConnectionStatusBarComponent, SyncStatusBadgeComponent],
   templateUrl: './entry-logs.component.html',
   styleUrl: './entry-logs.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntryLogsComponent implements OnInit {
-  private readonly entryControlService = inject(EntryControlService);
+  private readonly entryGateway = inject(EntryGateway);
+  private readonly eventQueue = inject(OfflineEventQueueService);
   private readonly router = inject(Router);
 
-  readonly entries = signal<EntryRecord[]>([]);
+  readonly entries = signal<AccessEvent[]>([]);
+  readonly pendingCount = this.eventQueue.pendingCount;
+  readonly loading = signal(false);
   readonly searchQuery = signal('');
-  readonly activeFilter = signal<'all' | 'valid' | 'denied'>('all');
+  readonly activeFilter = signal<'all' | 'VALID' | 'EXPIRED' | 'REVOKED' | 'INVALID'>('all');
 
   readonly filteredEntries = computed(() => {
     let filtered = [...this.entries()];
     const filter = this.activeFilter();
     if (filter !== 'all') {
-      filtered = filtered.filter(entry => entry.status === filter);
+      filtered = filtered.filter(entry => entry.scanResult === filter);
     }
     const query = this.searchQuery().trim().toLowerCase();
     if (query) {
       filtered = filtered.filter(entry =>
-        entry.visitorName.toLowerCase().includes(query) ||
-        entry.unit.toLowerCase().includes(query) ||
-        entry.plate?.toLowerCase().includes(query)
+        entry.personName?.toLowerCase().includes(query) ||
+        entry.personDocument?.toLowerCase().includes(query) ||
+        entry.vehiclePlate?.toLowerCase().includes(query)
       );
     }
-    return filtered;
+    return filtered.sort((a, b) =>
+      new Date(b.scannedAt || b.syncedAt || '').getTime() - new Date(a.scannedAt || a.syncedAt || '').getTime()
+    );
   });
 
   readonly todayEntries = computed(() =>
-    this.filteredEntries().filter(entry => this.isToday(entry.timestamp))
+    this.filteredEntries().filter(entry => this.isToday(entry.scannedAt))
   );
 
   readonly olderEntries = computed(() =>
-    this.filteredEntries().filter(entry => !this.isToday(entry.timestamp))
+    this.filteredEntries().filter(entry => !this.isToday(entry.scannedAt))
   );
 
   ngOnInit(): void {
     this.loadEntries();
+    this.eventQueue.refreshCount();
   }
 
   loadEntries(): void {
-    this.entryControlService.getEntries().subscribe(entries => {
-      this.entries.set(entries);
+    this.loading.set(true);
+    this.entryGateway.getAccessHistory().subscribe({
+      next: (result) => {
+        const data = result.success ? (result.data ?? []) : [];
+        this.entries.set(data);
+        this.loading.set(false);
+      },
+      error: () => {
+        // Offline fallback — show pending queued events
+        this.eventQueue.dequeueAll().then(pending => {
+          this.entries.set(pending);
+        });
+        this.loading.set(false);
+      }
     });
   }
 
-  setFilter(filter: 'all' | 'valid' | 'denied'): void {
+  setFilter(filter: 'all' | 'VALID' | 'EXPIRED' | 'REVOKED' | 'INVALID'): void {
     this.activeFilter.set(filter);
   }
 
@@ -68,63 +89,35 @@ export class EntryLogsComponent implements OnInit {
     this.router.navigate(['/doorman/entry-control']);
   }
 
-  private readonly statusClassMap: Record<string, string> = {
-    valid: 'status-valid',
-    denied: 'status-denied'
-  };
-
-  getStatusClass(status: string): string {
-    return this.statusClassMap[status] ?? 'status-pending';
+  getStatusClass(scanResult: string): string {
+    if (scanResult === 'VALID') return 'status-valid';
+    if (scanResult === 'EXPIRED') return 'status-expired';
+    if (scanResult === 'REVOKED' || scanResult === 'INVALID') return 'status-denied';
+    return 'status-pending';
   }
 
-  private readonly visitorTypeIconMap: Record<string, string> = {
-    resident: 'bi-house-door-fill',
-    guest: 'bi-person-fill',
-    service: 'bi-wrench',
-    delivery: 'bi-truck',
-    unauthorized: 'bi-slash-circle'
-  };
-
-  getVisitorTypeIcon(type: string): string {
-    return this.visitorTypeIconMap[type] ?? 'bi-person';
+  getStatusLabel(scanResult: string): string {
+    const labels: Record<string, string> = {
+      VALID: 'VÁLIDA',
+      INVALID: 'INVÁLIDA',
+      EXPIRED: 'EXPIRADA',
+      REVOKED: 'REVOCADA',
+      ALREADY_USED: 'YA USADA'
+    };
+    return labels[scanResult] ?? scanResult;
   }
 
-  private readonly visitorTypeColorMap: Record<string, string> = {
-    resident: '#3b82f6',
-    guest: '#8b5cf6',
-    service: '#f59e0b',
-    delivery: '#ec4899',
-    unauthorized: '#ef4444'
-  };
-
-  getVisitorTypeColor(type: string): string {
-    return this.visitorTypeColorMap[type] ?? '#6b7280';
+  getActionIcon(action: string): string {
+    return action === 'EXIT' ? 'bi-box-arrow-right' : 'bi-box-arrow-in-right';
   }
 
-  private readonly accessTypeLabelMap: Record<string, string> = {
-    qr: 'QR Code',
-    manual: 'Manual',
-    'walk-in': 'Walk-in'
-  };
-
-  getAccessTypeLabel(type: string): string {
-    return this.accessTypeLabelMap[type] ?? type;
+  getActionLabel(action: string): string {
+    return action === 'EXIT' ? 'Salida' : 'Entrada';
   }
 
-  private readonly visitorTypeLabelMap: Record<string, string> = {
-    resident: 'Residente',
-    guest: 'Invitado',
-    service: 'Servicio',
-    delivery: 'Entrega'
-  };
-
-  getVisitorTypeLabel(type: string): string {
-    return this.visitorTypeLabelMap[type] ?? type;
-  }
-
-  private isToday(date: Date): boolean {
+  private isToday(dateStr: string): boolean {
     const today = new Date();
-    const entryDate = new Date(date);
+    const entryDate = new Date(dateStr);
     return entryDate.toDateString() === today.toDateString();
   }
 }

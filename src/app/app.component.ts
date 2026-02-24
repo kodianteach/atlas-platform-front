@@ -3,13 +3,15 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationContainerComponent } from '@presentation/ui/organisms/notification-container/notification-container.component';
 import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
+import { PwaUpdateBannerComponent } from '@presentation/ui/organisms/pwa-update-banner/pwa-update-banner.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NotificationContainerComponent],
+  imports: [RouterOutlet, NotificationContainerComponent, PwaUpdateBannerComponent],
   template: `
     <app-notification-container />
+    <app-pwa-update-banner />
     <router-outlet />
   `,
   styleUrl: './app.component.css',

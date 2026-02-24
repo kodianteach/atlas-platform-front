@@ -1,15 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Notification } from '../models/notification.model';
+import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private notificationsSubject = new BehaviorSubject<Notification[]>(this.getDummyNotifications());
+  private readonly pwaUpdate = inject(PwaUpdateService);
+  private readonly notificationsSubject = new BehaviorSubject<Notification[]>(this.getDummyNotifications());
   public notifications$: Observable<Notification[]> = this.notificationsSubject.asObservable();
 
-  constructor() { }
+  private readonly installNotificationId = 'pwa-install';
+
+  constructor() {
+    this.checkPwaInstallNotification();
+  }
 
   getNotifications(): Notification[] {
     return this.notificationsSubject.value;
@@ -29,6 +35,51 @@ export class NotificationService {
 
   getUnreadCount(): number {
     return this.notificationsSubject.value.filter(n => !n.read).length;
+  }
+
+  /**
+   * Handles install notification click — triggers PWA install prompt
+   */
+  async handleInstallClick(): Promise<void> {
+    if (this.pwaUpdate.canInstall()) {
+      await this.pwaUpdate.promptInstall();
+    }
+    this.removeNotification(this.installNotificationId);
+  }
+
+  removeNotification(notificationId: string): void {
+    const notifications = this.notificationsSubject.value.filter(n => n.id !== notificationId);
+    this.notificationsSubject.next(notifications);
+  }
+
+  /**
+   * Check if PWA install notification should be shown
+   */
+  private checkPwaInstallNotification(): void {
+    // Wait a bit for PWA service to initialize
+    setTimeout(() => {
+      if (!this.pwaUpdate.isInstalled() && !this.pwaUpdate.installDismissed()) {
+        this.addInstallNotification();
+      }
+    }, 3000);
+  }
+
+  private addInstallNotification(): void {
+    const exists = this.notificationsSubject.value.some(n => n.id === this.installNotificationId);
+    if (exists) return;
+
+    const installNotification: Notification = {
+      id: this.installNotificationId,
+      title: 'Instalar Atlas',
+      message: 'Instala la app para acceso rápido desde tu pantalla de inicio',
+      timestamp: new Date(),
+      read: false,
+      type: 'install',
+      icon: 'bi-download'
+    };
+
+    const current = this.notificationsSubject.value;
+    this.notificationsSubject.next([installNotification, ...current]);
   }
 
   private getDummyNotifications(): Notification[] {

@@ -1,0 +1,94 @@
+@if (visible()) {
+  <div class="result-overlay" [class.valid]="isValid()" [class.invalid]="!isValid()" (click)="onDismiss()" (keydown.escape)="onDismiss()">
+    <div class="result-content" (click)="$event.stopPropagation()" (keydown.escape)="onDismiss()">
+
+      <!-- Result Icon -->
+      <div class="result-icon-wrapper" [class.valid]="isValid()" [class.invalid]="!isValid()">
+        <i class="bi" [class]="icon()"></i>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <h2 class="result-title">{{ title() }}</h2>
+      <p class="result-subtitle">{{ subtitle() }}</p>
+
+      <!-- Person Info Card -->
+      @if (qrPayload(); as payload) {
+        <div class="person-card">
+          <div class="person-card-header">
+            <div class="person-avatar">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="person-main-info">
+              <span class="person-name">{{ payload.personName }}</span>
+              <span class="person-type-badge" [class.badge-valid]="isValid()">{{ serviceTypeLabel() }}</span>
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="details-grid">
+            @if (payload.unitCode) {
+              <div class="detail-item">
+                <span class="detail-label">DESTINO</span>
+                <span class="detail-value">{{ payload.unitCode }}</span>
+              </div>
+            }
+            <div class="detail-item">
+              <span class="detail-label">VIGENCIA</span>
+              <span class="detail-value">{{ payload.validFrom | date:'shortDate' }} — {{ payload.validTo | date:'shortDate' }}</span>
+            </div>
+          </div>
+
+          <!-- Vehicle Info -->
+          @if (payload.vehiclePlate) {
+            <div class="vehicle-info-bar">
+              <div class="vehicle-detail">
+                <i class="bi bi-car-front-fill"></i>
+                <span class="plate-value">{{ payload.vehiclePlate }}</span>
+              </div>
+              @if (payload.vehicleColor) {
+                <span class="vehicle-color">{{ payload.vehicleColor }}</span>
+              }
+              @if (payload.vehicleType) {
+                <span class="vehicle-type">{{ payload.vehicleType }}</span>
+              }
+            </div>
+
+            <!-- Vehicle Confirmation: must confirm before gate opens -->
+            @if (vehicleConfirmationNeeded() && isValid()) {
+              <div class="vehicle-confirmation">
+                <p class="confirmation-question">¿El vehículo coincide con los datos?</p>
+                <div class="confirmation-buttons">
+                  <button class="btn-confirm-yes" (click)="onVehicleConfirm(true)" type="button">
+                    <i class="bi bi-check-lg"></i> Sí, coincide
+                  </button>
+                  <button class="btn-confirm-no" (click)="onVehicleConfirm(false)" type="button">
+                    <i class="bi bi-x-lg"></i> No coincide
+                  </button>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="result-actions">
+        @if (isValid()) {
+          <button class="btn-dismiss" (click)="onDismiss()" type="button">Cerrar</button>
+          <!-- Gate button: hidden while vehicle confirmation is pending -->
+          @if (!vehicleConfirmationNeeded()) {
+            <button class="btn-open-gate" (click)="onConfirmEntry()" type="button">
+              <span>Abrir Puerta</span>
+              <i class="bi bi-unlock-fill"></i>
+            </button>
+          }
+        } @else {
+          <button class="btn-deny" (click)="onDenyEntry()" type="button">
+            <i class="bi bi-shield-x"></i> Rechazar
+          </button>
+          <button class="btn-dismiss-light" (click)="onDismiss()" type="button">Cerrar</button>
+        }
+      </div>
+    </div>
+  </div>
+}

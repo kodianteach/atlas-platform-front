@@ -6,7 +6,6 @@ import { AdminBottomNavComponent } from '../../ui/organisms/admin-bottom-nav/adm
 import { QuickActionCardComponent } from '../../ui/molecules/quick-action-card/quick-action-card.component';
 import { AuthorizationFormComponent } from '../../ui/organisms/authorization-form/authorization-form.component';
 import { NotificationTrayComponent } from '../../ui/organisms/notification-tray/notification-tray.component';
-import { AuthorizationFormValue } from '@domain/models/authorization/authorization.model';
 import { Notification } from '@domain/models/notification/notification.model';
 import { NotificationService } from '../../../services/notification.service';
 import { StorageGateway } from '@domain/gateways/storage/storage.gateway';
@@ -92,8 +91,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showFormOverlay.set(false);
   }
 
-  onFormSubmit(formValue: AuthorizationFormValue): void {
+  onAuthorizationCreated(_authorization: any): void {
     this.showFormOverlay.set(false);
+  }
+
+  onFormError(_errorMessage: string): void {
+    // Error handled by the form component toast
   }
 
   onNoticeBoard(): void {

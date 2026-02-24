@@ -1,0 +1,74 @@
+<div class="vehicle-exit-page">
+  <app-connection-status-bar />
+
+  <header class="page-header">
+    <h1><i class="bi bi-box-arrow-right"></i> Registrar Salida</h1>
+    <p class="header-subtitle">Registro de salida de vehículo</p>
+  </header>
+
+  <main class="page-content">
+    @if (success()) {
+      <div class="success-card">
+        <i class="bi bi-check-circle-fill"></i>
+        <h2>Salida Registrada</h2>
+        <p>Placa {{ vehiclePlate() }} — {{ personName() }}</p>
+      </div>
+    } @else {
+      <div class="exit-form">
+        <!-- Vehicle Plate -->
+        <div class="form-group">
+          <label for="plate">
+            <i class="bi bi-car-front-fill"></i> Placa del Vehículo
+          </label>
+          <input
+            type="text"
+            id="plate"
+            class="form-input plate-input"
+            placeholder="ABC123"
+            maxlength="7"
+            [value]="vehiclePlate()"
+            (input)="updatePlate($any($event.target).value)"
+            autocomplete="off" />
+        </div>
+
+        <!-- Person Name -->
+        <div class="form-group">
+          <label for="personName">
+            <i class="bi bi-person"></i> Nombre de la Persona
+          </label>
+          <input
+            type="text"
+            id="personName"
+            class="form-input"
+            placeholder="Nombre completo"
+            [value]="personName()"
+            (input)="updatePersonName($any($event.target).value)"
+            autocomplete="off" />
+        </div>
+
+        <!-- Error -->
+        @if (errorMessage()) {
+          <div class="error-banner">
+            <i class="bi bi-exclamation-triangle"></i>
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <!-- Submit -->
+        <button
+          class="btn-submit"
+          [disabled]="submitting()"
+          (click)="onSubmit()"
+          type="button">
+          @if (submitting()) {
+            <i class="bi bi-arrow-repeat spinning"></i> Registrando...
+          } @else {
+            <i class="bi bi-box-arrow-right"></i> Registrar Salida
+          }
+        </button>
+      </div>
+    }
+  </main>
+
+  <app-doorman-bottom-nav activeTab="exits" />
+</div>

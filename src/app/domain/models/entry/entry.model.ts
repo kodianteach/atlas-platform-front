@@ -40,3 +40,65 @@ export interface GateLocation {
   wing: string;
   gateNumber: number;
 }
+
+// ═══════════════════════════════════════════════════════════
+// HU #7: Validación en Portería — Modelos
+// ═══════════════════════════════════════════════════════════
+
+export type ValidationResult = 'VALID' | 'INVALID' | 'EXPIRED' | 'REVOKED' | 'FORMAT_ERROR';
+export type SyncStatus = 'PENDING' | 'SYNCED';
+
+export interface QrPayload {
+  authId: number;
+  orgId: number;
+  unitCode: string;
+  personName: string;
+  personDoc: string;
+  serviceType: string;
+  validFrom: string;
+  validTo: string;
+  vehiclePlate?: string;
+  vehicleType?: string;
+  vehicleColor?: string;
+  issuedAt: string;
+  kid: string;
+}
+
+export interface ParsedQr {
+  payload: QrPayload;
+  signatureBytes: Uint8Array;
+  rawPayloadBase64: string;
+}
+
+export interface AccessEvent {
+  id?: number;
+  authorizationId?: number;
+  organizationId?: number;
+  porterUserId?: number;
+  deviceId?: string;
+  action: 'ENTRY' | 'EXIT';
+  scanResult: ValidationResult;
+  personName: string;
+  personDocument?: string;
+  vehiclePlate?: string;
+  vehicleMatch?: boolean;
+  offlineValidated: boolean;
+  notes?: string;
+  scannedAt: string;
+  syncStatus: SyncStatus;
+  syncedAt?: string;
+}
+
+export interface VisitorAuthorizationSummary {
+  id: number;
+  personName: string;
+  personDocument: string;
+  serviceType: string;
+  unitCode?: string;
+  validFrom: string;
+  validTo: string;
+  vehiclePlate?: string;
+  vehicleType?: string;
+  vehicleColor?: string;
+  status: string;
+}

@@ -93,6 +93,11 @@
   color: #92400E;
 }
 
+.porter-list__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .porter-list__action-btn {
   background: none;
   border: 1px solid #e5e7eb;
@@ -107,6 +112,35 @@
   background: #f3f4f6;
   color: #FF7A59;
   border-color: #FF7A59;
+}
+
+.porter-list__action-btn--inactive {
+  color: #16a34a;
+}
+
+.porter-list__action-btn--inactive:hover {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.porter-list__action-btn--activate {
+  color: #dc2626;
+}
+
+.porter-list__action-btn--activate:hover {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.porter-list__status--active {
+  color: #16a34a !important;
+  font-size: 0.5rem !important;
+}
+
+.porter-list__status--inactive,
+.porter-list__status--pre_registered {
+  color: #f59e0b !important;
+  font-size: 0.5rem !important;
 }
 
 .porter-list__card-details {

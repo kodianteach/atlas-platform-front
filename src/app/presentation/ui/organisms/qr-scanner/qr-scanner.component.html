@@ -1,0 +1,62 @@
+<div class="scanner-container">
+  <!-- Camera viewfinder -->
+  <div class="viewfinder">
+    <div id="qr-scanner-region" class="scanner-region"></div>
+
+    @if (!scanning()) {
+      <div class="scanner-overlay">
+        @if (lastError()) {
+          <div class="error-message">
+            <i class="bi bi-exclamation-triangle"></i>
+            <p>{{ lastError() }}</p>
+            <button class="btn-retry" (click)="startScanner()" type="button">
+              <i class="bi bi-arrow-clockwise"></i> Reintentar
+            </button>
+          </div>
+        } @else {
+          <div class="start-message">
+            <i class="bi bi-qr-code-scan"></i>
+            <p>Toca para iniciar la cámara</p>
+            <button class="btn-start" (click)="startScanner()" type="button">
+              <i class="bi bi-camera-fill"></i> Activar Cámara
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    @if (scanning()) {
+      <!-- Scanning frame corners -->
+      <div class="scan-frame">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+        <div class="scan-line"></div>
+      </div>
+      <!-- Instruction text over camera -->
+      <div class="scan-instruction">
+        <span>Apunte al código QR</span>
+      </div>
+      <!-- Torch / flashlight toggle -->
+      <button
+        class="btn-torch"
+        [class.torch-on]="torchOn()"
+        (click)="toggleTorch()"
+        type="button"
+        title="Linterna">
+        <i class="bi" [class.bi-lightning-fill]="torchOn()" [class.bi-lightning]="!torchOn()"></i>
+      </button>
+    }
+  </div>
+
+  <!-- Controls -->
+  <div class="scanner-controls">
+    @if (scanning()) {
+      <button class="btn-control" (click)="stopScanner()" type="button">
+        <i class="bi bi-pause-circle"></i>
+        Pausar
+      </button>
+    }
+  </div>
+</div>

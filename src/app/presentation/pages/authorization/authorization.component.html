@@ -95,15 +95,16 @@
   <!-- Authorization Form Organism -->
   <app-authorization-form
     [visible]="showForm()"
-    (formSubmit)="onFormSubmit($event)"
+    (authorizationCreated)="onAuthorizationCreated($event)"
+    (errorOccurred)="onFormError($event)"
     (formCancel)="onFormCancel()" />
 
   <!-- Toast Messages -->
   @if (showSuccessToast()) {
-    <div class="toast toast-success">{{ toastMessage() }}</div>
+    <div class="toast toast-success show">{{ toastMessage() }}</div>
   }
   @if (showErrorToast()) {
-    <div class="toast toast-error">{{ toastMessage() }}</div>
+    <div class="toast toast-error show">{{ toastMessage() }}</div>
   }
 
   @if (!showForm()) {

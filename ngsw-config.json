@@ -3,8 +3,9 @@
   "index": "/index.html",
   "assetGroups": [
     {
-      "name": "app",
+      "name": "app-shell",
       "installMode": "prefetch",
+      "updateMode": "prefetch",
       "resources": {
         "files": [
           "/favicon.ico",
@@ -16,25 +17,76 @@
       }
     },
     {
-      "name": "assets",
+      "name": "assets-i18n",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/i18n/**"
+        ]
+      }
+    },
+    {
+      "name": "assets-icons",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/icons/**",
+          "/**/*.ico"
+        ]
+      }
+    },
+    {
+      "name": "assets-media",
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
         "files": [
           "/assets/**/*",
-          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2|ico)"
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
       }
     }
   ],
   "dataGroups": [
     {
+      "name": "api-porter-authorizations",
+      "urls": ["/api/porter/authorizations/**", "/api/porter/entries/**"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 200,
+        "maxAge": "1h",
+        "timeout": "3s"
+      }
+    },
+    {
+      "name": "api-porter-revocations",
+      "urls": ["/api/porter/revocations/**"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "30m",
+        "timeout": "3s"
+      }
+    },
+    {
+      "name": "api-porter-general",
+      "urls": ["/api/porter/**"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "30m",
+        "timeout": "3s"
+      }
+    },
+    {
       "name": "api-announcements",
       "urls": ["/api/announcements/**"],
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 50,
-        "maxAge": "5m",
+        "maxAge": "10m",
         "timeout": "3s"
       }
     },
@@ -43,7 +95,7 @@
       "urls": ["/api/auth/**"],
       "cacheConfig": {
         "strategy": "freshness",
-        "maxSize": 5,
+        "maxSize": 10,
         "maxAge": "0u",
         "timeout": "10s"
       }
@@ -78,11 +130,11 @@
       }
     },
     {
-      "name": "bootstrap-icons",
+      "name": "bootstrap-icons-cdn",
       "urls": ["https://cdn.jsdelivr.net/npm/bootstrap-icons**"],
       "cacheConfig": {
         "strategy": "performance",
-        "maxSize": 5,
+        "maxSize": 10,
         "maxAge": "30d"
       }
     }

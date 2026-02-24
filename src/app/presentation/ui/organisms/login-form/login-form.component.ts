@@ -26,7 +26,7 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
   }
@@ -34,8 +34,7 @@ export class LoginFormComponent implements OnInit {
   getEmailError(): string {
     const emailControl = this.loginForm.get('email');
     if (!emailControl?.touched) return '';
-    if (emailControl.hasError('required')) return 'Email is required';
-    if (emailControl.hasError('email')) return 'Please enter a valid email address';
+    if (emailControl.hasError('required')) return 'Usuario o correo es requerido';
     return '';
   }
 

@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError, timeout } from 'rxjs/operators';
 import { AuthorizationGateway } from '@domain/gateways/authorization/authorization.gateway';
 import { Authorization, AuthorizationFormValue, AuthorizationVerification } from '@domain/models/authorization/authorization.model';
+import { AccessEvent } from '@domain/models/entry/entry.model';
 import { Result, success, failure } from '@domain/models/common/api-response.model';
 import { environment } from '@env/environment';
 
@@ -46,6 +47,10 @@ export class AuthorizationAdapter extends AuthorizationGateway {
   }
 
   override createAuthorization(formValue: AuthorizationFormValue, document?: File): Observable<Result<Authorization>> {
+    console.log('[AuthorizationAdapter] createAuthorization LLAMADO');
+    console.log('[AuthorizationAdapter] URL:', this.BASE_URL);
+    console.log('[AuthorizationAdapter] FormValue:', formValue);
+
     const formData = new FormData();
     formData.append('data', new Blob([JSON.stringify(formValue)], { type: 'application/json' }));
 
@@ -53,9 +58,11 @@ export class AuthorizationAdapter extends AuthorizationGateway {
       formData.append('document', document, document.name);
     }
 
+    console.log('[AuthorizationAdapter] Enviando HTTP POST...');
     return this.http.post<ApiResponse<Authorization>>(this.BASE_URL, formData).pipe(
       timeout(this.TIMEOUT_MS),
       map(response => {
+        console.log('[AuthorizationAdapter] Respuesta recibida:', response);
         if (response.success) {
           return success(response.data, response.message);
         }
@@ -65,7 +72,10 @@ export class AuthorizationAdapter extends AuthorizationGateway {
           timestamp: new Date()
         });
       }),
-      catchError(error => of(this.handleError<Authorization>(error)))
+      catchError(error => {
+        console.error('[AuthorizationAdapter] Error HTTP:', error);
+        return of(this.handleError<Authorization>(error));
+      })
     );
   }
 
@@ -124,9 +134,44 @@ export class AuthorizationAdapter extends AuthorizationGateway {
     return `${this.EXTERNAL_URL}/${id}/qr-image`;
   }
 
-  private handleError<T>(error: unknown): Result<T> {
-    const httpError = error as { status?: number; name?: string; error?: { message?: string } };
+  override getAccessEvents(id: number): Observable<Result<AccessEvent[]>> {
+    return this.http.get<ApiResponse<AccessEvent[]>>(`${this.BASE_URL}/${id}/access-events`).pipe(
+      timeout(this.TIMEOUT_MS),
+      map(response => {
+        if (response.success) {
+          return success(response.data || [], response.message);
+        }
+        return failure<AccessEvent[]>({
+          code: response.errorCode || 'ACCESS_EVENTS_ERROR',
+          message: response.message,
+          timestamp: new Date()
+        });
+      }),
+      catchError(error => of(this.handleError<AccessEvent[]>(error)))
+    );
+  }
 
+  override getDocumentDownloadUrl(id: number): string {
+    return `${this.BASE_URL}/${id}/document`;
+  }
+
+  override downloadDocument(id: number): Observable<Result<Blob>> {
+    return this.http.get(`${this.BASE_URL}/${id}/document`, {
+      responseType: 'blob'
+    }).pipe(
+      timeout(this.TIMEOUT_MS),
+      map(blob => success(blob)),
+      catchError(error => of(this.handleError<Blob>(error)))
+    );
+  }
+
+  private handleError<T>(error: unknown): Result<T> {
+    const httpError = error as { status?: number; name?: string; error?: { message?: string; errorCode?: string } };
+    const backendMessage = httpError.error?.message;
+
+    if (httpError.status === 400) {
+      return failure({ code: httpError.error?.errorCode || 'BAD_REQUEST', message: backendMessage || 'Datos inválidos', timestamp: new Date() });
+    }
     if (httpError.status === 404) {
       return failure({ code: 'NOT_FOUND', message: 'Autorización no encontrada', timestamp: new Date() });
     }
@@ -138,7 +183,7 @@ export class AuthorizationAdapter extends AuthorizationGateway {
     }
     return failure({
       code: 'UNKNOWN_ERROR',
-      message: httpError.error?.message || 'Error inesperado. Intente nuevamente',
+      message: backendMessage || 'Error inesperado. Intente nuevamente',
       timestamp: new Date()
     });
   }

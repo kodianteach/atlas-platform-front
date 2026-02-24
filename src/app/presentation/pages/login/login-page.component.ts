@@ -54,6 +54,12 @@ export class LoginPageComponent {
 
     const user = response.user;
 
+    // PORTERO: redirect to doorman entry control
+    if (user && this.isPorter(user)) {
+      this.router.navigate(['/doorman/entry-control']);
+      return;
+    }
+
     // ADMIN_ATLAS: redirect to onboarding only if no organization yet
     if (user && this.isAdminAtlas(user)) {
       if (user.organizationId) {
@@ -71,7 +77,7 @@ export class LoginPageComponent {
       // For admin users, check profile completion status
       this.adminProfileService.getProfile().subscribe({
         next: (profile) => {
-          if (profile && profile.profileComplete) {
+          if (profile?.profileComplete) {
             // Profile is complete, redirect to appropriate dashboard
             this.router.navigate(['/home']);
           } else {
@@ -96,6 +102,15 @@ export class LoginPageComponent {
   private isAdminAtlas(user: AuthUser): boolean {
     return user.role === 'ADMIN_ATLAS' ||
       user.roles?.includes('ADMIN_ATLAS') === true;
+  }
+
+  /**
+   * Check if user has a porter role (PORTERO_GENERAL or PORTERO_DELIVERY)
+   */
+  private isPorter(user: AuthUser): boolean {
+    const porterRoles = new Set(['PORTERO_GENERAL', 'PORTERO_DELIVERY']);
+    if (porterRoles.has(user.role)) return true;
+    return user.roles?.some(r => porterRoles.has(r)) === true;
   }
 
   private handleError(error: HttpErrorLike | AuthResponse): void {

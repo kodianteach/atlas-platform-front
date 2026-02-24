@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { profileCompletionGuard } from '@infrastructure/guards/profile-completion.guard';
 import { authGuard } from '@infrastructure/guards/auth.guard';
+import { porterGuard } from '@infrastructure/guards/porter.guard';
 import { onboardingGuard } from '@infrastructure/guards/onboarding.guard';
 
 export const routes: Routes = [
@@ -63,16 +64,34 @@ export const routes: Routes = [
     path: 'doorman',
     children: [
       {
+        path: '',
+        redirectTo: 'scan',
+        pathMatch: 'full'
+      },
+      {
+        path: 'scan',
+        loadComponent: () => import('@presentation/pages/doorman/scan/scan-page.component').then(m => m.ScanPageComponent),
+        canActivate: [porterGuard]
+      },
+      {
         path: 'entry-control',
-        loadComponent: () => import('@presentation/pages/doorman/entry-control/entry-control.component').then(m => m.EntryControlComponent)
+        redirectTo: 'scan',
+        pathMatch: 'full'
+      },
+      {
+        path: 'vehicle-exit',
+        loadComponent: () => import('@presentation/pages/doorman/vehicle-exit/vehicle-exit-page.component').then(m => m.VehicleExitPageComponent),
+        canActivate: [porterGuard]
       },
       {
         path: 'entry-logs',
-        loadComponent: () => import('@presentation/pages/doorman/entry-logs/entry-logs.component').then(m => m.EntryLogsComponent)
+        loadComponent: () => import('@presentation/pages/doorman/entry-logs/entry-logs.component').then(m => m.EntryLogsComponent),
+        canActivate: [porterGuard]
       },
       {
         path: 'admin-chat',
-        loadComponent: () => import('@presentation/pages/doorman/admin-chat/admin-chat.component').then(m => m.AdminChatComponent)
+        loadComponent: () => import('@presentation/pages/doorman/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
+        canActivate: [porterGuard]
       }
     ]
   },
@@ -124,6 +143,16 @@ export const routes: Routes = [
         canActivate: [authGuard]
       },
       {
+        path: 'authorizations',
+        loadComponent: () => import('@presentation/pages/admin/authorizations/admin-authorizations-page.component').then(m => m.AdminAuthorizationsPageComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'authorizations/:id',
+        loadComponent: () => import('@presentation/pages/admin/authorization-detail/admin-authorization-detail-page.component').then(m => m.AdminAuthorizationDetailPageComponent),
+        canActivate: [authGuard]
+      },
+      {
         path: 'more',
         loadComponent: () => import('@presentation/pages/admin/more/admin-more-page.component').then(m => m.AdminMorePageComponent),
         canActivate: [authGuard]
@@ -132,6 +161,10 @@ export const routes: Routes = [
   },
   {
     path: 'enroll/:token',
+    loadComponent: () => import('@presentation/pages/enrollment/enrollment-page.component').then(m => m.EnrollmentPageComponent)
+  },
+  {
+    path: 'porter-enroll',
     loadComponent: () => import('@presentation/pages/enrollment/enrollment-page.component').then(m => m.EnrollmentPageComponent)
   },
   {
