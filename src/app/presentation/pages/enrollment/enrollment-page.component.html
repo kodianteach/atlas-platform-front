@@ -46,11 +46,35 @@
     <div class="state-message">
       <i class="bi bi-shield-check" style="font-size: 2rem; color: #16a34a;"></i>
       <p class="state-text">Este dispositivo ya está enrolado.</p>
-      <p class="state-hint">Las claves de verificación ya están almacenadas. Inicia sesión con tu usuario y PIN para acceder a la portería.</p>
-      <button class="btn-enroll" (click)="goToLogin()">
-        <i class="bi bi-box-arrow-in-right"></i>
-        Iniciar Sesión
-      </button>
+
+      @if (!showReEnrollConfirm()) {
+        <p class="state-hint">Las claves de verificación ya están almacenadas.
+           Inicia sesión con tu usuario.</p>
+        <button class="btn-enroll" (click)="goToLogin()">
+          <i class="bi bi-box-arrow-in-right"></i>
+          Iniciar Sesión
+        </button>
+        <button class="btn-reenroll" (click)="showReEnrollConfirm.set(true)">
+          <i class="bi bi-arrow-repeat"></i>
+          Actualizar Enrolamiento
+        </button>
+      } @else {
+        <div class="reenroll-confirm">
+          <div class="reenroll-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <p>Al actualizar el enrolamiento se reemplazarán las claves de verificación actuales. El dispositivo quedará vinculado al nuevo portero/organización.</p>
+          </div>
+          <div class="reenroll-actions">
+            <button class="btn-enroll" (click)="proceedWithReEnrollment()">
+              <i class="bi bi-arrow-repeat"></i>
+              Sí, Actualizar
+            </button>
+            <button class="btn-cancel" (click)="showReEnrollConfirm.set(false)">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      }
     </div>
   }
 

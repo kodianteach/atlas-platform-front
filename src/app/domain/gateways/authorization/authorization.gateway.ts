@@ -4,6 +4,7 @@
  */
 import { Observable } from 'rxjs';
 import { Authorization, AuthorizationFormValue, AuthorizationVerification } from '@domain/models/authorization/authorization.model';
+import { AccessEvent } from '@domain/models/entry/entry.model';
 import { Result } from '@domain/models/common/api-response.model';
 
 export abstract class AuthorizationGateway {
@@ -42,4 +43,22 @@ export abstract class AuthorizationGateway {
    * @param id - Authorization ID
    */
   abstract getQrImageUrl(id: number): string;
+
+  /**
+   * Get access events for an authorization
+   * @param id - Authorization ID
+   */
+  abstract getAccessEvents(id: number): Observable<Result<AccessEvent[]>>;
+
+  /**
+   * Get the URL to download the identity document PDF
+   * @param id - Authorization ID
+   */
+  abstract getDocumentDownloadUrl(id: number): string;
+
+  /**
+   * Download the identity document as blob
+   * @param id - Authorization ID
+   */
+  abstract downloadDocument(id: number): Observable<Result<Blob>>;
 }

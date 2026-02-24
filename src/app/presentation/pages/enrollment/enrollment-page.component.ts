@@ -52,6 +52,9 @@ export class EnrollmentPageComponent implements OnInit {
   readonly generalError = signal<string | undefined>(undefined);
   readonly showPwaModal = signal(false);
 
+  /** Whether to show re-enroll confirmation prompt */
+  readonly showReEnrollConfirm = signal(false);
+
   /** Track which field was just copied for visual feedback */
   readonly copiedField = signal<string | null>(null);
 
@@ -127,6 +130,19 @@ export class EnrollmentPageComponent implements OnInit {
 
   goToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  /** Clear existing enrollment and proceed with new token validation */
+  async proceedWithReEnrollment(): Promise<void> {
+    try {
+      await this.cryptoStorage.clearKeys();
+      this.showReEnrollConfirm.set(false);
+      this.pageState.set('loading');
+      this.validateToken();
+    } catch {
+      this.generalError.set('No se pudo limpiar el enrolamiento anterior. Intenta de nuevo.');
+      this.pageState.set('enrollment-error');
+    }
   }
 
   /** Navigate to doorman entry control after successful enrollment */

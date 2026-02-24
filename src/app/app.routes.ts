@@ -143,6 +143,16 @@ export const routes: Routes = [
         canActivate: [authGuard]
       },
       {
+        path: 'authorizations',
+        loadComponent: () => import('@presentation/pages/admin/authorizations/admin-authorizations-page.component').then(m => m.AdminAuthorizationsPageComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'authorizations/:id',
+        loadComponent: () => import('@presentation/pages/admin/authorization-detail/admin-authorization-detail-page.component').then(m => m.AdminAuthorizationDetailPageComponent),
+        canActivate: [authGuard]
+      },
+      {
         path: 'more',
         loadComponent: () => import('@presentation/pages/admin/more/admin-more-page.component').then(m => m.AdminMorePageComponent),
         canActivate: [authGuard]

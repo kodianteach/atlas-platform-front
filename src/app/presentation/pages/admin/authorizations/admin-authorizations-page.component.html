@@ -1,0 +1,189 @@
+<div class="auth-page">
+  <!-- Header -->
+  <header class="auth-page__header">
+    <div class="auth-page__header-top">
+      <button class="auth-page__back-btn" (click)="goBack()" type="button">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <div class="auth-page__header-content">
+        <h1 class="auth-page__title">
+          <i class="bi bi-shield-check"></i>
+          Autorizaciones
+        </h1>
+        <p class="auth-page__subtitle">
+          {{ activeCount() }} activas de {{ totalCount() }} total
+        </p>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="auth-page__search-bar">
+      <div class="auth-page__search-input-container">
+        <i class="bi bi-search auth-page__search-icon"></i>
+        <input
+          type="text"
+          class="auth-page__search-input"
+          placeholder="Buscar por nombre, documento o placa..."
+          [value]="searchQuery()"
+          (input)="onSearchChange($any($event.target).value)"
+        />
+        @if (searchQuery()) {
+          <button class="auth-page__search-clear" (click)="onSearchChange('')" type="button">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        }
+      </div>
+      <button
+        class="auth-page__filter-toggle"
+        [class.auth-page__filter-toggle--active]="showFilters() || hasActiveFilters()"
+        (click)="toggleFilters()"
+        type="button">
+        <i class="bi bi-funnel"></i>
+        @if (hasActiveFilters()) {
+          <span class="auth-page__filter-badge"></span>
+        }
+      </button>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  @if (showFilters()) {
+    <div class="auth-page__filters">
+      <div class="auth-page__filter-group">
+        <span class="auth-page__filter-label">Estado</span>
+        <div class="auth-page__filter-chips">
+          @for (opt of statusOptions; track opt.value) {
+            <button
+              class="auth-page__chip"
+              [class.auth-page__chip--active]="filterStatus() === opt.value"
+              (click)="onStatusFilterChange(opt.value)"
+              type="button">
+              {{ opt.label }}
+            </button>
+          }
+        </div>
+      </div>
+      <div class="auth-page__filter-group">
+        <span class="auth-page__filter-label">Tipo de servicio</span>
+        <div class="auth-page__filter-chips">
+          @for (opt of serviceTypeOptions; track opt.value) {
+            <button
+              class="auth-page__chip"
+              [class.auth-page__chip--active]="filterServiceType() === opt.value"
+              (click)="onServiceTypeFilterChange(opt.value)"
+              type="button">
+              {{ opt.label }}
+            </button>
+          }
+        </div>
+      </div>
+      @if (hasActiveFilters()) {
+        <button class="auth-page__clear-filters" (click)="clearFilters()" type="button">
+          <i class="bi bi-x-lg"></i> Limpiar filtros
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Error Banner -->
+  @if (errorMessage()) {
+    <div class="auth-page__error" role="alert">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+      <button class="auth-page__error-close" (click)="onDismissError()" type="button">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="auth-page__loading">
+      <div class="auth-page__spinner"></div>
+      <span>Cargando autorizaciones...</span>
+    </div>
+  }
+
+  <!-- Results Counter -->
+  @if (!loading() && !errorMessage()) {
+    <div class="auth-page__results-info">
+      <span>{{ filteredCount() }} resultado{{ filteredCount() !== 1 ? 's' : '' }}</span>
+    </div>
+  }
+
+  <!-- Authorization List -->
+  <main class="auth-page__content">
+    @if (!loading() && filteredAuthorizations().length === 0 && !errorMessage()) {
+      <div class="auth-page__empty">
+        <i class="bi bi-shield-x auth-page__empty-icon"></i>
+        <p class="auth-page__empty-title">No se encontraron autorizaciones</p>
+        <p class="auth-page__empty-desc">
+          @if (hasActiveFilters()) {
+            Intenta ajustar los filtros de búsqueda
+          } @else {
+            Aún no hay autorizaciones registradas en la organización
+          }
+        </p>
+        @if (hasActiveFilters()) {
+          <button class="auth-page__empty-action" (click)="clearFilters()" type="button">
+            Limpiar filtros
+          </button>
+        }
+      </div>
+    }
+
+    @for (auth of filteredAuthorizations(); track auth.id) {
+      <button
+        class="auth-page__card"
+        (click)="onAuthorizationClick(auth)"
+        type="button">
+        <div class="auth-page__card-header">
+          <div class="auth-page__card-icon-container">
+            <i [class]="'bi ' + getServiceTypeIcon(auth.serviceType) + ' auth-page__card-icon'"></i>
+          </div>
+          <div class="auth-page__card-info">
+            <span class="auth-page__card-name">{{ auth.personName }}</span>
+            <span class="auth-page__card-document">
+              <i class="bi bi-credit-card-2-front"></i>
+              {{ auth.personDocument }}
+            </span>
+          </div>
+          <span class="auth-page__card-status" [class]="getStatusClass(auth)">
+            {{ getStatusLabel(auth) }}
+          </span>
+        </div>
+        <div class="auth-page__card-details">
+          <div class="auth-page__card-detail">
+            <i class="bi bi-tag"></i>
+            <span>{{ getServiceTypeLabel(auth.serviceType) }}</span>
+          </div>
+          <div class="auth-page__card-detail">
+            <i class="bi bi-calendar-range"></i>
+            <span>{{ formatDate(auth.validFrom) }} — {{ formatDate(auth.validTo) }}</span>
+          </div>
+          @if (auth.vehiclePlate) {
+            <div class="auth-page__card-detail">
+              <i class="bi bi-car-front"></i>
+              <span>{{ auth.vehiclePlate }}</span>
+            </div>
+          }
+          @if (auth.identityDocumentKey) {
+            <div class="auth-page__card-detail auth-page__card-detail--doc">
+              <i class="bi bi-file-earmark-pdf"></i>
+              <span>Documento adjunto</span>
+            </div>
+          }
+        </div>
+        <div class="auth-page__card-footer">
+          <span class="auth-page__card-date">
+            <i class="bi bi-clock"></i> Creada {{ formatDateTime(auth.createdAt) }}
+          </span>
+          <i class="bi bi-chevron-right auth-page__card-arrow"></i>
+        </div>
+      </button>
+    }
+  </main>
+
+  <!-- Bottom Navigation -->
+  <app-admin-bottom-nav [activeTab]="'more'" />
+</div>

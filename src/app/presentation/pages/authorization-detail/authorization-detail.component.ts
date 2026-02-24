@@ -6,6 +6,7 @@ import { Authorization, SERVICE_TYPE_LABELS, STATUS_LABELS } from '@domain/model
 import { GetAuthorizationByIdUseCase } from '@domain/use-cases/authorization/get-authorization-by-id.use-case';
 import { RevokeAuthorizationUseCase } from '@domain/use-cases/authorization/revoke-authorization.use-case';
 import { AuthorizationGateway } from '@domain/gateways/authorization/authorization.gateway';
+import { AuthorizationPdfService } from '../../../infrastructure/services/authorization-pdf.service';
 import { QrDisplayComponent } from '../../ui/molecules/qr-display/qr-display.component';
 import { ShareActionsComponent } from '../../ui/molecules/share-actions/share-actions.component';
 import { ButtonComponent } from '../../ui/atoms/button/button.component';
@@ -129,6 +130,19 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
                 [personName]="authorization()!.personName" />
             </div>
           }
+
+          <!-- Download PDF -->
+          <div class="actions-section">
+            <button class="download-pdf-btn" (click)="onDownloadPdf()" [disabled]="generatingPdf()">
+              @if (generatingPdf()) {
+                <div class="btn-spinner"></div>
+                Generando PDF...
+              } @else {
+                <i class="bi bi-file-earmark-pdf"></i>
+                Descargar Invitación PDF
+              }
+            </button>
+          </div>
 
           <!-- Revoke Action -->
           @if (authorization()!.status === 'ACTIVE') {
@@ -342,6 +356,52 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
 
     .retry-btn:hover { background: #e9ecef; }
 
+    /* Download PDF Button */
+    .download-pdf-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border: none;
+      background: linear-gradient(135deg, #FF8C61, #FF6B3D);
+      color: white;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255, 107, 61, 0.3);
+    }
+
+    .download-pdf-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 107, 61, 0.4);
+    }
+
+    .download-pdf-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .download-pdf-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .download-pdf-btn i {
+      font-size: 1.125rem;
+    }
+
+    .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
     /* Revoke Confirmation Modal */
     .modal-backdrop {
       position: fixed;
@@ -477,12 +537,14 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   private readonly getByIdUseCase = inject(GetAuthorizationByIdUseCase);
   private readonly revokeUseCase = inject(RevokeAuthorizationUseCase);
   private readonly authorizationGateway = inject(AuthorizationGateway);
+  private readonly pdfService = inject(AuthorizationPdfService);
 
   readonly authorization = signal<Authorization | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string>('');
   readonly revoking = signal(false);
   readonly showRevokeModal = signal(false);
+  readonly generatingPdf = signal(false);
 
   private authorizationId = 0;
   private destroy$ = new Subject<void>();
@@ -556,6 +618,19 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
 
   onCancelRevoke(): void {
     this.showRevokeModal.set(false);
+  }
+
+  async onDownloadPdf(): Promise<void> {
+    const auth = this.authorization();
+    if (!auth) return;
+
+    this.generatingPdf.set(true);
+    try {
+      const qrUrl = this.qrImageUrl();
+      await this.pdfService.generatePdf(auth, qrUrl);
+    } finally {
+      this.generatingPdf.set(false);
+    }
   }
 
   goBack(): void {

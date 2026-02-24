@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError, timeout } from 'rxjs/operators';
 import { AuthorizationGateway } from '@domain/gateways/authorization/authorization.gateway';
 import { Authorization, AuthorizationFormValue, AuthorizationVerification } from '@domain/models/authorization/authorization.model';
+import { AccessEvent } from '@domain/models/entry/entry.model';
 import { Result, success, failure } from '@domain/models/common/api-response.model';
 import { environment } from '@env/environment';
 
@@ -131,6 +132,37 @@ export class AuthorizationAdapter extends AuthorizationGateway {
 
   override getQrImageUrl(id: number): string {
     return `${this.EXTERNAL_URL}/${id}/qr-image`;
+  }
+
+  override getAccessEvents(id: number): Observable<Result<AccessEvent[]>> {
+    return this.http.get<ApiResponse<AccessEvent[]>>(`${this.BASE_URL}/${id}/access-events`).pipe(
+      timeout(this.TIMEOUT_MS),
+      map(response => {
+        if (response.success) {
+          return success(response.data || [], response.message);
+        }
+        return failure<AccessEvent[]>({
+          code: response.errorCode || 'ACCESS_EVENTS_ERROR',
+          message: response.message,
+          timestamp: new Date()
+        });
+      }),
+      catchError(error => of(this.handleError<AccessEvent[]>(error)))
+    );
+  }
+
+  override getDocumentDownloadUrl(id: number): string {
+    return `${this.BASE_URL}/${id}/document`;
+  }
+
+  override downloadDocument(id: number): Observable<Result<Blob>> {
+    return this.http.get(`${this.BASE_URL}/${id}/document`, {
+      responseType: 'blob'
+    }).pipe(
+      timeout(this.TIMEOUT_MS),
+      map(blob => success(blob)),
+      catchError(error => of(this.handleError<Blob>(error)))
+    );
   }
 
   private handleError<T>(error: unknown): Result<T> {

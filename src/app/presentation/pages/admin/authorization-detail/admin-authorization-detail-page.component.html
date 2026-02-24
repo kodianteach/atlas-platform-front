@@ -1,0 +1,293 @@
+<div class="auth-detail">
+  <!-- Header -->
+  <header class="auth-detail__header">
+    <button class="auth-detail__back-btn" (click)="goBack()" type="button">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="auth-detail__header-content">
+      <h1 class="auth-detail__title">Detalle de Autorización</h1>
+      @if (authorization()) {
+        <p class="auth-detail__subtitle">ID #{{ authorization()!.id }}</p>
+      }
+    </div>
+  </header>
+
+  <!-- Error -->
+  @if (errorMessage()) {
+    <div class="auth-detail__error" role="alert">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+      <button class="auth-detail__error-close" (click)="onDismissError()" type="button">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="auth-detail__loading">
+      <div class="auth-detail__spinner"></div>
+      <span>Cargando...</span>
+    </div>
+  }
+
+  @if (authorization(); as auth) {
+    <main class="auth-detail__content">
+
+      <!-- Status Banner -->
+      <div class="auth-detail__status-banner" [class]="getStatusClass(auth)">
+        <span class="auth-detail__status-badge" [class]="getStatusClass(auth)">
+          {{ getStatusLabel(auth) }}
+        </span>
+        <span class="auth-detail__status-dates">
+          {{ formatDate(auth.validFrom) }} — {{ formatDate(auth.validTo) }}
+        </span>
+      </div>
+
+      <!-- Person Info Card -->
+      <section class="auth-detail__card">
+        <h2 class="auth-detail__card-title">
+          <i class="bi bi-person-circle"></i> Persona Autorizada
+        </h2>
+        <div class="auth-detail__info-grid">
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Nombre</span>
+            <span class="auth-detail__info-value">{{ auth.personName }}</span>
+          </div>
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Documento</span>
+            <span class="auth-detail__info-value">{{ auth.personDocument }}</span>
+          </div>
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Tipo de servicio</span>
+            <span class="auth-detail__info-value auth-detail__info-value--badge">
+              <i [class]="'bi ' + getServiceTypeIcon(auth.serviceType)"></i>
+              {{ getServiceTypeLabel(auth.serviceType) }}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Validity Card -->
+      <section class="auth-detail__card">
+        <h2 class="auth-detail__card-title">
+          <i class="bi bi-calendar-range"></i> Vigencia
+        </h2>
+        <div class="auth-detail__info-grid">
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Válida desde</span>
+            <span class="auth-detail__info-value">{{ formatDateTime(auth.validFrom) }}</span>
+          </div>
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Válida hasta</span>
+            <span class="auth-detail__info-value">{{ formatDateTime(auth.validTo) }}</span>
+          </div>
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Creada</span>
+            <span class="auth-detail__info-value">{{ formatDateTime(auth.createdAt) }}</span>
+          </div>
+          @if (auth.revokedAt) {
+            <div class="auth-detail__info-item">
+              <span class="auth-detail__info-label">Revocada</span>
+              <span class="auth-detail__info-value auth-detail__info-value--danger">{{ formatDateTime(auth.revokedAt) }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Vehicle Card -->
+      @if (auth.vehiclePlate || auth.vehicleType || auth.vehicleColor) {
+        <section class="auth-detail__card">
+          <h2 class="auth-detail__card-title">
+            <i class="bi bi-car-front"></i> Vehículo
+          </h2>
+          <div class="auth-detail__info-grid">
+            @if (auth.vehiclePlate) {
+              <div class="auth-detail__info-item">
+                <span class="auth-detail__info-label">Placa</span>
+                <span class="auth-detail__info-value auth-detail__info-value--mono">{{ auth.vehiclePlate }}</span>
+              </div>
+            }
+            @if (auth.vehicleType) {
+              <div class="auth-detail__info-item">
+                <span class="auth-detail__info-label">Tipo</span>
+                <span class="auth-detail__info-value">{{ auth.vehicleType }}</span>
+              </div>
+            }
+            @if (auth.vehicleColor) {
+              <div class="auth-detail__info-item">
+                <span class="auth-detail__info-label">Color</span>
+                <span class="auth-detail__info-value">{{ auth.vehicleColor }}</span>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Organization Info -->
+      <section class="auth-detail__card">
+        <h2 class="auth-detail__card-title">
+          <i class="bi bi-building"></i> Información Adicional
+        </h2>
+        <div class="auth-detail__info-grid">
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Unidad (ID)</span>
+            <span class="auth-detail__info-value">{{ auth.unitId }}</span>
+          </div>
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Creada por (ID usuario)</span>
+            <span class="auth-detail__info-value">{{ auth.createdByUserId }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Identity Document Card -->
+      @if (hasDocument()) {
+        <section class="auth-detail__card">
+          <h2 class="auth-detail__card-title">
+            <i class="bi bi-file-earmark-pdf"></i> Documento de Identidad
+          </h2>
+          <p class="auth-detail__doc-desc">
+            Se adjuntó un documento de identidad con esta autorización.
+          </p>
+          @if (documentError()) {
+            <div class="auth-detail__doc-error" role="alert">
+              <i class="bi bi-exclamation-triangle"></i>
+              <span>{{ documentError() }}</span>
+            </div>
+          }
+          <div class="auth-detail__doc-actions">
+            <button
+              class="auth-detail__doc-btn auth-detail__doc-btn--preview"
+              (click)="onPreviewDocument()"
+              [disabled]="loadingDocument()"
+              type="button">
+              @if (loadingDocument()) {
+                <div class="auth-detail__btn-spinner"></div>
+              } @else {
+                <i class="bi bi-eye"></i>
+              }
+              Previsualizar
+            </button>
+            <button
+              class="auth-detail__doc-btn auth-detail__doc-btn--download"
+              (click)="onDownloadDocument()"
+              [disabled]="loadingDocument()"
+              type="button">
+              <i class="bi bi-download"></i>
+              Descargar PDF
+            </button>
+          </div>
+        </section>
+      }
+
+      <!-- Access Events Card -->
+      <section class="auth-detail__card">
+        <h2 class="auth-detail__card-title">
+          <i class="bi bi-clock-history"></i> Historial de Validaciones
+        </h2>
+
+        @if (loadingEvents()) {
+          <div class="auth-detail__events-loading">
+            <div class="auth-detail__spinner auth-detail__spinner--small"></div>
+            <span>Cargando historial...</span>
+          </div>
+        } @else if (accessEvents().length === 0) {
+          <div class="auth-detail__events-empty">
+            <i class="bi bi-inbox"></i>
+            <p>No se han registrado validaciones para esta autorización</p>
+          </div>
+        } @else {
+          <div class="auth-detail__events-list">
+            @for (event of accessEvents(); track event.id || $index) {
+              <div class="auth-detail__event">
+                <div class="auth-detail__event-icon-container" [class]="getScanResultClass(event.scanResult)">
+                  <i [class]="'bi ' + getScanResultIcon(event.scanResult)"></i>
+                </div>
+                <div class="auth-detail__event-content">
+                  <div class="auth-detail__event-header">
+                    <span class="auth-detail__event-result" [class]="getScanResultClass(event.scanResult)">
+                      {{ getScanResultLabel(event.scanResult) }}
+                    </span>
+                    <span class="auth-detail__event-action">
+                      {{ getActionLabel(event.action) }}
+                    </span>
+                  </div>
+                  <div class="auth-detail__event-details">
+                    @if (event.porterUserId) {
+                      <span class="auth-detail__event-detail">
+                        <i class="bi bi-person-badge"></i>
+                        Portero #{{ event.porterUserId }}
+                      </span>
+                    }
+                    <span class="auth-detail__event-detail">
+                      <i class="bi bi-clock"></i>
+                      {{ formatDateTime(event.scannedAt) }}
+                    </span>
+                    @if (event.vehiclePlate) {
+                      <span class="auth-detail__event-detail">
+                        <i class="bi bi-car-front"></i>
+                        {{ event.vehiclePlate }}
+                        @if (event.vehicleMatch !== undefined) {
+                          <span class="auth-detail__vehicle-match" [class.auth-detail__vehicle-match--ok]="event.vehicleMatch" [class.auth-detail__vehicle-match--no]="!event.vehicleMatch">
+                            {{ event.vehicleMatch ? '✓ Coincide' : '✗ No coincide' }}
+                          </span>
+                        }
+                      </span>
+                    }
+                    @if (event.offlineValidated) {
+                      <span class="auth-detail__event-detail auth-detail__event-detail--offline">
+                        <i class="bi bi-wifi-off"></i> Offline
+                      </span>
+                    }
+                    @if (event.notes) {
+                      <span class="auth-detail__event-detail">
+                        <i class="bi bi-chat-text"></i>
+                        {{ event.notes }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+    </main>
+  }
+
+  <!-- Document Preview Modal -->
+  @if (showDocumentPreview()) {
+    <div class="auth-detail__modal-overlay">
+      <div class="auth-detail__modal">
+        <div class="auth-detail__modal-header">
+          <h3 class="auth-detail__modal-title">Documento de Identidad</h3>
+          <button class="auth-detail__modal-close" (click)="closeDocumentPreview()" type="button">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="auth-detail__modal-body">
+          @if (documentBlobUrl()) {
+            <iframe
+              class="auth-detail__pdf-viewer"
+              [src]="documentBlobUrl()!"
+              title="Documento de identidad PDF">
+            </iframe>
+          }
+        </div>
+        <div class="auth-detail__modal-footer">
+          <button class="auth-detail__doc-btn auth-detail__doc-btn--download" (click)="onDownloadDocument()" type="button">
+            <i class="bi bi-download"></i> Descargar
+          </button>
+          <button class="auth-detail__doc-btn auth-detail__doc-btn--close" (click)="closeDocumentPreview()" type="button">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Bottom Navigation -->
+  <app-admin-bottom-nav [activeTab]="'more'" />
+</div>
