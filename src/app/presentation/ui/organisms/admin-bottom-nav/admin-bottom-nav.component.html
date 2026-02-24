@@ -26,8 +26,8 @@
     <span class="admin-bottom-nav__label">Porteros</span>
   </button>
   
-  <!-- Center FAB -->
-  <div class="admin-bottom-nav__fab-container">
+  <!-- Center FAB - Oculto para administradores supremos -->
+  <div class="admin-bottom-nav__fab-container" *ngIf="!isSupremeAdmin()">
     <button class="admin-bottom-nav__fab" type="button">
       <i class="bi bi-plus-lg"></i>
     </button>
@@ -60,6 +60,12 @@
       <i class="bi bi-envelope-paper admin-bottom-nav__more-icon"></i>
       <span class="admin-bottom-nav__more-label">Invitaciones</span>
       <span class="admin-bottom-nav__more-desc">Gestionar invitaciones de propietarios</span>
+    </button>
+    
+    <button class="admin-bottom-nav__more-item admin-bottom-nav__more-item--danger" (click)="logout()" type="button">
+      <i class="bi bi-box-arrow-right admin-bottom-nav__more-icon"></i>
+      <span class="admin-bottom-nav__more-label">Cerrar Sesión</span>
+      <span class="admin-bottom-nav__more-desc">Salir de la aplicación</span>
     </button>
   </div>
 }
