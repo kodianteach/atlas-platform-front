@@ -174,6 +174,25 @@
   padding-left: calc(32px + var(--spacing-sm));
 }
 
+.admin-bottom-nav__more-item--danger {
+  margin-top: var(--spacing-xs);
+  border-top: 1px solid var(--border-color);
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); 
+}
+
+.admin-bottom-nav__more-item--danger .admin-bottom-nav__more-icon,
+.admin-bottom-nav__more-item--danger .admin-bottom-nav__more-label {
+  color: var(--color-error);
+}
+
+.admin-bottom-nav__more-item--danger:hover {
+  background: var(--color-error-light);
+}
+
+.theme-dark .admin-bottom-nav__more-item--danger:hover {
+  background: rgba(255, 0, 0, 0.1);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

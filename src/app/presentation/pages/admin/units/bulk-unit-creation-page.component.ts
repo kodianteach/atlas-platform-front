@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DistributeUnitsUseCase } from '@domain/use-cases/unit/distribute-units.use-case';
 import { GetOrganizationConfigUseCase } from '@domain/use-cases/organization/get-organization-config.use-case';
-import { UnitDistributeRequest, UnitDistributeResponse } from '@domain/models/unit/unit.model';
+import { GetOrganizationUnitsUseCase } from '@domain/use-cases/unit/get-organization-units.use-case';
+import { UnitDistributeRequest, UnitDistributeResponse, Unit } from '@domain/models/unit/unit.model';
 import { AuthenticationService } from '../../../../services/authentication.service';
 import { AdminBottomNavComponent } from '../../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
 import { BulkUnitFormComponent } from '../../../ui/organisms/bulk-unit-form/bulk-unit-form.component';
@@ -20,6 +21,7 @@ export class BulkUnitCreationPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly distributeUnitsUseCase = inject(DistributeUnitsUseCase);
   private readonly getOrgConfigUseCase = inject(GetOrganizationConfigUseCase);
+  private readonly getOrgUnitsUseCase = inject(GetOrganizationUnitsUseCase);
   private readonly authService = inject(AuthenticationService);
 
   readonly isSubmitting = signal(false);
@@ -27,10 +29,56 @@ export class BulkUnitCreationPageComponent implements OnInit {
   readonly maxUnitsAllowed = signal(100);
   readonly generalError = signal('');
   readonly distributionResult = signal<UnitDistributeResponse | null>(null);
+  readonly showForm = signal(false);
+  
+  // Units Preview Logic
+  readonly isLoadingUnits = signal(false);
+  readonly units = signal<Unit[]>([]);
+  
+  readonly groupedUnits = computed(() => {
+    const unitList = this.units();
+    const groups: { [key: string]: Unit[] } = {};
+    
+    // Group
+    unitList.forEach(unit => {
+      if (!groups[unit.type]) {
+        groups[unit.type] = [];
+      }
+      groups[unit.type].push(unit);
+    });
+
+    // Sort Keys and Values
+    return Object.keys(groups).sort().map(type => ({
+      type,
+      units: groups[type].sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }))
+    }));
+  });
 
   ngOnInit(): void {
     this.loadOrganizationConfig();
+    this.loadUnits();
   }
+  
+  private loadUnits(): void {
+    const user = this.authService.getUser();
+    if (!user?.organizationId) return;
+
+    this.isLoadingUnits.set(true);
+    this.getOrgUnitsUseCase.execute(Number(user.organizationId)).subscribe({
+      next: (result) => {
+        this.isLoadingUnits.set(false);
+        if (result.success) {
+          this.units.set(result.data);
+        }
+      },
+      error: () => {
+        this.isLoadingUnits.set(false);
+      }
+    });
+  }
+
+  // Remove sortUnits method as it is now inside computed
+
 
   handleSubmit(formData: {
     codePrefix: string;
@@ -77,11 +125,16 @@ export class BulkUnitCreationPageComponent implements OnInit {
   }
 
   handleCancel(): void {
-    this.router.navigate(['/home']);
+    this.showForm.set(false);
+  }
+
+  toggleForm(): void {
+    this.showForm.update(v => !v);
   }
 
   handleCreateMore(): void {
     this.distributionResult.set(null);
+    this.showForm.set(true); // Show form immediately
     this.generalError.set('');
   }
 

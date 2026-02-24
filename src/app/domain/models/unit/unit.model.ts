@@ -53,4 +53,8 @@ export interface Unit {
   code: string;
   type: string;
   status: string;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  organizationId?: number;
 }
