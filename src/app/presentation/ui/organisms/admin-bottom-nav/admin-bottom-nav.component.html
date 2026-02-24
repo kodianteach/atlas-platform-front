@@ -26,8 +26,8 @@
     <span class="admin-bottom-nav__label">Porteros</span>
   </button>
   
-  <!-- Center FAB -->
-  <div class="admin-bottom-nav__fab-container">
+  <!-- Center FAB - Oculto para administradores supremos -->
+  <div class="admin-bottom-nav__fab-container" *ngIf="!isSupremeAdmin()">
     <button class="admin-bottom-nav__fab" type="button">
       <i class="bi bi-plus-lg"></i>
     </button>
@@ -35,31 +35,10 @@
   
   <button 
     class="admin-bottom-nav__item" 
-    [class.admin-bottom-nav__item--active]="isActive('config')"
-    (click)="navigateTo('config')"
-    type="button">
-    <i class="bi bi-gear admin-bottom-nav__icon"></i>
-    <span class="admin-bottom-nav__label">Config</span>
-  </button>
-  
-  <button 
-    class="admin-bottom-nav__item" 
     [class.admin-bottom-nav__item--active]="isActive('more')"
-    (click)="toggleMoreMenu()"
+    (click)="navigateTo('more')"
     type="button">
     <i class="bi bi-three-dots admin-bottom-nav__icon"></i>
     <span class="admin-bottom-nav__label">Más</span>
   </button>
 </nav>
-
-<!-- More menu overlay -->
-@if (moreMenuOpen()) {
-  <div class="admin-bottom-nav__overlay" (click)="closeMoreMenu()"></div>
-  <div class="admin-bottom-nav__more-menu">
-    <button class="admin-bottom-nav__more-item" (click)="navigateToInvitations()" type="button">
-      <i class="bi bi-envelope-paper admin-bottom-nav__more-icon"></i>
-      <span class="admin-bottom-nav__more-label">Invitaciones</span>
-      <span class="admin-bottom-nav__more-desc">Gestionar invitaciones de propietarios</span>
-    </button>
-  </div>
-}

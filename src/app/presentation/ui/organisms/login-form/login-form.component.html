@@ -15,21 +15,19 @@
     [errorMessage]="getEmailError()"
     [value]="loginForm.get('email')?.value || ''"
     autocomplete="email"
-    icon="user"
+    icon="envelope"
     (valueChange)="updateEmail($event)"
     (blurred)="markEmailTouched()" />
 
-  <app-form-field
+  <app-password-input
     id="password"
     label="Contraseña"
-    type="password"
     placeholder="Contraseña"
     [required]="true"
     [disabled]="isSubmitting()"
     [errorMessage]="getPasswordError()"
     [value]="loginForm.get('password')?.value || ''"
     autocomplete="current-password"
-    icon="lock"
     (valueChange)="updatePassword($event)"
     (blurred)="markPasswordTouched()" />
 
@@ -43,9 +41,4 @@
     [disabled]="!loginForm.valid"
     [loading]="isSubmitting()"
     label="Iniciar Sesión" />
-
-  <div class="register-section">
-    <span class="register-text">¿Aún no eres residente?</span>
-    <a href="#" class="register-link">Registrarse</a>
-  </div>
 </form>

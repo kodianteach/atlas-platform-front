@@ -30,21 +30,59 @@
 
     <!-- Form / Result -->
     @if (!isLoadingConfig()) {
-      @if (distributionResult()) {
-        <app-distribution-result
-          [result]="distributionResult()!"
-          (createMore)="handleCreateMore()" />
-      } @else {
-        <div class="bulk-unit-page__config-badge">
-          <i class="bi bi-info-circle"></i>
-          Máximo permitido: <strong>{{ maxUnitsAllowed() }}</strong> unidades por lote
+      
+      <!-- Add Button -->
+      @if (!showForm() && !distributionResult()) {
+        <div class="bulk-unit-page__actions">
+          <button class="btn-add-units" (click)="toggleForm()">
+            <i class="bi bi-plus-circle"></i> 
+            Agregar nuevas unidades
+          </button>
         </div>
+      }
 
-        <app-bulk-unit-form
-          [isSubmitting]="isSubmitting()"
-          [maxAllowed]="maxUnitsAllowed()"
-          (formSubmit)="handleSubmit($event)"
-          (formCancel)="handleCancel()" />
+      @if (showForm() || distributionResult()) {
+        @if (distributionResult()) {
+          <app-distribution-result
+            [result]="distributionResult()!"
+            (createMore)="handleCreateMore()" />
+        } @else {
+          <div class="bulk-unit-page__config-badge">
+            <i class="bi bi-info-circle"></i>
+            Máximo permitido: <strong>{{ maxUnitsAllowed() }}</strong> unidades por lote
+          </div>
+
+          <app-bulk-unit-form
+            [isSubmitting]="isSubmitting()"
+            [maxAllowed]="maxUnitsAllowed()"
+            (formSubmit)="handleSubmit($event)"
+            (formCancel)="handleCancel()" />
+        }
+      }
+
+      <!-- Units Preview -->
+      @if (!isLoadingUnits() && groupedUnits().length > 0) {
+        <section class="units-preview" aria-labelledby="preview-title">
+          <h2 id="preview-title" class="units-preview__title">Unidades Existentes</h2>
+          
+          <div class="units-preview__container">
+            @for (group of groupedUnits(); track group.type) {
+              <div class="units-preview__group">
+                <h3 class="units-preview__group-title">{{ group.type }}</h3>
+                <div class="units-preview__grid">
+                  @for (unit of group.units; track unit.id) {
+                    <div 
+                      class="units-preview__card" 
+                      [class.units-preview__card--active]="unit.isActive"
+                      [title]="unit.status">
+                      {{ unit.code }}
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </section>
       }
     }
   </div>
