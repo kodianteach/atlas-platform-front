@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../../services/authentication.service';
@@ -15,8 +15,7 @@ export class AdminBottomNavComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthenticationService);
 
-  readonly activeTab = input<'home' | 'units' | 'porters' | 'config' | 'more'>('home');
-  readonly moreMenuOpen = signal(false);
+  readonly activeTab = input<'home' | 'units' | 'porters' | 'more'>('home');
 
   /**
    * Verifica si el usuario es administrador supremo (ADMIN_ATLAS)
@@ -32,32 +31,12 @@ export class AdminBottomNavComponent {
       home: '/home',
       units: '/admin/units',
       porters: '/admin/porters',
-      config: '/admin/organization-config'
+      more: '/admin/more'
     };
     const route = routes[tab];
     if (route) {
-      this.moreMenuOpen.set(false);
       this.router.navigate([route]);
     }
-  }
-
-  toggleMoreMenu(): void {
-    this.moreMenuOpen.update(v => !v);
-  }
-
-  closeMoreMenu(): void {
-    this.moreMenuOpen.set(false);
-  }
-
-  navigateToInvitations(): void {
-    this.moreMenuOpen.set(false);
-    this.router.navigate(['/admin/invitations']);
-  }
-
-  logout(): void {
-    this.moreMenuOpen.set(false);
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 
   isActive(tab: string): boolean {
