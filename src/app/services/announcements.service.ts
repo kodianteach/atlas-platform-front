@@ -8,6 +8,7 @@ import {
   Poll,
   Discussion
 } from '../models/announcement.model';
+import { environment } from '@env/environment';
 
 /**
  * Service for managing announcements (broadcasts and polls)
@@ -19,7 +20,7 @@ import {
   providedIn: 'root'
 })
 export class AnnouncementsService {
-  private readonly apiUrl = '/api/announcements';
+  private readonly apiUrl = `${environment.apiUrl}/announcements`;
 
   constructor(private http: HttpClient) {}
 

@@ -7,10 +7,11 @@ import {
   ProfileSetupRequest,
   ProfileSetupResponse
 } from '../models/admin-profile.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AdminProfileService {
-  private readonly PROFILE_ENDPOINT = '/api/admin/profile';
+  private readonly PROFILE_ENDPOINT = `${environment.apiUrl}/admin/profile`;
   private profileComplete$ = new BehaviorSubject<boolean>(false);
   private currentProfile$ = new BehaviorSubject<AdminProfile | null>(null);
 

@@ -51,12 +51,13 @@ export class PwaUpdateService {
    * Call this from the root component constructor
    */
   initialize(): void {
-    this.listenForUpdates();
-    this.listenForOnlineStatus();
-    this.listenForInstallPrompt();
-    this.checkForUpdatesInterval();
-    this.listenForDisplayModeChanges();
-    this.detectInstallability();
+    // PWA features temporarily disabled
+    // this.listenForUpdates();
+    // this.listenForOnlineStatus();
+    // this.listenForInstallPrompt();
+    // this.checkForUpdatesInterval();
+    // this.listenForDisplayModeChanges();
+    // this.detectInstallability();
   }
 
   /**

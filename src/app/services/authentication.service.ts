@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, timeout, retry, map } from 'rxjs/operators';
+import { environment } from '@env/environment';
 
 export interface LoginCredentials {
   email: string;
@@ -59,7 +60,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private readonly AUTH_ENDPOINT = '/api/auth/login';
+  private readonly AUTH_ENDPOINT = `${environment.apiUrl}/auth/login`;
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
   private readonly TIMEOUT_MS = 10000;
