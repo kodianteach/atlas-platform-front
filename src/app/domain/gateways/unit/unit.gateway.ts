@@ -2,7 +2,7 @@
  * Unit Gateway - Abstract interface for unit operations
  */
 import { Observable } from 'rxjs';
-import { UnitDistributeRequest, UnitDistributeResponse, Unit } from '@domain/models/unit/unit.model';
+import { UnitDistributeRequest, UnitDistributeResponse, Unit, UnitDetail } from '@domain/models/unit/unit.model';
 import { Result } from '@domain/models/common/api-response.model';
 
 export abstract class UnitGateway {
@@ -17,4 +17,10 @@ export abstract class UnitGateway {
    * @param organizationId - The organization ID
    */
   abstract getOrganizationUnits(organizationId: number): Observable<Result<Unit[]>>;
+
+  /**
+   * Get unit detail with owners and residents
+   * @param unitId - The unit ID
+   */
+  abstract getUnitMembers(unitId: number): Observable<Result<UnitDetail>>;
 }

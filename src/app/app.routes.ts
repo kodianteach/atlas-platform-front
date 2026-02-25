@@ -97,6 +97,11 @@ export const routes: Routes = [
         path: 'admin-chat',
         loadComponent: () => import('@presentation/pages/doorman/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
         canActivate: [porterGuard]
+      },
+      {
+        path: 'more',
+        loadComponent: () => import('@presentation/pages/doorman/more/doorman-more-page.component').then(m => m.DoormanMorePageComponent),
+        canActivate: [porterGuard]
       }
     ]
   },
