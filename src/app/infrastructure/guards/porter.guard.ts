@@ -16,10 +16,12 @@ export const porterGuard: CanActivateFn = (): boolean | UrlTree => {
     return router.createUrlTree(['/login']);
   }
 
-  // Decode JWT payload to check roles
+  // Decode JWT payload to check roles (with proper UTF-8 decoding)
   try {
-    const payloadBase64 = token.split('.')[1];
-    const payload = JSON.parse(atob(payloadBase64));
+    const payloadBase64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const bytes = Uint8Array.from(atob(payloadBase64), c => c.charCodeAt(0));
+    const decoded = new TextDecoder('utf-8').decode(bytes);
+    const payload = JSON.parse(decoded);
     const roles: string[] = payload.roles || payload.role || [];
     const rolesArray = Array.isArray(roles) ? roles : [roles];
 

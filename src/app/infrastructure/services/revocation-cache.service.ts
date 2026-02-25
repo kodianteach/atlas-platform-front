@@ -12,8 +12,9 @@ export class RevocationCacheService {
   private dbPromise: Promise<IDBPDatabase> | null = null;
 
   private getDb(): Promise<IDBPDatabase> {
-    this.dbPromise ??= openDB(DB_NAME, DB_VERSION, {
-      upgrade(db) {
+    if (!this.dbPromise) {
+      this.dbPromise = openDB(DB_NAME, DB_VERSION, {
+        upgrade(db: IDBPDatabase) {
         if (!db.objectStoreNames.contains('pending-events')) {
           db.createObjectStore('pending-events', { keyPath: 'id', autoIncrement: true });
         }
@@ -24,7 +25,8 @@ export class RevocationCacheService {
           db.createObjectStore(META_STORE, { keyPath: 'key' });
         }
       }
-    });
+      });
+    }
     return this.dbPromise;
   }
 

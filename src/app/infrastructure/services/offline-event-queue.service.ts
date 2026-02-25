@@ -14,8 +14,9 @@ export class OfflineEventQueueService {
   private dbPromise: Promise<IDBPDatabase> | null = null;
 
   private getDb(): Promise<IDBPDatabase> {
-    this.dbPromise ??= openDB(DB_NAME, DB_VERSION, {
-      upgrade(db) {
+    if (!this.dbPromise) {
+      this.dbPromise = openDB(DB_NAME, DB_VERSION, {
+        upgrade(db: IDBPDatabase) {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
         }
@@ -26,7 +27,8 @@ export class OfflineEventQueueService {
           db.createObjectStore('sync-metadata', { keyPath: 'key' });
         }
       }
-    });
+      });
+    }
     return this.dbPromise;
   }
 

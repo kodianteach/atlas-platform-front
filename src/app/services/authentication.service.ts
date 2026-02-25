@@ -131,13 +131,15 @@ export class AuthenticationService {
 
   /**
    * Decode JWT payload without verification (client-side only)
+   * Uses proper UTF-8 decoding for special characters (accents, ñ, etc.)
    */
   private decodeJwt(token: string): JwtPayload | null {
     try {
       const parts = token.split('.');
       if (parts.length !== 3) return null;
       const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-      const decoded = atob(payload);
+      const bytes = Uint8Array.from(atob(payload), c => c.charCodeAt(0));
+      const decoded = new TextDecoder('utf-8').decode(bytes);
       return JSON.parse(decoded) as JwtPayload;
     } catch {
       return null;

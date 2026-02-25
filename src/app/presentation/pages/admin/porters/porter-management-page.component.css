@@ -5,11 +5,37 @@
 }
 
 .porter-page__header {
-  background: linear-gradient(135deg, #FF7A59 0%, #FF6B4A 100%);
+  background: var(--gradient-primary);
   padding: 1.5rem 1rem 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.porter-page__back-btn {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-full);
+  color: var(--white);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.porter-page__back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.porter-page__back-btn:active {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .porter-page__header-content {
@@ -19,7 +45,7 @@
 .porter-page__title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  color: var(--white);
   margin: 0 0 0.25rem;
   display: flex;
   align-items: center;
@@ -35,7 +61,7 @@
 .porter-page__create-btn {
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  color: var(--white);
   width: 44px;
   height: 44px;
   border-radius: 12px;
@@ -47,6 +73,7 @@
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
+
 
 .porter-page__create-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.3);

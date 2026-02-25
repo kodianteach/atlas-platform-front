@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, output, signal, OnDestroy, AfterViewInit, effect, untracked } from '@angular/core';
-import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats, CameraDevice } from 'html5-qrcode';
 
 /**
  * QR Scanner organism using html5-qrcode with camera.
@@ -108,7 +108,7 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
       await this.scanner!.start(
         { facingMode: 'environment' },
         this.scanConfig,
-        (decodedText) => this.onScanSuccess(decodedText),
+        (decodedText: string) => this.onScanSuccess(decodedText),
         () => { /* no QR detected yet */ }
       );
     } catch {
@@ -121,14 +121,14 @@ export class QrScannerComponent implements AfterViewInit, OnDestroy {
     if (!cameras?.length) {
       throw new Error('No se encontraron cámaras disponibles');
     }
-    const backCamera = cameras.find(c =>
+    const backCamera = cameras.find((c: CameraDevice) =>
       /back|rear|trasera|environment/i.test(c.label)
     ) ?? cameras.at(-1)!;
 
     await this.scanner!.start(
       backCamera.id,
       this.scanConfig,
-      (decodedText) => this.onScanSuccess(decodedText),
+      (decodedText: string) => this.onScanSuccess(decodedText),
       () => { /* no QR detected yet */ }
     );
   }

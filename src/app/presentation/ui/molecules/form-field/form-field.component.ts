@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, signal } from '@angular/core';
 
 @Component({
   selector: 'app-form-field',
@@ -26,6 +26,19 @@ export class FormFieldComponent {
   readonly focused = output<void>();
 
   readonly shouldRenderInternalInput = computed(() => !!this.id());
+  
+  readonly isPasswordVisible = signal(false);
+  readonly isPassword = computed(() => this.type() === 'password');
+  readonly inputType = computed(() => {
+    if (this.type() === 'password') {
+      return this.isPasswordVisible() ? 'text' : 'password';
+    }
+    return this.type();
+  });
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible.update(v => !v);
+  }
 
   onValueChange(value: string): void {
     this.valueChange.emit(value);

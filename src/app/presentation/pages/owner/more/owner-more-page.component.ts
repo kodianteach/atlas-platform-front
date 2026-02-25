@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@ang
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../../services/authentication.service';
 import { StorageGateway } from '@domain/gateways/storage/storage.gateway';
-import { AdminBottomNavComponent } from '../../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
+import { BottomNavComponent } from '../../../ui/organisms/bottom-nav/bottom-nav.component';
 
 interface MenuItem {
   id: string;
@@ -20,14 +20,14 @@ interface MenuSection {
 }
 
 @Component({
-  selector: 'app-admin-more-page',
+  selector: 'app-owner-more-page',
   standalone: true,
-  imports: [AdminBottomNavComponent],
-  templateUrl: './admin-more-page.component.html',
-  styleUrl: './admin-more-page.component.css',
+  imports: [BottomNavComponent],
+  templateUrl: './owner-more-page.component.html',
+  styleUrl: './owner-more-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminMorePageComponent implements OnInit {
+export class OwnerMorePageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthenticationService);
   private readonly storage = inject(StorageGateway);
@@ -37,37 +37,6 @@ export class AdminMorePageComponent implements OnInit {
   readonly userInitial = signal('U');
 
   readonly sections: MenuSection[] = [
-    {
-      title: 'Gestión',
-      items: [
-        {
-          id: 'config',
-          icon: 'bi-gear',
-          label: 'Configuración',
-          description: 'Ajustes de la organización',
-          route: '/admin/organization-config'
-        },
-        {
-          id: 'authorizations',
-          icon: 'bi-shield-check',
-          label: 'Autorizaciones',
-          description: 'Ver autorizaciones de acceso',
-          route: '/admin/authorizations'
-        }
-      ]
-    },
-    {
-      title: 'Usuarios',
-      items: [
-        {
-          id: 'porters',
-          icon: 'bi-person-badge',
-          label: 'Porteros',
-          description: 'Gestionar porteros',
-          route: '/admin/porters'
-        }
-      ]
-    },
     {
       title: 'Sesión',
       items: [
