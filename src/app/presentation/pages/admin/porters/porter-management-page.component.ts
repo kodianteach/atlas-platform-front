@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit, DestroyRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminBottomNavComponent } from '../../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
 import { PorterListComponent } from '../../../ui/organisms/porter-list/porter-list.component';
@@ -26,6 +26,7 @@ import { Porter, CreatePorterRequest } from '@domain/models/porter/porter.model'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PorterManagementPageComponent implements OnInit {
+  private readonly location = inject(Location);
   private readonly listPortersUseCase = inject(ListPortersUseCase);
   private readonly createPorterUseCase = inject(CreatePorterUseCase);
   private readonly regenerateUrlUseCase = inject(RegeneratePorterUrlUseCase);
@@ -119,5 +120,9 @@ export class PorterManagementPageComponent implements OnInit {
 
   onDismissError(): void {
     this.errorMessage.set(null);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

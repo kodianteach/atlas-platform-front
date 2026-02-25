@@ -14,38 +14,55 @@
 }
 
 .document-row {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--spacing-sm);
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.document-type {
+  display: flex;
+  flex-direction: column;
+}
+
+.document-number {
+  display: flex;
+  flex-direction: column;
 }
 
 .field-label {
   display: block;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: var(--spacing-xs);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 
 .required {
   color: #dc2626;
+  margin-left: 0.25rem;
 }
 
 .select-input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
+  padding: 0.875rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
   background: white;
   cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 3.25rem;
 }
 
 .select-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(255, 140, 97, 0.15);
+  border-color: #ff8c61;
+  box-shadow: 0 0 0 3px rgba(255, 140, 97, 0.1);
+}
+
+.select-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 .unit-autocomplete {

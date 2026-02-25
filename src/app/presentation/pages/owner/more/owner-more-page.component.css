@@ -3,15 +3,15 @@
   width: 100%;
 }
 
-/* Block: admin-more-page */
-.admin-more-page {
+/* Block: owner-more-page */
+.owner-more-page {
   min-height: 100vh;
   background: var(--bg-secondary);
   padding-bottom: 120px;
 }
 
 /* Element: header */
-.admin-more-page__header {
+.owner-more-page__header {
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
@@ -21,7 +21,7 @@
 }
 
 /* Element: avatar */
-.admin-more-page__avatar {
+.owner-more-page__avatar {
   width: 64px;
   min-width: 64px;
   height: 64px;
@@ -34,7 +34,7 @@
   flex-shrink: 0;
 }
 
-.admin-more-page__avatar-initial {
+.owner-more-page__avatar-initial {
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--white);
@@ -43,7 +43,7 @@
 }
 
 /* Element: user-info */
-.admin-more-page__user-info {
+.owner-more-page__user-info {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
@@ -51,7 +51,7 @@
   overflow: hidden;
 }
 
-.admin-more-page__user-name {
+.owner-more-page__user-name {
   font-size: var(--font-size-xl);
   font-weight: 700;
   color: var(--text-primary);
@@ -61,7 +61,7 @@
   white-space: nowrap;
 }
 
-.admin-more-page__user-email {
+.owner-more-page__user-email {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
   margin: 0;
@@ -71,7 +71,7 @@
 }
 
 /* Element: content */
-.admin-more-page__content {
+.owner-more-page__content {
   padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
@@ -79,13 +79,13 @@
 }
 
 /* Element: section */
-.admin-more-page__section {
+.owner-more-page__section {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
 }
 
-.admin-more-page__section-title {
+.owner-more-page__section-title {
   font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--text-tertiary);
@@ -95,7 +95,7 @@
   padding-left: var(--spacing-sm);
 }
 
-.admin-more-page__section-items {
+.owner-more-page__section-items {
   background: var(--bg-primary);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
@@ -103,7 +103,7 @@
 }
 
 /* Element: menu-item */
-.admin-more-page__menu-item {
+.owner-more-page__menu-item {
   width: 100%;
   display: flex;
   align-items: center;
@@ -116,20 +116,20 @@
   transition: background-color var(--transition-fast);
 }
 
-.admin-more-page__menu-item:not(:last-child) {
+.owner-more-page__menu-item:not(:last-child) {
   border-bottom: 1px solid var(--border-color);
 }
 
-.admin-more-page__menu-item:hover {
+.owner-more-page__menu-item:hover {
   background-color: var(--bg-secondary);
 }
 
-.admin-more-page__menu-item:active {
+.owner-more-page__menu-item:active {
   background-color: var(--bg-tertiary);
 }
 
 /* Element: menu-icon-container */
-.admin-more-page__menu-icon-container {
+.owner-more-page__menu-icon-container {
   width: 40px;
   height: 40px;
   background: var(--bg-secondary);
@@ -140,13 +140,13 @@
   flex-shrink: 0;
 }
 
-.admin-more-page__menu-icon {
+.owner-more-page__menu-icon {
   font-size: var(--font-size-lg);
   color: var(--color-primary);
 }
 
 /* Element: menu-content */
-.admin-more-page__menu-content {
+.owner-more-page__menu-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -154,37 +154,37 @@
   min-width: 0;
 }
 
-.admin-more-page__menu-label {
+.owner-more-page__menu-label {
   font-size: var(--font-size-md);
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.admin-more-page__menu-desc {
+.owner-more-page__menu-desc {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
 
 /* Element: menu-arrow */
-.admin-more-page__menu-arrow {
+.owner-more-page__menu-arrow {
   font-size: var(--font-size-sm);
   color: var(--text-tertiary);
   flex-shrink: 0;
 }
 
 /* Modifier: danger */
-.admin-more-page__menu-item--danger .admin-more-page__menu-icon-container {
+.owner-more-page__menu-item--danger .owner-more-page__menu-icon-container {
   background: var(--color-error-light);
 }
 
-.admin-more-page__menu-item--danger .admin-more-page__menu-icon {
+.owner-more-page__menu-item--danger .owner-more-page__menu-icon {
   color: var(--color-error);
 }
 
-.admin-more-page__menu-item--danger .admin-more-page__menu-label {
+.owner-more-page__menu-item--danger .owner-more-page__menu-label {
   color: var(--color-error);
 }
 
-.admin-more-page__menu-item--danger:hover {
+.owner-more-page__menu-item--danger:hover {
   background-color: var(--color-error-light);
 }

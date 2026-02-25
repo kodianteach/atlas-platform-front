@@ -233,11 +233,14 @@ export class EnrollmentPageComponent implements OnInit {
     if (data.accessToken) {
       localStorage.setItem('auth_token', JSON.stringify(data.accessToken));
 
-      // Decode JWT and store user info
+      // Decode JWT and store user info (with proper UTF-8 decoding)
       try {
         const parts = data.accessToken.split('.');
         if (parts.length === 3) {
-          const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+          const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+          const bytes = Uint8Array.from(atob(payloadBase64), c => c.charCodeAt(0));
+          const decoded = new TextDecoder('utf-8').decode(bytes);
+          const payload = JSON.parse(decoded);
           const user = {
             id: payload.sub || '',
             email: payload.email || '',

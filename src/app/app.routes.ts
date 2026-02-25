@@ -61,6 +61,11 @@ export const routes: Routes = [
     loadComponent: () => import('@presentation/pages/vehicles/vehicles.component').then(m => m.VehiclesComponent)
   },
   {
+    path: 'more',
+    loadComponent: () => import('@presentation/pages/owner/more/owner-more-page.component').then(m => m.OwnerMorePageComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'doorman',
     children: [
       {
