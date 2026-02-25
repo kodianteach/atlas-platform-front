@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { DistributeUnitsUseCase } from '@domain/use-cases/unit/distribute-units.use-case';
 import { GetOrganizationConfigUseCase } from '@domain/use-cases/organization/get-organization-config.use-case';
 import { GetOrganizationUnitsUseCase } from '@domain/use-cases/unit/get-organization-units.use-case';
@@ -8,17 +7,17 @@ import { AuthenticationService } from '../../../../services/authentication.servi
 import { AdminBottomNavComponent } from '../../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
 import { BulkUnitFormComponent } from '../../../ui/organisms/bulk-unit-form/bulk-unit-form.component';
 import { DistributionResultComponent } from '../../../ui/organisms/distribution-result/distribution-result.component';
+import { UnitDetailModalComponent } from '../../../ui/organisms/unit-detail-modal/unit-detail-modal.component';
 
 @Component({
   selector: 'app-bulk-unit-creation-page',
   standalone: true,
-  imports: [AdminBottomNavComponent, BulkUnitFormComponent, DistributionResultComponent],
+  imports: [AdminBottomNavComponent, BulkUnitFormComponent, DistributionResultComponent, UnitDetailModalComponent],
   templateUrl: './bulk-unit-creation-page.component.html',
   styleUrl: './bulk-unit-creation-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BulkUnitCreationPageComponent implements OnInit {
-  private readonly router = inject(Router);
   private readonly distributeUnitsUseCase = inject(DistributeUnitsUseCase);
   private readonly getOrgConfigUseCase = inject(GetOrganizationConfigUseCase);
   private readonly getOrgUnitsUseCase = inject(GetOrganizationUnitsUseCase);
@@ -34,12 +33,15 @@ export class BulkUnitCreationPageComponent implements OnInit {
   // Units Preview Logic
   readonly isLoadingUnits = signal(false);
   readonly units = signal<Unit[]>([]);
+
+  // Unit Detail Modal
+  readonly showUnitModal = signal(false);
+  readonly selectedUnit = signal<Unit | null>(null);
   
   readonly groupedUnits = computed(() => {
     const unitList = this.units();
     const groups: { [key: string]: Unit[] } = {};
     
-    // Group
     unitList.forEach(unit => {
       if (!groups[unit.type]) {
         groups[unit.type] = [];
@@ -47,11 +49,11 @@ export class BulkUnitCreationPageComponent implements OnInit {
       groups[unit.type].push(unit);
     });
 
-    // Sort Keys and Values
-    return Object.keys(groups).sort().map(type => ({
-      type,
-      units: groups[type].sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }))
-    }));
+    return Object.keys(groups).sort((a, b) => a.localeCompare(b)).map(type => {
+      const sorted = [...groups[type]];
+      sorted.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
+      return { type, units: sorted };
+    });
   });
 
   ngOnInit(): void {
@@ -134,8 +136,30 @@ export class BulkUnitCreationPageComponent implements OnInit {
 
   handleCreateMore(): void {
     this.distributionResult.set(null);
-    this.showForm.set(true); // Show form immediately
+    this.showForm.set(true);
     this.generalError.set('');
+  }
+
+  openUnitDetail(unit: Unit): void {
+    this.selectedUnit.set(unit);
+    this.showUnitModal.set(true);
+  }
+
+  closeUnitModal(): void {
+    this.showUnitModal.set(false);
+    this.selectedUnit.set(null);
+  }
+
+  isOccupied(unit: Unit): boolean {
+    return unit.status === 'OCCUPIED';
+  }
+
+  translateType(type: string): string {
+    const typeMap: Record<string, string> = {
+      'APARTMENT': 'Apartamentos',
+      'HOUSE': 'Casas'
+    };
+    return typeMap[type?.toUpperCase()] ?? type;
   }
 
   private loadOrganizationConfig(): void {

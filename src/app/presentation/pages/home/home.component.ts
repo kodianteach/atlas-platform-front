@@ -9,6 +9,7 @@ import { NotificationTrayComponent } from '../../ui/organisms/notification-tray/
 import { Notification } from '@domain/models/notification/notification.model';
 import { NotificationService } from '../../../services/notification.service';
 import { StorageGateway } from '@domain/gateways/storage/storage.gateway';
+import { GetMyResidenceUseCase } from '@domain/use-cases/me/get-my-residence.use-case';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
   private readonly storage = inject(StorageGateway);
+  private readonly getMyResidenceUseCase = inject(GetMyResidenceUseCase);
 
   readonly showFormOverlay = signal(false);
   readonly showNotificationTray = signal(false);
@@ -52,10 +54,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     return 'Buenas noches';
   });
 
+  // Residence info for owners/residents
+  readonly residenceOrgName = signal('...');
+  readonly residenceUnitCode = signal<string | null>(null);
+  readonly residenceRoleName = signal('Residente');
+  readonly isLoadingResidence = signal(false);
+
   private subscription?: Subscription;
 
   ngOnInit(): void {
     this.loadUserData();
+    this.loadResidenceInfo();
 
     this.subscription = this.notificationService.notifications$.subscribe(notifications => {
       this.unreadCount.set(notifications.filter(n => !n.read).length);
@@ -77,6 +86,25 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.userRole.set(user.role || user.roles?.[0] || '');
       this.userRoles.set(user.roles || []);
     }
+  }
+
+  private loadResidenceInfo(): void {
+    if (this.isAdmin()) return;
+
+    this.isLoadingResidence.set(true);
+    this.getMyResidenceUseCase.execute().subscribe({
+      next: (result) => {
+        this.isLoadingResidence.set(false);
+        if (result.success) {
+          this.residenceOrgName.set(result.data.organizationName || 'Organización');
+          this.residenceUnitCode.set(result.data.unitCode);
+          this.residenceRoleName.set(result.data.roleName || 'Residente');
+        }
+      },
+      error: () => {
+        this.isLoadingResidence.set(false);
+      }
+    });
   }
 
   ngOnDestroy(): void {

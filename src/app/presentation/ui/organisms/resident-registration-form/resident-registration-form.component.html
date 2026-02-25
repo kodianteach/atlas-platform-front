@@ -20,6 +20,20 @@
     (blurred)="markFieldTouched('names')" />
 
   <app-form-field
+    id="email"
+    label="Correo electrónico"
+    type="email"
+    placeholder="correo@ejemplo.com"
+    [required]="false"
+    [disabled]="isSubmitting()"
+    [errorMessage]="getError('email')"
+    [value]="registrationForm.get('email')?.value || ''"
+    autocomplete="email"
+    icon="envelope"
+    (valueChange)="updateField('email', $event)"
+    (blurred)="markFieldTouched('email')" />
+
+  <app-form-field
     id="phone"
     label="Teléfono"
     type="tel"

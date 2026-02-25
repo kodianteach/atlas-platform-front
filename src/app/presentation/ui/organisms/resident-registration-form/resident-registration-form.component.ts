@@ -12,6 +12,7 @@ import { LookupUserUseCase } from '@domain/use-cases/invitation/lookup-user.use-
 
 export interface ResidentRegistrationFormData {
   names: string;
+  email: string;
   phone: string;
   documentType: string;
   documentNumber: string;
@@ -48,6 +49,7 @@ export class ResidentRegistrationFormComponent implements OnInit {
   ngOnInit(): void {
     this.registrationForm = new FormGroup({
       names: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.email]),
       phone: new FormControl(''),
       documentType: new FormControl('CC', [Validators.required]),
       documentNumber: new FormControl('', [Validators.required]),
@@ -65,6 +67,9 @@ export class ResidentRegistrationFormComponent implements OnInit {
     switch (fieldName) {
       case 'names':
         if (control.hasError('required')) return 'Los nombres son obligatorios';
+        break;
+      case 'email':
+        if (control.hasError('email')) return 'Ingresa un correo electrónico válido';
         break;
       case 'documentType':
         if (control.hasError('required')) return 'El tipo de documento es obligatorio';
@@ -103,6 +108,7 @@ export class ResidentRegistrationFormComponent implements OnInit {
             const user = result.data;
             if (user.names) this.registrationForm.get('names')?.setValue(user.names);
             if (user.phone) this.registrationForm.get('phone')?.setValue(user.phone);
+            if (user.email) this.registrationForm.get('email')?.setValue(user.email);
           }
         });
     }
@@ -112,6 +118,7 @@ export class ResidentRegistrationFormComponent implements OnInit {
     if (this.registrationForm.valid) {
       const formData: ResidentRegistrationFormData = {
         names: this.registrationForm.get('names')?.value || '',
+        email: this.registrationForm.get('email')?.value || '',
         phone: this.registrationForm.get('phone')?.value || '',
         documentType: this.registrationForm.get('documentType')?.value || 'CC',
         documentNumber: this.registrationForm.get('documentNumber')?.value || '',

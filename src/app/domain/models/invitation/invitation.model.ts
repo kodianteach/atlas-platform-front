@@ -84,6 +84,7 @@ export interface OwnerRegistrationRequest {
 export interface ResidentRegistrationRequest {
   token: string;
   names: string;
+  email?: string;
   phone?: string;
   documentType: string;
   documentNumber: string;

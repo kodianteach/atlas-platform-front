@@ -131,12 +131,12 @@
         </h2>
         <div class="auth-detail__info-grid">
           <div class="auth-detail__info-item">
-            <span class="auth-detail__info-label">Unidad (ID)</span>
-            <span class="auth-detail__info-value">{{ auth.unitId }}</span>
+            <span class="auth-detail__info-label">Unidad</span>
+            <span class="auth-detail__info-value">{{ auth.unitCode || auth.unitId }}</span>
           </div>
           <div class="auth-detail__info-item">
-            <span class="auth-detail__info-label">Creada por (ID usuario)</span>
-            <span class="auth-detail__info-value">{{ auth.createdByUserId }}</span>
+            <span class="auth-detail__info-label">Creada por</span>
+            <span class="auth-detail__info-value">{{ auth.createdByUserName || auth.createdByUserId }}</span>
           </div>
         </div>
       </section>

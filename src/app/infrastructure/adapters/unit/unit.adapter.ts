@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { UnitGateway } from '@domain/gateways/unit/unit.gateway';
-import { UnitDistributeRequest, UnitDistributeResponse, Unit } from '@domain/models/unit/unit.model';
+import { UnitDistributeRequest, UnitDistributeResponse, Unit, UnitDetail } from '@domain/models/unit/unit.model';
 import { Result, success, failure } from '@domain/models/common/api-response.model';
 import { environment } from '@env/environment';
 
@@ -31,6 +31,14 @@ export class UnitAdapter extends UnitGateway {
     return this.http.get<{ data: Unit[]; message?: string }>(url).pipe(
       map(response => success(response.data, response.message)),
       catchError(error => of(this.handleError<Unit[]>(error)))
+    );
+  }
+
+  override getUnitMembers(unitId: number): Observable<Result<UnitDetail>> {
+    const url = `${environment.apiUrl}/units/${unitId}/members`;
+    return this.http.get<{ data: UnitDetail; message?: string }>(url).pipe(
+      map(response => success(response.data, response.message)),
+      catchError(error => of(this.handleError<UnitDetail>(error)))
     );
   }
 

@@ -57,4 +57,36 @@ export interface Unit {
   createdAt?: string;
   updatedAt?: string;
   organizationId?: number;
+  floor?: number;
+  areaSqm?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  parkingSpots?: number;
+  maxVehicles?: number;
+  zoneId?: number;
+  towerId?: number;
+}
+
+/**
+ * Member of a unit (owner or resident)
+ */
+export interface UnitMember {
+  userId: number;
+  names: string;
+  email: string;
+  phone?: string;
+  documentType?: string;
+  documentNumber?: string;
+  ownershipType?: string;
+  status?: string;
+  joinedAt?: string;
+}
+
+/**
+ * Unit detail with owners and residents
+ */
+export interface UnitDetail {
+  unit: Unit;
+  owners: UnitMember[];
+  residents: UnitMember[];
 }

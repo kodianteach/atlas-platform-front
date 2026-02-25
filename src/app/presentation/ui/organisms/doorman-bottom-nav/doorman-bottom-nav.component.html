@@ -17,7 +17,7 @@
     <span>Historial</span>
   </button>
   
-  <button 
+  <!-- <button 
     class="nav-item" 
     [class.active]="isActive('residents')"
     (click)="navigateTo('residents')"
@@ -33,5 +33,14 @@
     type="button">
     <i class="bi bi-box-arrow-right"></i>
     <span>Salidas</span>
+  </button> -->
+  
+  <button 
+    class="nav-item" 
+    [class.active]="isActive('more')"
+    (click)="navigateTo('more')"
+    type="button">
+    <i class="bi bi-three-dots"></i>
+    <span>Más</span>
   </button>
 </nav>

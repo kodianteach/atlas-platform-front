@@ -11,14 +11,15 @@ import { Router } from '@angular/router';
 export class DoormanBottomNavComponent {
   private readonly router = inject(Router);
 
-  readonly activeTab = input<'scan' | 'history' | 'residents' | 'exits'>('scan');
+  readonly activeTab = input<'scan' | 'history' | 'residents' | 'exits' | 'more'>('scan');
 
   navigateTo(tab: string): void {
     const routes: Record<string, string> = {
       scan: '/doorman/scan',
       history: '/doorman/entry-logs',
       residents: '/doorman/admin-chat',
-      exits: '/doorman/vehicle-exit'
+      exits: '/doorman/vehicle-exit',
+      more: '/doorman/more'
     };
     const route = routes[tab];
     if (route) {
