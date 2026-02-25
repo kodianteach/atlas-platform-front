@@ -130,9 +130,12 @@ export class ScanPageComponent implements OnInit, OnDestroy {
     }
 
     // Step 5: All offline checks passed — show result immediately
-    // The access event will be synced to the server later via EventSyncService
+    // If vehicle plate exists, defer event creation until portero confirms vehicle match.
+    // Otherwise, enqueue immediately.
     this.showValidResult(parsed.payload);
-    await this.enqueueEvent(parsed.payload, 'VALID', !this.pwaUpdate.isOnline());
+    if (!parsed.payload.vehiclePlate) {
+      await this.enqueueEvent(parsed.payload, 'VALID', !this.pwaUpdate.isOnline());
+    }
   }
 
   onScanError(error: string): void {
@@ -145,7 +148,9 @@ export class ScanPageComponent implements OnInit, OnDestroy {
       this.resetScanner();
       return;
     }
-    this.syncOrEnqueue(payload, 'VALID');
+    // Pass vehicleMatch=true when vehicle was confirmed, undefined when no vehicle
+    const vehicleMatch = payload.vehiclePlate ? true : undefined;
+    this.syncOrEnqueue(payload, 'VALID', vehicleMatch);
     this.resetScanner();
   }
 
