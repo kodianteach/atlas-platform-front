@@ -37,8 +37,6 @@ export class BulkUnitFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       codePrefix: new FormControl('', [
-        Validators.required,
-        Validators.minLength(1),
         Validators.maxLength(10),
         Validators.pattern(/^[A-Za-z0-9\-]+$/)
       ]),
@@ -98,8 +96,6 @@ export class BulkUnitFormComponent implements OnInit {
 
     const errors: Record<string, Record<string, string>> = {
       codePrefix: {
-        required: 'El prefijo es obligatorio',
-        minlength: 'Mínimo 1 carácter',
         maxlength: 'Máximo 10 caracteres',
         pattern: 'Solo letras, números y guiones'
       },
@@ -149,18 +145,22 @@ export class BulkUnitFormComponent implements OnInit {
     const prefix = (this.form.get('codePrefix')?.value || '').toUpperCase();
     const start = this.form.get('rangeStart')?.value || 0;
     const end = this.form.get('rangeEnd')?.value || 0;
-    if (!prefix || end < start) {
+    
+    if (end < start) {
       this.previewCodes.set([]);
       return;
     }
+    
     const codes: string[] = [];
     const max = Math.min(end, start + 4); // Show up to 5 preview codes
+    
     for (let i = start; i <= max; i++) {
-      codes.push(`${prefix}-${i}`);
+      codes.push(prefix ? `${prefix}-${i}` : `${i}`);
     }
+    
     if (end > max) {
       codes.push('...');
-      codes.push(`${prefix}-${end}`);
+      codes.push(prefix ? `${prefix}-${end}` : `${end}`);
     }
     this.previewCodes.set(codes);
   }

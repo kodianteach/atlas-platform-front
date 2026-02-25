@@ -1,6 +1,9 @@
 <div class="porter-page">
   <!-- Header -->
   <header class="porter-page__header">
+    <button class="porter-page__back-btn" (click)="goBack()" type="button" aria-label="Volver">
+      <i class="bi bi-arrow-left"></i>
+    </button>
     <div class="porter-page__header-content">
       <h1 class="porter-page__title">
         <i class="bi bi-person-badge"></i>
@@ -53,7 +56,8 @@
   <main class="porter-page__content">
     <app-porter-list
       [porters]="porters()"
-      (regenerateUrl)="onRegenerateUrl($event)" />
+      (regenerateUrl)="onRegenerateUrl($event)"
+      (toggleStatus)="onToggleStatus($event)" />
   </main>
 
   <!-- Enrollment URL Modal -->
@@ -64,5 +68,5 @@
   }
 
   <!-- Bottom Nav -->
-  <app-admin-bottom-nav activeTab="porters" />
+  <app-admin-bottom-nav [activeTab]="'more'" />
 </div>

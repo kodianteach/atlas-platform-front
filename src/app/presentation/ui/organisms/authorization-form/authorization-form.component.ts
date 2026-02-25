@@ -1,8 +1,14 @@
-import { Component, ChangeDetectionStrategy, input, output, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, inject, signal, OnInit, OnDestroy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { AuthorizationFormValue, ServiceType } from '@domain/models/authorization/authorization.model';
+import { Authorization, AuthorizationFormValue, ServiceType } from '@domain/models/authorization/authorization.model';
+import { AuthUser } from '@domain/models/auth/auth.model';
+import { UnitSearchResult } from '@domain/models/invitation/invitation.model';
+import { StorageGateway } from '@domain/gateways/storage/storage.gateway';
+import { SearchUnitsUseCase } from '@domain/use-cases/invitation/search-units.use-case';
+import { CreateAuthorizationUseCase } from '@domain/use-cases/authorization/create-authorization.use-case';
 import { ServiceTypeSelectorComponent } from '../../molecules/service-type-selector/service-type-selector.component';
 import { FormFieldComponent } from '../../molecules/form-field/form-field.component';
 import { TextInputComponent } from '../../atoms/text-input/text-input.component';
@@ -30,15 +36,27 @@ import { ButtonComponent } from '../../atoms/button/button.component';
 })
 export class AuthorizationFormComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
+  private readonly storage = inject(StorageGateway);
+  private readonly searchUnitsUseCase = inject(SearchUnitsUseCase);
+  private readonly createAuthorizationUseCase = inject(CreateAuthorizationUseCase);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly visible = input<boolean>(false);
-  readonly formSubmit = output<AuthorizationFormValue>();
+  readonly authorizationCreated = output<Authorization>();
   readonly formCancel = output<void>();
-  readonly documentSelected = output<File>();
+  readonly errorOccurred = output<string>();
 
   form!: FormGroup;
   selectedDocument: File | null = null;
   private destroy$ = new Subject<void>();
+  readonly submitting = signal(false);
+
+  /** Unit autocomplete state (solo para ADMIN_ATLAS) */
+  readonly unitSuggestions = signal<UnitSearchResult[]>([]);
+  readonly selectedUnit = signal<UnitSearchResult | null>(null);
+  readonly unitSearchQuery = signal('');
+
+  private cachedIsAdmin: boolean | null = null;
 
   readonly vehicleTypeOptions = [
     { value: 'CAR', label: 'Automóvil' },
@@ -86,11 +104,52 @@ export class AuthorizationFormComponent implements OnInit, OnDestroy {
       serviceType: ['VISIT' as ServiceType, Validators.required],
       validFrom: ['', Validators.required],
       validTo: ['', Validators.required],
-      unitId: [null as number | null, Validators.required],
+      unitId: [null as number | null],
       vehiclePlate: ['', Validators.pattern(/^[a-zA-Z0-9-]+$/)],
       vehicleType: [''],
       vehicleColor: ['']
     });
+  }
+
+  /**
+   * Determina si el usuario actual tiene rol ADMIN_ATLAS.
+   * Solo ADMIN_ATLAS ve el autocomplete de unidad; los demás roles
+   * tienen su unitId resuelto automáticamente por el backend.
+   */
+  isAdmin(): boolean {
+    if (this.cachedIsAdmin === null) {
+      const user = this.storage.getItem<AuthUser>('auth_user');
+      const roles = user?.roles ?? [];
+      const role = user?.role ?? '';
+      this.cachedIsAdmin = roles.includes('ADMIN_ATLAS') || role === 'ADMIN_ATLAS';
+    }
+    return this.cachedIsAdmin;
+  }
+
+  onUnitSearch(query: string): void {
+    this.unitSearchQuery.set(query);
+    this.selectedUnit.set(null);
+    this.form.get('unitId')?.setValue(null);
+
+    if (query.length < 1) {
+      this.unitSuggestions.set([]);
+      return;
+    }
+
+    this.searchUnitsUseCase.execute(query)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => {
+        if (result.success) {
+          this.unitSuggestions.set(result.data);
+        }
+      });
+  }
+
+  selectUnit(unit: UnitSearchResult): void {
+    this.selectedUnit.set(unit);
+    this.unitSearchQuery.set(unit.code);
+    this.form.get('unitId')?.setValue(unit.id);
+    this.unitSuggestions.set([]);
   }
 
   onServiceTypeChange(type: ServiceType): void {
@@ -101,28 +160,62 @@ export class AuthorizationFormComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedDocument = input.files[0];
-      this.documentSelected.emit(this.selectedDocument);
     }
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const raw = this.form.value;
-      const formValue: AuthorizationFormValue = {
-        personName: raw.personName.trim(),
-        personDocument: raw.personDocument.trim(),
-        serviceType: raw.serviceType,
-        validFrom: new Date(raw.validFrom).toISOString(),
-        validTo: new Date(raw.validTo).toISOString(),
-        unitId: raw.unitId,
-        vehiclePlate: raw.vehiclePlate?.trim() || undefined,
-        vehicleType: raw.vehicleType || undefined,
-        vehicleColor: raw.vehicleColor?.trim() || undefined
-      };
+    this.form.markAllAsTouched();
 
-      this.formSubmit.emit(formValue);
-      this.resetForm();
+    if (!this.form.valid) {
+      console.warn('[AuthorizationForm] Formulario inválido:', this.getInvalidControls());
+      return;
     }
+
+    this.submitting.set(true);
+    const raw = this.form.value;
+    const formValue: AuthorizationFormValue = {
+      personName: raw.personName.trim(),
+      personDocument: raw.personDocument.trim(),
+      serviceType: raw.serviceType,
+      validFrom: new Date(raw.validFrom).toISOString(),
+      validTo: new Date(raw.validTo).toISOString(),
+      unitId: raw.unitId,
+      vehiclePlate: raw.vehiclePlate?.trim() || undefined,
+      vehicleType: raw.vehicleType || undefined,
+      vehicleColor: raw.vehicleColor?.trim() || undefined
+    };
+
+    console.log('[AuthorizationForm] Llamando al backend con:', formValue);
+    this.createAuthorizationUseCase.execute(formValue, this.selectedDocument ?? undefined)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          console.log('[AuthorizationForm] Resultado del backend:', result);
+          this.submitting.set(false);
+          if (result.success) {
+            this.authorizationCreated.emit(result.data);
+            this.resetForm();
+          } else {
+            this.errorOccurred.emit(result.error.message);
+          }
+        },
+        error: (err) => {
+          console.error('[AuthorizationForm] Error inesperado:', err);
+          this.submitting.set(false);
+          this.errorOccurred.emit('No se pudo crear la autorización. Verifica tu conexión e intenta nuevamente');
+        }
+      });
+  }
+
+  private getInvalidControls(): Record<string, unknown> {
+    const invalid: Record<string, unknown> = {};
+    for (const key of Object.keys(this.form.controls)) {
+      const control = this.form.get(key);
+      if (control?.invalid) {
+        invalid[key] = { value: control.value, errors: control.errors };
+      }
+    }
+    return invalid;
   }
 
   onCancel(): void {
@@ -148,6 +241,9 @@ export class AuthorizationFormComponent implements OnInit, OnDestroy {
       vehicleColor: ''
     });
     this.setDefaultDates();
+    this.unitSuggestions.set([]);
+    this.selectedUnit.set(null);
+    this.unitSearchQuery.set('');
   }
 
   getFieldError(fieldName: string): string {

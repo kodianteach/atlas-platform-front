@@ -26,6 +26,7 @@ import { OrganizationConfigGateway } from '@domain/gateways/organization/organiz
 import { PorterGateway } from '@domain/gateways/porter/porter.gateway';
 import { InvitationGateway } from '@domain/gateways/invitation/invitation.gateway';
 import { EnrollmentGateway } from '@domain/gateways/enrollment/enrollment.gateway';
+import { MeGateway } from '@domain/gateways/me/me.gateway';
 
 // Infrastructure Adapters (implementations)
 import { AuthAdapter } from '@infrastructure/adapters/auth/auth.adapter';
@@ -44,6 +45,7 @@ import { OrganizationConfigAdapter } from '@infrastructure/adapters/organization
 import { PorterAdapter } from '@infrastructure/adapters/porter/porter.adapter';
 import { InvitationAdapter } from '@infrastructure/adapters/invitation/invitation.adapter';
 import { EnrollmentAdapter } from '@infrastructure/adapters/enrollment/enrollment.adapter';
+import { MeAdapter } from '@infrastructure/adapters/me/me.adapter';
 
 /**
  * Factory for ngx-translate HTTP loader
@@ -61,7 +63,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerImmediately'
     }),
 
     // i18n - Translation module
@@ -93,5 +95,6 @@ export const appConfig: ApplicationConfig = {
     { provide: PorterGateway, useClass: PorterAdapter },
     { provide: InvitationGateway, useClass: InvitationAdapter },
     { provide: EnrollmentGateway, useClass: EnrollmentAdapter },
+    { provide: MeGateway, useClass: MeAdapter },
   ]
 };

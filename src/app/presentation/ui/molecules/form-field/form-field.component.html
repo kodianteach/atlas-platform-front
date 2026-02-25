@@ -12,20 +12,33 @@
     }
     
     @if (shouldRenderInternalInput()) {
-      <input
-        [id]="id()"
-        [type]="type()"
-        [placeholder]="placeholder()"
-        [disabled]="disabled()"
-        [value]="value()"
-        [autocomplete]="autocomplete()"
-        [class.has-icon]="icon()"
-        [class.error]="errorMessage()"
-        (input)="onValueChange($any($event.target).value)"
-        (blur)="onBlur()"
-        (focus)="onFocus()"
-        class="form-input"
-      />
+      <div class="input-container">
+        <input
+          [id]="id()"
+          [type]="inputType()"
+          [placeholder]="placeholder()"
+          [disabled]="disabled()"
+          [value]="value()"
+          [autocomplete]="autocomplete()"
+          [class.has-icon]="icon()"
+          [class.has-toggle]="isPassword()"
+          [class.error]="errorMessage()"
+          (input)="onValueChange($any($event.target).value)"
+          (blur)="onBlur()"
+          (focus)="onFocus()"
+          class="form-input"
+        />
+        
+        @if (isPassword()) {
+          <button 
+            type="button" 
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="isPasswordVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+            <i [class]="isPasswordVisible() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        }
+      </div>
     } @else {
       <ng-content />
     }

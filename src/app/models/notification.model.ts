@@ -4,6 +4,6 @@ export interface Notification {
   message: string;
   timestamp: Date;
   read: boolean;
-  type: 'info' | 'warning' | 'success' | 'announcement';
+  type: 'info' | 'warning' | 'success' | 'announcement' | 'install';
   icon?: string;
 }

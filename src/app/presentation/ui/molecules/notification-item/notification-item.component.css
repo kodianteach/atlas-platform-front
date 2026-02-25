@@ -52,6 +52,20 @@
   color: #9c27b0;
 }
 
+.notification-install .notification-icon {
+  background-color: #e0f2f1;
+  color: #00897b;
+}
+
+.notification-install {
+  background: linear-gradient(135deg, #f0fdf9, #e0f7fa) !important;
+  border-left: 3px solid #00897b;
+}
+
+.notification-install:hover {
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2) !important;
+}
+
 .notification-content {
   flex: 1;
   min-width: 0;

@@ -2,7 +2,7 @@
  * Notification models
  */
 
-export type NotificationType = 'info' | 'warning' | 'success' | 'announcement';
+export type NotificationType = 'info' | 'warning' | 'success' | 'announcement' | 'install';
 
 export interface Notification {
   id: string;

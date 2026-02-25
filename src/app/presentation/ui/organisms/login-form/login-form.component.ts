@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, output, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../../molecules/form-field/form-field.component';
+import { PasswordInputComponent } from '../../molecules/password-input/password-input.component';
 import { ButtonComponent } from '../../atoms/button/button.component';
 
 export interface LoginFormData {
@@ -11,7 +12,7 @@ export interface LoginFormData {
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormFieldComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, FormFieldComponent, PasswordInputComponent, ButtonComponent],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,7 +26,7 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
   }
@@ -33,8 +34,7 @@ export class LoginFormComponent implements OnInit {
   getEmailError(): string {
     const emailControl = this.loginForm.get('email');
     if (!emailControl?.touched) return '';
-    if (emailControl.hasError('required')) return 'Email is required';
-    if (emailControl.hasError('email')) return 'Please enter a valid email address';
+    if (emailControl.hasError('required')) return 'Usuario o correo es requerido';
     return '';
   }
 

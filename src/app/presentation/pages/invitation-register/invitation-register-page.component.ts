@@ -109,6 +109,7 @@ export class InvitationRegisterPageComponent implements OnInit {
     this.registerResidentUseCase.execute({
       token: this.token,
       names: formData.names,
+      email: formData.email || undefined,
       phone: formData.phone,
       documentType: formData.documentType,
       documentNumber: formData.documentNumber,

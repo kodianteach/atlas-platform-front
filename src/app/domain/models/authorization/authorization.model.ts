@@ -36,6 +36,8 @@ export interface Authorization {
   revokedBy?: number;
   createdAt: string;
   updatedAt: string;
+  unitCode?: string;
+  createdByUserName?: string;
 }
 
 /**

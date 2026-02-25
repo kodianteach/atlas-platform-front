@@ -1,7 +1,9 @@
 <div class="invitation-page">
   <header class="invitation-page__header">
-    <h1 class="invitation-page__title">{{ 'app.invitation.history.title' | translate }}</h1>
-    <p class="invitation-page__subtitle">Genera y gestiona invitaciones para propietarios</p>
+    <div class="invitation-page__header-content">
+      <h1 class="invitation-page__title">{{ 'app.invitation.history.title' | translate }}</h1>
+      <p class="invitation-page__subtitle">Genera y gestiona invitaciones para propietarios</p>
+    </div>
   </header>
 
   <section class="invitation-page__content">
@@ -76,4 +78,4 @@
   </section>
 </div>
 
-<app-admin-bottom-nav [activeTab]="'more'" />
+<app-admin-bottom-nav [activeTab]="'owners'" />

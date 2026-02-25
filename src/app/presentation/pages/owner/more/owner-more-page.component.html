@@ -1,0 +1,44 @@
+<div class="owner-more-page">
+  <!-- Header del Usuario -->
+  <header class="owner-more-page__header">
+    <div class="owner-more-page__avatar">
+      <span class="owner-more-page__avatar-initial">{{ userInitial() }}</span>
+    </div>
+    <div class="owner-more-page__user-info">
+      <h1 class="owner-more-page__user-name">{{ userName() }}</h1>
+      @if (userEmail()) {
+        <p class="owner-more-page__user-email">{{ userEmail() }}</p>
+      }
+    </div>
+  </header>
+
+  <!-- Secciones del Menú -->
+  <main class="owner-more-page__content">
+    @for (section of sections; track section.title) {
+      <section class="owner-more-page__section">
+        <h2 class="owner-more-page__section-title">{{ section.title }}</h2>
+        <div class="owner-more-page__section-items">
+          @for (item of section.items; track item.id) {
+            <button 
+              class="owner-more-page__menu-item"
+              [class.owner-more-page__menu-item--danger]="item.variant === 'danger'"
+              (click)="onItemClick(item)"
+              type="button">
+              <div class="owner-more-page__menu-icon-container">
+                <i [class]="'bi ' + item.icon + ' owner-more-page__menu-icon'"></i>
+              </div>
+              <div class="owner-more-page__menu-content">
+                <span class="owner-more-page__menu-label">{{ item.label }}</span>
+                <span class="owner-more-page__menu-desc">{{ item.description }}</span>
+              </div>
+              <i class="bi bi-chevron-right owner-more-page__menu-arrow"></i>
+            </button>
+          }
+        </div>
+      </section>
+    }
+  </main>
+
+  <!-- Bottom Navigation -->
+  <app-bottom-nav />
+</div>

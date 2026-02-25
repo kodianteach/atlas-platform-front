@@ -26,3 +26,9 @@ export interface RegenerateUrlResponse {
   porterId: number;
   enrollmentUrl: string;
 }
+
+export interface ToggleStatusResponse {
+  porterId: number;
+  active: boolean;
+  status: string;
+}

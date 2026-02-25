@@ -22,7 +22,7 @@ export class BottomNavComponent {
     { label: 'Inicio', icon: 'bi-house-door', route: '/home' },
     { label: 'Historial', icon: 'bi-clock-history', route: '/authorization' },
     { label: 'Difusión', icon: 'bi-megaphone', route: '/announcements' },
-    { label: 'Vehículos', icon: 'bi-car-front-fill', route: '/vehicles' }
+    { label: 'Más', icon: 'bi-three-dots', route: '/more' }
   ];
 
   onCenterAction(): void {

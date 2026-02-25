@@ -13,7 +13,40 @@
 }
 
 .invitation-page__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-xl);
+}
+
+.invitation-page__back-btn {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-full);
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.invitation-page__back-btn:hover {
+  background: var(--bg-tertiary, #e5e7eb);
+}
+
+.invitation-page__back-btn:active {
+  background: var(--border-color);
+}
+
+.invitation-page__header-content {
+  flex: 1;
 }
 
 .invitation-page__title {

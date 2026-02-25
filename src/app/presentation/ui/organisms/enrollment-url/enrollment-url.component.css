@@ -1,128 +1,147 @@
 .enrollment-url {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--z-index-modal);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: var(--spacing-md);
 }
 
 .enrollment-url__backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
+  animation: fadeIn var(--transition-normal);
 }
 
 .enrollment-url__modal {
   position: relative;
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   max-width: 480px;
   width: 100%;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn var(--transition-normal);
 }
 
 .enrollment-url__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .enrollment-url__title {
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg);
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .enrollment-url__title i {
-  color: #FF7A59;
+  color: var(--color-primary);
 }
 
 .enrollment-url__close {
   background: none;
   border: none;
-  color: #6b7280;
+  color: var(--text-secondary);
   cursor: pointer;
-  padding: 0.5rem;
-  font-size: 1.125rem;
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+}
+
+.enrollment-url__close:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
 }
 
 .enrollment-url__description {
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
   line-height: 1.5;
-  margin: 0 0 1rem;
+  margin: 0 0 var(--spacing-md);
 }
 
 .enrollment-url__url-box {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   overflow-x: auto;
 }
 
 .enrollment-url__url-text {
-  font-size: 0.8125rem;
-  color: #374151;
+  font-size: var(--font-size-xs);
+  color: var(--text-primary);
   word-break: break-all;
   font-family: 'Fira Code', 'Consolas', monospace;
 }
 
+.enrollment-url__url-link {
+  font-size: var(--font-size-xs);
+  color: var(--color-info);
+  word-break: break-all;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  text-decoration: none;
+  display: block;
+  transition: color var(--transition-fast);
+}
+
+.enrollment-url__url-link:hover {
+  color: var(--color-info-dark);
+  text-decoration: underline;
+}
+
 .enrollment-url__actions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--spacing-md);
 }
 
 .enrollment-url__btn {
   flex: 1;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9375rem;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
   font-weight: 600;
   cursor: pointer;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-fast);
 }
 
 .enrollment-url__btn--copy {
-  background: #FF7A59;
-  color: white;
+  background: var(--color-primary);
+  color: var(--bg-primary);
 }
 
 .enrollment-url__btn--copy:hover {
-  background: #e86a4a;
+  background: var(--color-primary-dark);
 }
 
 .enrollment-url__btn--close {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
 }
 
 .enrollment-url__btn--close:hover {
-  background: #e5e7eb;
+  background: var(--border-color);
+}
+
+@media (max-width: 768px) {
+  .enrollment-url__modal {
+    max-width: 95vw;
+    margin: var(--spacing-md);
+  }
 }

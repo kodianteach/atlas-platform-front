@@ -13,7 +13,7 @@
         <p class="header-subtitle">Completa los detalles del visitante autorizado</p>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="authorization-form">
+      <form [formGroup]="form" class="authorization-form">
         <!-- Service Type Selector -->
         <app-service-type-selector [selectedType]="form.get('serviceType')?.value"
           (typeChange)="onServiceTypeChange($event)" />
@@ -47,19 +47,37 @@
             }
           </div>
 
-          <!-- Unit ID -->
-          <div class="form-group">
-            <label>UNIDAD</label>
-            <div class="input-wrapper">
-              <i class="bi bi-building input-icon"></i>
-              <app-text-input type="number" [value]="form.get('unitId')?.value" placeholder="ID de la unidad"
-                [error]="isFieldInvalid('unitId')" (valueChange)="form.get('unitId')?.setValue(+$event)"
-                (blurred)="form.get('unitId')?.markAsTouched()" />
+          <!-- Unit Autocomplete (solo visible para ADMIN_ATLAS) -->
+          @if (isAdmin()) {
+            <div class="unit-autocomplete">
+              <div class="form-group">
+                <label>UNIDAD</label>
+                <div class="input-wrapper">
+                  <i class="bi bi-building input-icon"></i>
+                  <app-text-input [value]="unitSearchQuery()" placeholder="Buscar por código de unidad"
+                    (valueChange)="onUnitSearch($event)" />
+                </div>
+              </div>
+              @if (unitSuggestions().length > 0) {
+                <ul class="unit-suggestions" role="listbox" aria-label="Sugerencias de unidad">
+                  @for (unit of unitSuggestions(); track unit.id) {
+                    <li class="unit-suggestion-item" role="option" (click)="selectUnit(unit)">
+                      <span class="unit-code">{{ unit.code }}</span>
+                      @if (unit.type) {
+                        <span class="unit-type">{{ unit.type }}</span>
+                      }
+                    </li>
+                  }
+                </ul>
+              }
+              @if (selectedUnit()) {
+                <div class="selected-unit">
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>Unidad seleccionada: {{ selectedUnit()!.code }}</span>
+                </div>
+              }
             </div>
-            @if (isFieldInvalid('unitId')) {
-              <span class="error-text">{{ getFieldError('unitId') }}</span>
-            }
-          </div>
+          }
 
           <!-- Valid From -->
           <div class="form-group">
@@ -156,9 +174,11 @@
 
         <!-- Action Button -->
         <div class="form-actions">
-          <button type="submit" class="submit-button" [disabled]="form.invalid">
-            CREAR AUTORIZACIÓN
-            <i class="bi bi-qr-code"></i>
+          <button type="button" class="submit-button" [disabled]="submitting()" (click)="onSubmit()">
+            {{ submitting() ? 'CREANDO...' : 'CREAR AUTORIZACIÓN' }}
+            @if (!submitting()) {
+              <i class="bi bi-qr-code"></i>
+            }
           </button>
         </div>
       </form>

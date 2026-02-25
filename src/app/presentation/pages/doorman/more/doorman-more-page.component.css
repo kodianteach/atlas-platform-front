@@ -1,0 +1,190 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Block: doorman-more-page */
+.doorman-more-page {
+  min-height: 100vh;
+  background: var(--bg-secondary);
+  padding-bottom: 120px;
+}
+
+/* Element: header */
+.doorman-more-page__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Element: avatar */
+.doorman-more-page__avatar {
+  width: 64px;
+  min-width: 64px;
+  height: 64px;
+  background: var(--gradient-primary);
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+  flex-shrink: 0;
+}
+
+.doorman-more-page__avatar-initial {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Element: user-info */
+.doorman-more-page__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.doorman-more-page__user-name {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doorman-more-page__user-email {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Element: content */
+.doorman-more-page__content {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* Element: section */
+.doorman-more-page__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.doorman-more-page__section-title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  padding-left: var(--spacing-sm);
+}
+
+.doorman-more-page__section-items {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Element: menu-item */
+.doorman-more-page__menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-fast);
+}
+
+.doorman-more-page__menu-item:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.doorman-more-page__menu-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.doorman-more-page__menu-item:active {
+  background-color: var(--bg-tertiary);
+}
+
+/* Element: menu-icon-container */
+.doorman-more-page__menu-icon-container {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doorman-more-page__menu-icon {
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+}
+
+/* Element: menu-content */
+.doorman-more-page__menu-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.doorman-more-page__menu-label {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.doorman-more-page__menu-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* Element: menu-arrow */
+.doorman-more-page__menu-arrow {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* Modifier: danger */
+.doorman-more-page__menu-item--danger .doorman-more-page__menu-icon-container {
+  background: var(--color-error-light);
+}
+
+.doorman-more-page__menu-item--danger .doorman-more-page__menu-icon {
+  color: var(--color-error);
+}
+
+.doorman-more-page__menu-item--danger .doorman-more-page__menu-label {
+  color: var(--color-error);
+}
+
+.doorman-more-page__menu-item--danger:hover {
+  background-color: var(--color-error-light);
+}

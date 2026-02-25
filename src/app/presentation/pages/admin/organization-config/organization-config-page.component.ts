@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit, DestroyRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { GetOrganizationConfigUseCase } from '@domain/use-cases/organization/get-organization-config.use-case';
@@ -16,6 +17,7 @@ import { ToggleSwitchComponent } from '../../../ui/atoms/toggle-switch/toggle-sw
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationConfigPageComponent implements OnInit {
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly getConfigUseCase = inject(GetOrganizationConfigUseCase);
   private readonly saveConfigUseCase = inject(SaveOrganizationConfigUseCase);
@@ -108,5 +110,9 @@ export class OrganizationConfigPageComponent implements OnInit {
         this.generalError.set('Error al cargar la configuración.');
       }
     });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin/more']);
   }
 }

@@ -1,6 +1,6 @@
 .home-page {
   min-height: 100vh;
-  background: #fffbf8;
+  background: var(--bg-secondary);
   /* Very light warm background */
   padding-bottom: 120px;
   /* Space for floating bottom nav */
@@ -19,33 +19,40 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .avatar {
   width: 55px;
+  min-width: 55px;
   height: 55px;
-  background: #e0e0e0;
-  /* Placeholder gray or image */
+  background: var(--gradient-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--white);
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  border: 2px solid white;
+  box-shadow: 0 4px 10px rgba(var(--color-primary-rgb), 0.2);
+  border: 2px solid var(--white);
+  flex-shrink: 0;
 }
 
-/* Use a mock image or icon for now */
-.avatar i {
-  font-size: 3rem;
-  color: #bdbdbd;
-  margin-top: 5px;
+.avatar__initial {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 .greeting-text {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .greeting {
@@ -61,13 +68,17 @@
   color: var(--color-text);
   margin: 0;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .notification-btn {
   width: 48px;
+  min-width: 48px;
   height: 48px;
   border: none;
-  background: white;
+  background: var(--white);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -76,6 +87,7 @@
   transition: all var(--transition-speed);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   position: relative;
+  flex-shrink: 0;
 }
 
 .notification-btn:hover {
@@ -94,8 +106,8 @@
   right: 2px;
   min-width: 18px;
   height: 18px;
-  background: #f44336;
-  color: white;
+  background: var(--color-error);
+  color: var(--white);
   border-radius: 9px;
   display: flex;
   align-items: center;
@@ -103,21 +115,21 @@
   font-size: 11px;
   font-weight: 700;
   padding: 0 5px;
-  border: 2px solid white;
+  border: 2px solid var(--white);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Residence Card */
 .residence-card {
-  background: linear-gradient(135deg, #FF9A76 0%, #FFB399 100%);
+  background: var(--gradient-primary);
   border-radius: 2.5rem;
   padding: 2rem 1.75rem;
   margin: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  box-shadow: 0 15px 35px rgba(255, 140, 97, 0.25);
-  color: white;
+  box-shadow: 0 15px 35px rgba(var(--color-primary-rgb), 0.25);
+  color: var(--white);
   position: relative;
   overflow: hidden;
 }
@@ -176,9 +188,7 @@
 
 .status-badge i {
   font-size: 0.6rem;
-  color: #4caf50;
-  color: #00e676;
-  /* Brighter green */
+  color: var(--color-success);
 }
 
 .residence-icon {
@@ -195,7 +205,7 @@
 
 .residence-icon i {
   font-size: 1.75rem;
-  color: white;
+  color: var(--white);
 }
 
 /* Quick Actions */
@@ -255,7 +265,7 @@
   justify-content: space-between;
   align-items: flex-start;
   box-shadow: var(--shadow-lg);
-  color: white;
+  color: var(--white);
   position: relative;
   overflow: hidden;
 }
@@ -325,5 +335,5 @@
 
 .admin-card__icon i {
   font-size: 1.75rem;
-  color: white;
+  color: var(--white);
 }

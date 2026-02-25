@@ -1,0 +1,194 @@
+@if (visible()) {
+  <div class="modal-overlay" (click)="onOverlayClick($event)" (keydown.escape)="onClose()">
+    <dialog class="unit-detail-modal" open aria-labelledby="unit-detail-title">
+      <!-- Header -->
+      <div class="unit-detail-modal__header">
+        <h2 id="unit-detail-title" class="unit-detail-modal__title">
+          <i class="bi bi-building"></i>
+          Detalle de Unidad
+        </h2>
+        <button class="unit-detail-modal__close" (click)="onClose()" type="button" aria-label="Cerrar">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="unit-detail-modal__body">
+        @if (loading()) {
+          <div class="unit-detail-modal__loading">
+            <div class="unit-detail-modal__spinner"></div>
+            <p>Cargando detalles...</p>
+          </div>
+        }
+
+        @if (error()) {
+          <div class="unit-detail-modal__error">
+            <i class="bi bi-exclamation-triangle"></i>
+            {{ error() }}
+          </div>
+        }
+
+        @if (!loading() && !error() && unit()) {
+          <!-- Unit Info -->
+          <section class="unit-detail-modal__section">
+            <h3 class="unit-detail-modal__section-title">
+              <i class="bi bi-info-circle"></i>
+              Información de la Unidad
+            </h3>
+            <div class="unit-detail-modal__info-grid">
+              <div class="unit-detail-modal__info-item">
+                <span class="unit-detail-modal__info-label">Código</span>
+                <span class="unit-detail-modal__info-value">{{ unit()!.code }}</span>
+              </div>
+              <div class="unit-detail-modal__info-item">
+                <span class="unit-detail-modal__info-label">Tipo</span>
+                <span class="unit-detail-modal__info-value">{{ translateType(unit()!.type) }}</span>
+              </div>
+              <div class="unit-detail-modal__info-item">
+                <span class="unit-detail-modal__info-label">Estado</span>
+                <span class="unit-detail-modal__info-value unit-detail-modal__status"
+                      [class.unit-detail-modal__status--occupied]="unit()!.status === 'OCCUPIED'"
+                      [class.unit-detail-modal__status--available]="unit()!.status === 'AVAILABLE'"
+                      [class.unit-detail-modal__status--maintenance]="unit()!.status === 'MAINTENANCE'">
+                  {{ translateStatus(unit()!.status) }}
+                </span>
+              </div>
+              @if (unit()!.floor) {
+                <div class="unit-detail-modal__info-item">
+                  <span class="unit-detail-modal__info-label">Piso</span>
+                  <span class="unit-detail-modal__info-value">{{ unit()!.floor }}</span>
+                </div>
+              }
+              @if (unit()!.bedrooms) {
+                <div class="unit-detail-modal__info-item">
+                  <span class="unit-detail-modal__info-label">Habitaciones</span>
+                  <span class="unit-detail-modal__info-value">{{ unit()!.bedrooms }}</span>
+                </div>
+              }
+              @if (unit()!.bathrooms) {
+                <div class="unit-detail-modal__info-item">
+                  <span class="unit-detail-modal__info-label">Baños</span>
+                  <span class="unit-detail-modal__info-value">{{ unit()!.bathrooms }}</span>
+                </div>
+              }
+              @if (unit()!.parkingSpots) {
+                <div class="unit-detail-modal__info-item">
+                  <span class="unit-detail-modal__info-label">Parqueaderos</span>
+                  <span class="unit-detail-modal__info-value">{{ unit()!.parkingSpots }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Owners Section -->
+          <section class="unit-detail-modal__section">
+            <h3 class="unit-detail-modal__section-title">
+              <i class="bi bi-person-fill-gear"></i>
+              Propietarios
+            </h3>
+            @if (unitDetail()?.owners?.length) {
+              <div class="unit-detail-modal__members">
+                @for (owner of unitDetail()!.owners; track owner.userId) {
+                  <div class="unit-detail-modal__member-card">
+                    <div class="unit-detail-modal__member-avatar unit-detail-modal__member-avatar--owner">
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="unit-detail-modal__member-info">
+                      <div class="unit-detail-modal__member-name">{{ owner.names || 'Sin nombre' }}</div>
+                      <div class="unit-detail-modal__member-detail">
+                        <i class="bi bi-envelope"></i> {{ owner.email || '—' }}
+                      </div>
+                      @if (owner.phone) {
+                        <div class="unit-detail-modal__member-detail">
+                          <i class="bi bi-telephone"></i> {{ owner.phone }}
+                        </div>
+                      }
+                      @if (owner.documentNumber) {
+                        <div class="unit-detail-modal__member-detail">
+                          <i class="bi bi-card-text"></i> {{ owner.documentType }} {{ owner.documentNumber }}
+                        </div>
+                      }
+                      @if (owner.status) {
+                        <span class="unit-detail-modal__member-status"
+                              [class.unit-detail-modal__member-status--active]="owner.status === 'ACTIVE'"
+                              [class.unit-detail-modal__member-status--pending]="owner.status === 'PENDING'">
+                          {{ translateStatus(owner.status) }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="unit-detail-modal__empty">
+                <i class="bi bi-person-x"></i>
+                Sin propietarios asignados
+              </p>
+            }
+          </section>
+
+          <!-- Residents Section -->
+          <section class="unit-detail-modal__section">
+            <h3 class="unit-detail-modal__section-title">
+              <i class="bi bi-people-fill"></i>
+              Residentes
+            </h3>
+            @if (unitDetail()?.residents?.length) {
+              <div class="unit-detail-modal__members">
+                @for (resident of unitDetail()!.residents; track resident.userId) {
+                  <div class="unit-detail-modal__member-card">
+                    <div class="unit-detail-modal__member-avatar unit-detail-modal__member-avatar--resident">
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="unit-detail-modal__member-info">
+                      <div class="unit-detail-modal__member-name">{{ resident.names || 'Sin nombre' }}</div>
+                      <div class="unit-detail-modal__member-detail">
+                        <i class="bi bi-envelope"></i> {{ resident.email || '—' }}
+                      </div>
+                      @if (resident.phone) {
+                        <div class="unit-detail-modal__member-detail">
+                          <i class="bi bi-telephone"></i> {{ resident.phone }}
+                        </div>
+                      }
+                      @if (resident.documentNumber) {
+                        <div class="unit-detail-modal__member-detail">
+                          <i class="bi bi-card-text"></i> {{ resident.documentType }} {{ resident.documentNumber }}
+                        </div>
+                      }
+                      <div class="unit-detail-modal__member-meta">
+                        @if (resident.ownershipType) {
+                          <span class="unit-detail-modal__member-badge">
+                            {{ translateOwnership(resident.ownershipType) }}
+                          </span>
+                        }
+                        @if (resident.status) {
+                          <span class="unit-detail-modal__member-status"
+                                [class.unit-detail-modal__member-status--active]="resident.status === 'ACTIVE'"
+                                [class.unit-detail-modal__member-status--pending]="resident.status === 'PENDING'">
+                            {{ translateStatus(resident.status) }}
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="unit-detail-modal__empty">
+                <i class="bi bi-people"></i>
+                Sin residentes asociados
+              </p>
+            }
+          </section>
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="unit-detail-modal__footer">
+        <button class="unit-detail-modal__btn-close" (click)="onClose()" type="button">
+          Cerrar
+        </button>
+      </div>
+    </dialog>
+  </div>
+}

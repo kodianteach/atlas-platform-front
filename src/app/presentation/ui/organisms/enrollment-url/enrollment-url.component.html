@@ -17,7 +17,12 @@
     </p>
 
     <div class="enrollment-url__url-box">
-      <code class="enrollment-url__url-text">{{ enrollmentUrl() }}</code>
+      <a class="enrollment-url__url-link" 
+         [href]="fullUrl()" 
+         target="_blank" 
+         rel="noopener noreferrer">
+        {{ fullUrl() }}
+      </a>
     </div>
 
     <div class="enrollment-url__actions">

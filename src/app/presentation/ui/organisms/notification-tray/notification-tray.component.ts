@@ -45,6 +45,10 @@ export class NotificationTrayComponent implements OnInit, OnDestroy {
   }
 
   onNotificationClick(notification: Notification): void {
+    if (notification.type === 'install') {
+      this.notificationService.handleInstallClick();
+      return;
+    }
     if (!notification.read) {
       this.notificationService.markAsRead(notification.id);
     }
