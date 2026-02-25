@@ -78,6 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       email: string;
       role: string;
       roles?: string[];
+      organizationName?: string;
     }>('auth_user');
 
     if (user) {
@@ -85,6 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.userEmail.set(user.email || '');
       this.userRole.set(user.role || user.roles?.[0] || '');
       this.userRoles.set(user.roles || []);
+      this.orgName.set(user.organizationName || '');
     }
   }
 

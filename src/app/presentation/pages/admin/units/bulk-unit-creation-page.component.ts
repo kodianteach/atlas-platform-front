@@ -176,4 +176,8 @@ export class BulkUnitCreationPageComponent implements OnInit {
       }
     });
   }
+
+  goBack(): void {
+    this.router.navigate(['/admin/more']);
+  }
 }

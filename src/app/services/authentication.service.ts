@@ -30,6 +30,7 @@ export interface JwtPayload {
   permissions: string[];
   modulePermissions: string[];
   organizationId?: number;
+  organizationName?: string;
   enabledModules?: string[];
   defaultRoute: string;
   iss: string;
@@ -45,6 +46,7 @@ export interface AuthUser {
   roles?: string[];
   permissions?: string[];
   organizationId?: string;
+  organizationName?: string;
   defaultRoute?: string;
 }
 
@@ -83,6 +85,7 @@ export class AuthenticationService {
             roles: decoded?.roles || [],
             permissions: decoded?.permissions || [],
             organizationId: decoded?.organizationId ? String(decoded.organizationId) : undefined,
+            organizationName: decoded?.organizationName,
             defaultRoute: decoded?.defaultRoute
           };
 

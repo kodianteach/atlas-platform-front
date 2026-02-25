@@ -1,6 +1,9 @@
 <div class="bulk-unit-page">
   <!-- Header -->
   <header class="bulk-unit-page__header">
+    <button class="bulk-unit-page__back-btn" (click)="goBack()" type="button">
+      <i class="bi bi-arrow-left"></i>
+    </button>
     <div class="bulk-unit-page__header-content">
       <div class="bulk-unit-page__icon-container">
         <i class="bi bi-buildings"></i>
@@ -129,5 +132,5 @@
     (closeModal)="closeUnitModal()" />
 
   <!-- Bottom Navigation -->
-  <app-admin-bottom-nav [activeTab]="'units'" />
+  <app-admin-bottom-nav [activeTab]="'more'" />
 </div>
