@@ -121,10 +121,6 @@ export class AdminAuthorizationsPageComponent implements OnInit {
     this.router.navigate(['/admin/authorizations', auth.id]);
   }
 
-  goBack(): void {
-    this.router.navigate(['/admin/more']);
-  }
-
   onDismissError(): void {
     this.errorMessage.set(null);
   }

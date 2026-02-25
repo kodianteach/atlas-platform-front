@@ -24,7 +24,7 @@
       <div class="admin-card__content">
         <p class="admin-card__label">PANEL ADMINISTRATIVO</p>
         <h2 class="admin-card__title">Administrador</h2>
-        <p class="admin-card__org">Tu organización</p>
+        <p class="admin-card__org">{{ orgName() || 'Tu organización' }}</p>
         <span class="admin-card__badge">
           <i class="bi bi-shield-check"></i>
           Admin Atlas
@@ -53,22 +53,6 @@
           backgroundColor="#F3E5F5"
           iconColor="#9C27B0"
           (cardClick)="onOrganizationConfig()" />
-
-        <app-quick-action-card
-          title="Tablón de Anuncios"
-          subtitle="Comunicados"
-          icon="bi-megaphone"
-          backgroundColor="#FFF3E0"
-          iconColor="#FF9800"
-          (cardClick)="onNoticeBoard()" />
-
-        <app-quick-action-card
-          title="Vehículos"
-          subtitle="Gestionar vehículos"
-          icon="bi-car-front"
-          backgroundColor="#E8F5E9"
-          iconColor="#4CAF50"
-          (cardClick)="onRegisterVehicle()" />
       </div>
     </section>
 

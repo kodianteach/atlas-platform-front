@@ -48,11 +48,11 @@ export class AdminMorePageComponent implements OnInit {
           route: '/admin/organization-config'
         },
         {
-          id: 'authorizations',
-          icon: 'bi-shield-check',
-          label: 'Autorizaciones',
-          description: 'Ver autorizaciones de acceso',
-          route: '/admin/authorizations'
+          id: 'units',
+          icon: 'bi-building',
+          label: 'Unidades',
+          description: 'Gestión de unidades',
+          route: '/admin/units'
         }
       ]
     },
