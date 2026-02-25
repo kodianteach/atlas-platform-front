@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DistributeUnitsUseCase } from '@domain/use-cases/unit/distribute-units.use-case';
 import { GetOrganizationConfigUseCase } from '@domain/use-cases/organization/get-organization-config.use-case';
 import { GetOrganizationUnitsUseCase } from '@domain/use-cases/unit/get-organization-units.use-case';
@@ -22,6 +23,7 @@ export class BulkUnitCreationPageComponent implements OnInit {
   private readonly getOrgConfigUseCase = inject(GetOrganizationConfigUseCase);
   private readonly getOrgUnitsUseCase = inject(GetOrganizationUnitsUseCase);
   private readonly authService = inject(AuthenticationService);
+  private readonly router = inject(Router);
 
   readonly isSubmitting = signal(false);
   readonly isLoadingConfig = signal(true);
