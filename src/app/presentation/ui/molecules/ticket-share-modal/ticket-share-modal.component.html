@@ -1,0 +1,91 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Close Button -->
+    <button class="btn-close-x" (click)="close.emit()" type="button" aria-label="Cerrar">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <!-- Ticket Preview -->
+    <div class="ticket-container" #ticketElement>
+      <div class="ticket-header">
+        <div class="ticket-brand">
+          <i class="bi bi-building"></i>
+          <span>Atlas Platform</span>
+        </div>
+        <div class="ticket-title">
+          <h1>Pase de Acceso</h1>
+          <span class="ticket-subtitle">Autorización Digital</span>
+        </div>
+      </div>
+
+      <div class="ticket-body">
+        <div class="ticket-info">
+          <div class="info-group">
+            <label>Visitante</label>
+            <p class="highlight">{{ authorization().personName }}</p>
+          </div>
+          
+          <div class="info-row">
+            <div class="info-group">
+              <label>Documento</label>
+              <p>{{ authorization().personDocument }}</p>
+            </div>
+            <div class="info-group">
+              <label>Tipo</label>
+              <span class="service-badge">{{ authorization().serviceType }}</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-group">
+              <label>Desde</label>
+              <p>{{ authorization().validFrom | date:'dd MMM, HH:mm' }}</p>
+            </div>
+            <div class="info-group">
+              <label>Hasta</label>
+              <p>{{ authorization().validTo | date:'dd MMM, HH:mm' }}</p>
+            </div>
+          </div>
+
+          @if (authorization().vehiclePlate) {
+            <div class="vehicle-info">
+              <i class="bi bi-car-front"></i>
+              <span>{{ authorization().vehiclePlate }}</span>
+              @if (authorization().vehicleColor) {
+                <span class="vehicle-detail">• {{ authorization().vehicleColor }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="ticket-qr">
+          <div class="qr-wrapper">
+            <app-qr-display 
+              [imageUrl]="qrImageUrl() ?? ''"
+              altText="QR Acceso" />
+          </div>
+          <span class="qr-hint">Presenta este código en portería</span>
+        </div>
+      </div>
+      
+      <!-- Decorator Circles for Ticket effect -->
+      <div class="ticket-notch notch-left"></div>
+      <div class="ticket-notch notch-right"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="modal-actions">
+      <p class="share-hint">Comparte este ticket con el visitante</p>
+      
+      <div class="action-buttons">
+        <button class="btn-share whatsapp" (click)="onShareWhatsApp()" [disabled]="isGenerating()">
+          @if (isGenerating()) {
+            <i class="bi bi-arrow-repeat spinning"></i> Generando...
+          } @else {
+            <i class="bi bi-whatsapp"></i> Compartir por WhatsApp
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

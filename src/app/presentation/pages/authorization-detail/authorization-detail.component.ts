@@ -124,10 +124,9 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
           <!-- Share Actions -->
           @if (authorization()!.status === 'ACTIVE' && authorization()!.signedQr) {
             <div class="share-section">
-              <h3>Compartir autorización</h3>
               <app-share-actions
-                [shareUrl]="getShareUrl()"
-                [personName]="authorization()!.personName" />
+                [authorization]="authorization()!"
+                [qrImageUrl]="qrImageUrl()" />
             </div>
           }
 
