@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { AuthTemplateComponent } from '../../ui/templates/auth-template/auth-template.component';
 import { OnboardingFormComponent, OnboardingFormData } from '../../ui/organisms/onboarding-form/onboarding-form.component';
 import { CompleteOnboardingUseCase } from '@domain/use-cases/onboarding/complete-onboarding.use-case';
+import { StorageGateway } from '@domain/gateways/storage/storage.gateway';
+import { AuthUser } from '@domain/models/auth/auth.model';
 
 @Component({
   selector: 'app-onboarding-page',
@@ -21,6 +23,7 @@ import { CompleteOnboardingUseCase } from '@domain/use-cases/onboarding/complete
 export class OnboardingPageComponent {
   private readonly router = inject(Router);
   private readonly completeOnboardingUseCase = inject(CompleteOnboardingUseCase);
+  private readonly storage = inject(StorageGateway);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly isSubmitting = signal(false);
@@ -42,6 +45,13 @@ export class OnboardingPageComponent {
       this.isSubmitting.set(false);
 
       if (result.success) {
+        // Update user in storage with organizationId to pass onboarding guard
+        const user = this.storage.getItem<AuthUser>('auth_user');
+        if (user) {
+          user.organizationId = result.data.organizationId;
+          this.storage.setItem('auth_user', user);
+        }
+
         this.isCompleted.set(true);
         setTimeout(() => {
           this.router.navigate(['/home']);

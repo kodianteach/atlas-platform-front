@@ -1,0 +1,329 @@
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-font-base);
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 340px;
+  max-height: calc(100vh - 2rem);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+}
+
+/* Close Button X */
+.btn-close-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-close-x:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.btn-close-x i {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Ticket Design */
+.ticket-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(135deg, #FF6E40 0%, #FF9E80 100%); /* Atlas Orange Gradient */
+  color: white;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 20px 20px 0 0;
+}
+
+.ticket-header {
+  padding: 1rem 1rem 0.5rem;
+  text-align: center;
+}
+
+.ticket-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.ticket-title h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  line-height: 1.1;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ticket-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.ticket-body {
+  background: white;
+  color: #333;
+  margin: 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  clip-path: inset(0 round 12px); /* Maintain border radius */
+}
+
+.ticket-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-bottom: 1px dashed #eee;
+}
+
+.info-group label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #888;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.info-group p {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.info-group .highlight {
+  font-size: 1rem;
+  color: #FF5722; /* Primary Orange */
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.service-badge {
+  background: #E0F7FA;
+  color: #006064;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.vehicle-info {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+  background: #FAFAFA;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.ticket-qr {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+}
+
+.qr-wrapper {
+  background: white;
+  padding: 6px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.qr-wrapper app-qr-display {
+  display: block;
+}
+
+/* Override QR size inside ticket */
+.qr-wrapper ::ng-deep .qr-display-container {
+  max-width: 140px;
+  border: none;
+}
+
+.qr-hint {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: #999;
+}
+
+/* Notches for ticket effect */
+.ticket-notch {
+  position: absolute;
+  bottom: -10px;
+  width: 20px;
+  height: 20px;
+  background: var(--bg-secondary, #F4F6F8);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.notch-left {
+  left: -10px;
+}
+
+.notch-right {
+  right: -10px;
+}
+
+/* Modal Actions */
+.modal-actions {
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border-radius: 0 0 20px 20px;
+  flex-shrink: 0;
+}
+
+.share-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.btn-share {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.btn-share:active {
+  transform: scale(0.98);
+}
+
+.whatsapp {
+  background: #25D366;
+  color: white;
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
+}
+
+.copy {
+  background: #F0F2F5;
+  color: #333;
+}
+
+.btn-close-modal {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Spinning animation */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Disabled state */
+.btn-share:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
