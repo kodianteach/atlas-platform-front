@@ -1,0 +1,28 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # No procesar si ya es index.html
+  RewriteRule ^index\.html$ - [L]
+  
+  # No redirigir archivos del Service Worker
+  RewriteRule ^ngsw\.json$ - [L]
+  RewriteRule ^ngsw-worker\.js$ - [L]
+  
+  # Si el archivo o directorio existe, servirlo directamente
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  
+  # Para cualquier otra ruta, redirigir a index.html (sin cambiar la URL)
+  RewriteRule ^.*$ index.html [L]
+</IfModule>
+
+# Deshabilitar el cache para index.html y archivos del Service Worker
+<FilesMatch "^(index\.html|ngsw\.json|ngsw-worker\.js)$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </IfModule>
+</FilesMatch>

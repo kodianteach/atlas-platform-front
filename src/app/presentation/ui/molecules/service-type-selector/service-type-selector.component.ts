@@ -54,9 +54,9 @@ import { ServiceType } from '@domain/models/authorization/authorization.model';
   styles: [`
     .service-type-container {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       justify-content: center;
-      padding: 16px 0;
+      padding: 8px 0 24px 0;
       flex-wrap: wrap;
     }
 
@@ -64,55 +64,62 @@ import { ServiceType } from '@domain/models/authorization/authorization.model';
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border-radius: 12px;
+      gap: 10px;
+      padding: 16px 20px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      min-width: 72px;
-      background: #f8f9fa;
-      border: 2px solid transparent;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 90px;
+      background: var(--bg-primary, #FFFFFF);
+      border: 2px solid var(--border-color, #E5E7EB);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
 
     .type-card:hover {
-      background: #e9ecef;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+      border-color: var(--border-hover, #D1D5DB);
     }
 
     .type-card.selected {
-      background: #e8f5e9;
-      border-color: #4caf50;
+      background: rgba(var(--color-primary-rgb, 255, 140, 97), 0.08);
+      border-color: var(--color-primary, #FF8C61);
+      box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 255, 140, 97), 0.2);
     }
 
     .icon-circle {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background: #dee2e6;
-      transition: background 0.2s ease;
+      background: var(--bg-tertiary, #F3F4F6);
+      color: var(--text-secondary, #6B7280);
+      transition: all 0.25s ease;
     }
 
     .type-card.selected .icon-circle {
-      background: #4caf50;
+      background: var(--color-primary, #FF8C61);
       color: white;
+      transform: scale(1.1);
     }
 
     .icon-circle i {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
 
     .type-label {
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: #495057;
+      color: var(--text-secondary, #6B7280);
+      transition: color 0.2s ease;
     }
 
     .type-card.selected .type-label {
-      color: #2e7d32;
+      color: var(--color-primary-dark, #FF6B3D);
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -126,3 +133,4 @@ export class ServiceTypeSelectorComponent {
     this.typeChange.emit(type);
   }
 }
+

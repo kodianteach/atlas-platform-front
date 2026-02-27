@@ -84,7 +84,7 @@
             <label>VÁLIDO DESDE</label>
             <div class="input-wrapper">
               <i class="bi bi-calendar-event input-icon"></i>
-              <app-text-input type="datetime-local" [value]="form.get('validFrom')?.value"
+              <app-text-input type="date" [value]="form.get('validFrom')?.value"
                 [error]="isFieldInvalid('validFrom')"
                 (valueChange)="form.get('validFrom')?.setValue($event)"
                 (blurred)="form.get('validFrom')?.markAsTouched()" />
@@ -99,7 +99,7 @@
             <label>VÁLIDO HASTA</label>
             <div class="input-wrapper">
               <i class="bi bi-calendar-check input-icon"></i>
-              <app-text-input type="datetime-local" [value]="form.get('validTo')?.value"
+              <app-text-input type="date" [value]="form.get('validTo')?.value"
                 [error]="isFieldInvalid('validTo')"
                 (valueChange)="form.get('validTo')?.setValue($event)"
                 (blurred)="form.get('validTo')?.markAsTouched()" />
