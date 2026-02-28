@@ -1,0 +1,60 @@
+<article class="post-card">
+  <div class="post-card__header">
+    <div class="post-card__tags">
+      <span class="post-card__tag" [class]="statusClass()">{{ statusLabel() }}</span>
+      <span class="post-card__tag post-card__tag--info">{{ typeLabel() }}</span>
+      @if (post().isPinned) {
+        <span class="post-card__tag post-card__tag--pinned"><i class="bi bi-pin-angle-fill"></i> Fijado</span>
+      }
+    </div>
+    <span class="post-card__date">
+      <i class="bi bi-clock"></i> {{ post().createdAt | date:'dd/MM/yy' }}
+    </span>
+  </div>
+
+  <h3 class="post-card__title">{{ post().title }}</h3>
+
+  <p class="post-card__excerpt">
+    {{ post().content | slice:0:120 }}{{ post().content.length > 120 ? '...' : '' }}
+  </p>
+
+  <div class="post-card__footer">
+    @if (post().allowComments) {
+      <button class="post-card__meta-btn" [class.post-card__meta-btn--has-comments]="(post().commentsCount || 0) > 0" (click)="onViewComments()" type="button">
+        <i class="bi bi-chat-dots-fill"></i>
+        <span>{{ post().commentsCount || 0 }}</span>
+      </button>
+    } @else {
+      <span class="post-card__meta-btn post-card__meta-btn--disabled">
+        <i class="bi bi-chat-slash"></i>
+        <span>Sin comentarios</span>
+      </span>
+    }
+
+    <div class="post-card__actions">
+      @if (canPublish()) {
+        <button class="post-card__action post-card__action--success" (click)="onPublish()" type="button">
+          <i class="bi bi-send"></i> Publicar
+        </button>
+      }
+      @if (canArchive()) {
+        <button class="post-card__action post-card__action--warning" (click)="onArchive()" type="button">
+          <i class="bi bi-archive"></i>
+        </button>
+      }
+      @if (canReactivate()) {
+        <button class="post-card__action post-card__action--info" (click)="onReactivate()" type="button">
+          <i class="bi bi-arrow-counterclockwise"></i>
+        </button>
+      }
+      @if (canTogglePin()) {
+        <button class="post-card__action post-card__action--ghost" (click)="onTogglePin()" type="button">
+          <i class="bi" [class.bi-pin-angle-fill]="post().isPinned" [class.bi-pin-angle]="!post().isPinned"></i>
+        </button>
+      }
+      <button class="post-card__action post-card__action--danger" (click)="onDelete()" type="button">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+</article>

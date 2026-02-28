@@ -1,0 +1,49 @@
+<!-- Pill style (OWNER/RESIDENT) -->
+@if (navStyle() === 'pill') {
+  <nav class="unified-nav unified-nav--pill" aria-label="Navegación principal">
+    @for (item of leftItems(); track item.id) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="unified-nav__item--active"
+        class="unified-nav__item"
+        [attr.aria-label]="item.label">
+        <i [class]="'bi ' + item.icon + ' unified-nav__icon'"></i>
+        <span class="unified-nav__label">{{ item.label }}</span>
+      </a>
+    }
+
+    @if (showFab()) {
+      <button class="unified-nav__fab" (click)="onFabClick()" aria-label="Crear autorización" type="button">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    }
+
+    @for (item of rightItems(); track item.id) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="unified-nav__item--active"
+        class="unified-nav__item"
+        [attr.aria-label]="item.label">
+        <i [class]="'bi ' + item.icon + ' unified-nav__icon'"></i>
+        <span class="unified-nav__label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+}
+
+<!-- Flat style (ADMIN_ATLAS, PORTERO_VIGILANTE) -->
+@if (navStyle() === 'flat') {
+  <nav class="unified-nav unified-nav--flat" aria-label="Navegación principal">
+    @for (item of navItems(); track item.id) {
+      <button
+        class="unified-nav__item"
+        [class.unified-nav__item--active]="isActive(item.id)"
+        (click)="navigateTo(item.route)"
+        type="button"
+        [attr.aria-label]="item.label">
+        <i [class]="'bi ' + item.icon + ' unified-nav__icon'"></i>
+        <span class="unified-nav__label">{{ item.label }}</span>
+      </button>
+    }
+  </nav>
+}

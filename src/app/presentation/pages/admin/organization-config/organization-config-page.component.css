@@ -368,3 +368,170 @@
     padding: var(--spacing-md) var(--spacing-sm);
   }
 }
+
+/* ==============================
+   Branding Section
+   ============================== */
+
+/* Logo Upload */
+.org-config__logo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.org-config__logo-preview {
+  width: 160px;
+  height: 160px;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+}
+
+.org-config__logo-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.org-config__file-input {
+  display: none;
+}
+
+.org-config__upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.org-config__upload-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+.org-config__upload-btn i {
+  font-size: var(--font-size-lg);
+}
+
+/* Extracting colors indicator */
+.org-config__extracting {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Color Pickers */
+.org-config__color-pickers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.org-config__color-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.org-config__color-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.org-config__color-input-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.org-config__color-swatch {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  padding: 2px;
+  background: var(--bg-tertiary);
+  transition: border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.org-config__color-swatch:hover {
+  border-color: var(--color-primary);
+}
+
+.org-config__color-text {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-family: monospace;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+  width: 120px;
+  text-transform: uppercase;
+}
+
+.org-config__color-text:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.15);
+  background: var(--bg-secondary);
+}
+
+/* Dark Theme - Branding */
+.theme-dark .org-config__logo-preview {
+  border-color: var(--dark-border);
+  background: var(--dark-bg-tertiary);
+}
+
+.theme-dark .org-config__upload-btn {
+  border-color: var(--dark-border);
+  background: var(--dark-bg-tertiary);
+  color: var(--dark-text-secondary);
+}
+
+.theme-dark .org-config__upload-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.theme-dark .org-config__color-swatch {
+  border-color: var(--dark-border);
+  background: var(--dark-bg-tertiary);
+}
+
+.theme-dark .org-config__color-text {
+  background: var(--dark-bg-tertiary);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+.theme-dark .org-config__color-text:focus {
+  border-color: var(--color-primary);
+  background: var(--dark-bg-secondary);
+}

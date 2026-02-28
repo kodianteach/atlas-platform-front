@@ -8,7 +8,7 @@ import { Component, ChangeDetectionStrategy, input, computed } from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimestampDisplayComponent {
-  readonly timestamp = input.required<Date>();
+  readonly timestamp = input.required<Date | string>();
 
   readonly formattedTime = computed(() => {
     const now = new Date();

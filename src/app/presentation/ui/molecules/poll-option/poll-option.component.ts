@@ -14,7 +14,7 @@ export class PollOptionComponent {
   readonly option = input.required<PollOption>();
   readonly totalVotes = input<number>(0);
   readonly isSelected = input<boolean>(false);
-  readonly optionClick = output<string>();
+  readonly optionClick = output<number>();
 
   readonly percentage = computed(() => {
     const total = this.totalVotes();

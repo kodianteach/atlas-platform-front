@@ -11,7 +11,7 @@
 
 /* ═══ Header ═══ */
 .auth-page__header {
-  background: linear-gradient(135deg, #FF7A59 0%, #FF6B4A 100%);
+  background: var(--gradient-primary);
   padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
 }
 
@@ -127,7 +127,7 @@
   height: 8px;
   background: #fbbf24;
   border-radius: var(--border-radius-full);
-  border: 2px solid #FF7A59;
+  border: 2px solid var(--color-primary-dark);
 }
 
 /* ═══ Filters Panel ═══ */

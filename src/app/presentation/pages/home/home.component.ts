@@ -10,6 +10,7 @@ import { Notification } from '@domain/models/notification/notification.model';
 import { NotificationService } from '../../../services/notification.service';
 import { StorageGateway } from '@domain/gateways/storage/storage.gateway';
 import { GetMyResidenceUseCase } from '@domain/use-cases/me/get-my-residence.use-case';
+import { GlobalNotificationService } from '@infrastructure/services/global-notification.service';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly notificationService = inject(NotificationService);
   private readonly storage = inject(StorageGateway);
   private readonly getMyResidenceUseCase = inject(GetMyResidenceUseCase);
+  private readonly notify = inject(GlobalNotificationService);
 
   readonly showFormOverlay = signal(false);
   readonly showNotificationTray = signal(false);
@@ -65,10 +67,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserData();
     this.loadResidenceInfo();
+    this.initNotificationPolling();
 
     this.subscription = this.notificationService.notifications$.subscribe(notifications => {
       this.unreadCount.set(notifications.filter(n => !n.read).length);
     });
+  }
+
+  private initNotificationPolling(): void {
+    const user = this.storage.getItem<{ organizationId?: string }>('auth_user');
+    if (user?.organizationId) {
+      this.notificationService.startPolling(Number(user.organizationId));
+    }
   }
 
   private loadUserData(): void {
@@ -123,10 +133,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onAuthorizationCreated(_authorization: any): void {
     this.showFormOverlay.set(false);
+    this.notify.success('Autorización de visita creada exitosamente');
   }
 
   onFormError(_errorMessage: string): void {
-    // Error handled by the form component toast
+    this.notify.error(_errorMessage || 'Error al crear la autorización');
   }
 
   onNoticeBoard(): void {
@@ -149,6 +160,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/organization-config']);
   }
 
+  onCommunications(): void {
+    this.router.navigate(['/admin/communications']);
+  }
+
   onInviteResident(): void {
     this.router.navigate(['/owner/invite-resident']);
   }
@@ -162,6 +177,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onNotificationSelected(notification: Notification): void {
-    // Navigate based on notification type
+    this.showNotificationTray.set(false);
+
+    // Navigate to announcements for post/poll notifications
+    if (notification.entityType === 'POST' || notification.entityType === 'POLL') {
+      this.router.navigate(['/announcements']);
+    }
   }
 }

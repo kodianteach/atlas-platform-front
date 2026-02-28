@@ -27,6 +27,7 @@ import { PorterGateway } from '@domain/gateways/porter/porter.gateway';
 import { InvitationGateway } from '@domain/gateways/invitation/invitation.gateway';
 import { EnrollmentGateway } from '@domain/gateways/enrollment/enrollment.gateway';
 import { MeGateway } from '@domain/gateways/me/me.gateway';
+import { NotificationBackendGateway } from '@domain/gateways/notification/notification.gateway';
 
 // Infrastructure Adapters (implementations)
 import { AuthAdapter } from '@infrastructure/adapters/auth/auth.adapter';
@@ -46,6 +47,7 @@ import { PorterAdapter } from '@infrastructure/adapters/porter/porter.adapter';
 import { InvitationAdapter } from '@infrastructure/adapters/invitation/invitation.adapter';
 import { EnrollmentAdapter } from '@infrastructure/adapters/enrollment/enrollment.adapter';
 import { MeAdapter } from '@infrastructure/adapters/me/me.adapter';
+import { NotificationBackendAdapter } from '@infrastructure/adapters/notification/notification-backend.adapter';
 
 /**
  * Factory for ngx-translate HTTP loader
@@ -96,5 +98,6 @@ export const appConfig: ApplicationConfig = {
     { provide: InvitationGateway, useClass: InvitationAdapter },
     { provide: EnrollmentGateway, useClass: EnrollmentAdapter },
     { provide: MeGateway, useClass: MeAdapter },
+    { provide: NotificationBackendGateway, useClass: NotificationBackendAdapter },
   ]
 };

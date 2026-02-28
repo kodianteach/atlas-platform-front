@@ -1,0 +1,41 @@
+<div class="filter-bar">
+  <!-- Search + clear in one row -->
+  <div class="filter-bar__row">
+    <div class="filter-bar__search">
+      <i class="bi bi-search filter-bar__search-icon"></i>
+      <input
+        type="text"
+        class="filter-bar__search-input"
+        placeholder="Buscar..."
+        [ngModel]="searchText()"
+        (ngModelChange)="onSearchChange($event)"
+      />
+      @if (searchText()) {
+        <button class="filter-bar__search-clear" (click)="onSearchChange('')" type="button">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Status chips -->
+  <div class="filter-bar__row">
+    <div class="filter-bar__chips">
+      @for (option of statusOptions; track option.value) {
+        <button
+          class="filter-bar__chip"
+          [class.filter-bar__chip--active]="selectedStatus() === option.value"
+          (click)="onStatusChange(option.value)"
+          type="button"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+    @if (activeFilterCount() > 0) {
+      <button class="filter-bar__clear" (click)="clearFilters()" type="button">
+        <i class="bi bi-x-lg"></i> Limpiar
+      </button>
+    }
+  </div>
+</div>

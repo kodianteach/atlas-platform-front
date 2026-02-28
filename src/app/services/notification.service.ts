@@ -1,6 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Notification } from '../models/notification.model';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription, interval, switchMap, startWith, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Notification, BackendNotification } from '@domain/models/notification/notification.model';
+import { NotificationBackendGateway } from '@domain/gateways/notification/notification.gateway';
 import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
 
 @Injectable({
@@ -8,13 +10,93 @@ import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
 })
 export class NotificationService {
   private readonly pwaUpdate = inject(PwaUpdateService);
-  private readonly notificationsSubject = new BehaviorSubject<Notification[]>(this.getDummyNotifications());
+  private readonly backendGateway = inject(NotificationBackendGateway);
+  private readonly notificationsSubject = new BehaviorSubject<Notification[]>([]);
   public notifications$: Observable<Notification[]> = this.notificationsSubject.asObservable();
 
   private readonly installNotificationId = 'pwa-install';
+  private readonly POLL_INTERVAL_MS = 30_000;
+  private pollingSubscription: Subscription | null = null;
+
+  /** Current organization ID — set by the auth context */
+  private readonly currentOrgId = signal<number | null>(null);
+
+  /** Unread count as a computed signal */
+  readonly unreadCount = computed(() => {
+    return this.notificationsSubject.value.filter(n => !n.read).length;
+  });
 
   constructor() {
     this.checkPwaInstallNotification();
+  }
+
+  /**
+   * Initialize backend polling for a given organization.
+   * Called from auth context after login and on home init.
+   * Guards against duplicate subscriptions.
+   */
+  startPolling(organizationId: number): void {
+    // Skip if already polling for the same org
+    if (this.currentOrgId() === organizationId && this.pollingSubscription) {
+      return;
+    }
+
+    // Cancel any existing polling
+    this.stopPolling();
+    this.currentOrgId.set(organizationId);
+
+    this.pollingSubscription = interval(this.POLL_INTERVAL_MS).pipe(
+      startWith(0),
+      switchMap(() => this.loadBackendNotifications(organizationId))
+    ).subscribe();
+  }
+
+  /**
+   * Stop polling for notifications.
+   */
+  stopPolling(): void {
+    this.pollingSubscription?.unsubscribe();
+    this.pollingSubscription = null;
+  }
+
+  /**
+   * Load notifications from backend and merge with local ones.
+   */
+  private loadBackendNotifications(organizationId: number): Observable<void> {
+    return this.backendGateway.getNotifications(organizationId).pipe(
+      map(result => {
+        if (result.success) {
+          const backendMapped = result.data.map(n => this.mapBackendToLocal(n));
+          const localOnly = this.notificationsSubject.value.filter(n => 
+            n.id === this.installNotificationId
+          );
+          this.notificationsSubject.next([...localOnly, ...backendMapped]);
+        }
+      }),
+      catchError(() => of(undefined))
+    );
+  }
+
+  /**
+   * Maps a backend notification to the unified Notification interface.
+   */
+  private mapBackendToLocal(backend: BackendNotification): Notification {
+    const iconMap: Record<string, string> = {
+      'POST_PUBLISHED': 'bi-megaphone',
+      'POLL_ACTIVATED': 'bi-bar-chart'
+    };
+
+    return {
+      id: `backend-${backend.id}`,
+      title: backend.title,
+      message: backend.message,
+      timestamp: new Date(backend.createdAt),
+      read: backend.isRead,
+      type: backend.type,
+      icon: iconMap[backend.type] || 'bi-bell',
+      entityType: backend.entityType ?? undefined,
+      entityId: backend.entityId ?? undefined
+    };
   }
 
   getNotifications(): Notification[] {
@@ -22,6 +104,12 @@ export class NotificationService {
   }
 
   markAsRead(notificationId: string): void {
+    // If it's a backend notification, also mark on server
+    if (notificationId.startsWith('backend-')) {
+      const backendId = Number(notificationId.replace('backend-', ''));
+      this.backendGateway.markAsRead(backendId).subscribe();
+    }
+
     const notifications = this.notificationsSubject.value.map(n =>
       n.id === notificationId ? { ...n, read: true } : n
     );
@@ -29,7 +117,13 @@ export class NotificationService {
   }
 
   markAllAsRead(): void {
-    const notifications = this.notificationsSubject.value.map(n => ({ ...n, read: true }));
+    const notifications = this.notificationsSubject.value.map(n => {
+      if (!n.read && n.id.startsWith('backend-')) {
+        const backendId = Number(n.id.replace('backend-', ''));
+        this.backendGateway.markAsRead(backendId).subscribe();
+      }
+      return { ...n, read: true };
+    });
     this.notificationsSubject.next(notifications);
   }
 
@@ -56,7 +150,6 @@ export class NotificationService {
    * Check if PWA install notification should be shown
    */
   private checkPwaInstallNotification(): void {
-    // Wait a bit for PWA service to initialize
     setTimeout(() => {
       if (!this.pwaUpdate.isInstalled() && !this.pwaUpdate.installDismissed()) {
         this.addInstallNotification();
@@ -80,55 +173,5 @@ export class NotificationService {
 
     const current = this.notificationsSubject.value;
     this.notificationsSubject.next([installNotification, ...current]);
-  }
-
-  private getDummyNotifications(): Notification[] {
-    return [
-      {
-        id: '1',
-        title: 'Nueva Autorización',
-        message: 'Juan Pérez ha sido autorizado para ingresar hoy a las 3:00 PM',
-        timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 min ago
-        read: false,
-        type: 'success',
-        icon: 'bi-check-circle'
-      },
-      {
-        id: '2',
-        title: 'Mantenimiento Programado',
-        message: 'Corte de agua programado para mañana de 9:00 AM a 12:00 PM',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-        read: false,
-        type: 'warning',
-        icon: 'bi-exclamation-triangle'
-      },
-      {
-        id: '3',
-        title: 'Nuevo Anuncio',
-        message: 'Reunión de residentes este sábado a las 10:00 AM en el salón comunal',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-        read: false,
-        type: 'announcement',
-        icon: 'bi-megaphone'
-      },
-      {
-        id: '4',
-        title: 'Pago Confirmado',
-        message: 'Tu pago de cuota de mantenimiento ha sido procesado exitosamente',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-        read: true,
-        type: 'success',
-        icon: 'bi-credit-card'
-      },
-      {
-        id: '5',
-        title: 'Recordatorio',
-        message: 'No olvides renovar tu sticker de parqueo antes del 30 de este mes',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48), // 2 days ago
-        read: true,
-        type: 'info',
-        icon: 'bi-info-circle'
-      }
-    ];
   }
 }

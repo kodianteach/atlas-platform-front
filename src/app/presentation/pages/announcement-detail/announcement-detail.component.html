@@ -90,10 +90,15 @@
       }
 
       <!-- Discussion Section -->
+      @if (commentsAllowed()) {
       <div class="discussion-section">
         <h2 class="discussion-title">
           <i class="bi bi-chat-dots"></i>
-          Discusión ({{ comments().length }})
+          @if (isAdmin()) {
+            Todos los comentarios ({{ comments().length }})
+          } @else {
+            Mis comentarios ({{ comments().length }})
+          }
         </h2>
 
         <!-- Comment Form -->
@@ -108,51 +113,64 @@
               (input)="onCommentInput($any($event.target).value)"
               placeholder="Escribe un comentario..."
               rows="3"
-              maxlength="500"></textarea>
+              maxlength="500"
+              [disabled]="submitting()"></textarea>
             <div class="form-actions">
               <span class="char-count">{{ newComment().length }}/500</span>
               <button 
                 class="btn-submit"
-                [disabled]="!newComment().trim()"
+                [disabled]="!newComment().trim() || submitting()"
                 (click)="onSubmitComment()">
-                <i class="bi bi-send-fill"></i>
-                Publicar
+                @if (submitting()) {
+                  <i class="bi bi-hourglass-split"></i> Enviando...
+                } @else {
+                  <i class="bi bi-send-fill"></i> Publicar
+                }
               </button>
             </div>
           </div>
         </div>
 
+        @if (!isAdmin()) {
+          <p class="comments-visibility-hint">
+            <i class="bi bi-eye-slash"></i>
+            Solo tú puedes ver tus comentarios. El administrador puede ver todos.
+          </p>
+        }
+
         <!-- Comments List -->
         <div class="comments-list">
           @for (comment of comments(); track comment.id) {
-            <div class="comment-item">
-              <img [src]="comment.avatarUrl" [alt]="comment.author" class="comment-avatar">
+            <div class="comment-item" [class.comment-item--own]="comment.isOwn">
+              <div class="comment-avatar-wrap">
+                <i class="bi bi-person-circle comment-avatar-icon"></i>
+              </div>
               <div class="comment-content">
                 <div class="comment-header">
                   <span class="comment-author">{{ comment.author }}</span>
                   <span class="comment-time">{{ getTimeAgo(comment.timestamp) }}</span>
                 </div>
                 <p class="comment-text">{{ comment.content }}</p>
-                <div class="comment-actions">
-                  <button class="action-btn" (click)="onLikeComment(comment.id)">
-                    <i class="bi bi-heart"></i>
-                    <span>{{ comment.likes }}</span>
-                  </button>
-                  <button class="action-btn">
-                    <i class="bi bi-reply"></i>
-                    Responder
-                  </button>
-                </div>
               </div>
             </div>
           } @empty {
             <div class="empty-comments">
               <i class="bi bi-chat-square-text"></i>
-              <p>Sé el primero en comentar</p>
+              @if (isAdmin()) {
+                <p>Aún no hay comentarios en esta publicación</p>
+              } @else {
+                <p>Aún no has comentado en esta publicación</p>
+              }
             </div>
           }
         </div>
       </div>
+      } @else {
+      <div class="comments-disabled">
+        <i class="bi bi-chat-slash"></i>
+        <p>Los comentarios están desactivados para esta publicación</p>
+      </div>
+      }
     </div>
   }
 </div>

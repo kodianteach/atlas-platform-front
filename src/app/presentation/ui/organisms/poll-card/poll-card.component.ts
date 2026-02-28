@@ -12,12 +12,15 @@ import { Poll } from '@domain/models/announcement/announcement.model';
 })
 export class PollCardComponent {
   readonly poll = input.required<Poll>();
-  readonly voteClick = output<{ pollId: string; optionId: string }>();
-  readonly viewDiscussionClick = output<string>();
+  readonly voteClick = output<{ pollId: number; optionId: number }>();
+  readonly viewDiscussionClick = output<number>();
 
   readonly timeRemaining = computed(() => {
-    const now = new Date().getTime();
-    const end = this.poll().endsAt.getTime();
+    const endsAt = this.poll().endsAt;
+    if (!endsAt) return 'Sin fecha límite';
+    
+    const now = Date.now();
+    const end = new Date(endsAt).getTime();
     const diff = end - now;
 
     if (diff <= 0) return 'Finalizada';
@@ -32,7 +35,7 @@ export class PollCardComponent {
     return `Finaliza en ${minutes} minuto${minutes > 1 ? 's' : ''}`;
   });
 
-  onVote(optionId: string): void {
+  onVote(optionId: number): void {
     this.voteClick.emit({ pollId: this.poll().id, optionId });
   }
 
@@ -40,7 +43,7 @@ export class PollCardComponent {
     this.viewDiscussionClick.emit(this.poll().id);
   }
 
-  isOptionSelected(optionId: string): boolean {
+  isOptionSelected(optionId: number): boolean {
     return this.poll().userVote === optionId;
   }
 }

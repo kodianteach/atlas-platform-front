@@ -1,0 +1,28 @@
+@if (totalPages() > 1) {
+<nav class="pagination-container" aria-label="Paginación">
+  <div class="pagination-info">
+    <span class="text-muted small">
+      Mostrando {{ rangeStart() }}-{{ rangeEnd() }} de {{ totalElements() }}
+    </span>
+  </div>
+  <ul class="pagination pagination-sm mb-0">
+    <li class="page-item" [class.disabled]="isFirstPage()">
+      <button class="page-link" (click)="previousPage()" [disabled]="isFirstPage()" aria-label="Anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+    </li>
+    @for (page of visiblePages(); track page) {
+      <li class="page-item" [class.active]="page === currentPage()">
+        <button class="page-link" (click)="goToPage(page)">
+          {{ page + 1 }}
+        </button>
+      </li>
+    }
+    <li class="page-item" [class.disabled]="isLastPage()">
+      <button class="page-link" (click)="nextPage()" [disabled]="isLastPage()" aria-label="Siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </li>
+  </ul>
+</nav>
+}
