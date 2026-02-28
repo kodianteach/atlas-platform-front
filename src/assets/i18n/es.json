@@ -78,6 +78,7 @@
     "home": {
       "welcome": "¡Bienvenido!",
       "quickActions": "Acciones rápidas",
+      "quickActionsDescription": "Accede rápidamente a las funcionalidades principales de tu residencia.",
       "recentActivity": "Actividad reciente"
     },
     "authorization": {

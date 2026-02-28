@@ -76,15 +76,36 @@ export class AuthorizationFormComponent implements OnInit, OnDestroy {
 
   private setDefaultDates(): void {
     const now = new Date();
-    const validFrom = this.toLocalDateTimeString(now);
+    const validFrom = this.toLocalDateString(now);
     const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    const validTo = this.toLocalDateTimeString(tomorrow);
+    const validTo = this.toLocalDateString(tomorrow);
     this.form.patchValue({ validFrom, validTo });
   }
 
-  private toLocalDateTimeString(date: Date): string {
+  /**
+   * Convierte una fecha a string en formato YYYY-MM-DD (solo fecha)
+   */
+  private toLocalDateString(date: Date): string {
     const pad = (n: number) => n.toString().padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  }
+
+  /**
+   * Combina una fecha (YYYY-MM-DD) con la hora actual de Colombia (UTC-5)
+   * y retorna un ISO string para enviar al servidor
+   */
+  private combineDateWithColombiaTime(dateStr: string): string {
+    // Obtener hora actual en zona horaria de Colombia (America/Bogota = UTC-5)
+    const nowColombia = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+    const hours = nowColombia.getHours();
+    const minutes = nowColombia.getMinutes();
+    const seconds = nowColombia.getSeconds();
+    
+    // Combinar la fecha seleccionada con la hora actual de Colombia
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const combinedDate = new Date(year, month - 1, day, hours, minutes, seconds);
+    
+    return combinedDate.toISOString();
   }
 
   private initializeForm(): void {
@@ -177,8 +198,8 @@ export class AuthorizationFormComponent implements OnInit, OnDestroy {
       personName: raw.personName.trim(),
       personDocument: raw.personDocument.trim(),
       serviceType: raw.serviceType,
-      validFrom: new Date(raw.validFrom).toISOString(),
-      validTo: new Date(raw.validTo).toISOString(),
+      validFrom: this.combineDateWithColombiaTime(raw.validFrom),
+      validTo: this.combineDateWithColombiaTime(raw.validTo),
       unitId: raw.unitId,
       vehiclePlate: raw.vehiclePlate?.trim() || undefined,
       vehicleType: raw.vehicleType || undefined,

@@ -144,14 +144,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/announcements']);
   }
 
-  onRegisterVehicle(): void {
-    this.router.navigate(['/vehicles']);
-  }
-
-  onMaintenance(): void {
-    // Navigate to maintenance
-  }
-
   onManageUnits(): void {
     this.router.navigate(['/admin/units']);
   }

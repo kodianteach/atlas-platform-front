@@ -1,95 +1,80 @@
-import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, signal } from '@angular/core';
+import { Authorization } from '@domain/models/authorization/authorization.model';
+import { TicketShareModalComponent } from '../ticket-share-modal/ticket-share-modal.component';
 
 /**
  * Share Actions Component - Provides sharing options for authorization QR
- * HU #6 - WhatsApp share and link copy actions
+ * HU #6 - WhatsApp share with ticket image
+ * Opens a Ticket Preview Modal that generates and shares an image
  */
 @Component({
   selector: 'app-share-actions',
   standalone: true,
+  imports: [TicketShareModalComponent],
   template: `
-    <div class="share-actions">
-      <button class="share-btn whatsapp" (click)="onShareWhatsApp()" type="button">
-        <i class="bi bi-whatsapp"></i>
-        <span>WhatsApp</span>
+    <div class="share-actions-container">
+      <button class="btn-main-share" (click)="openModal()" type="button">
+        <i class="bi bi-share-fill"></i>
+        <span>Compartir Autorización</span>
       </button>
-      <button class="share-btn copy-link" (click)="onCopyLink()" type="button">
-        <i class="bi bi-link-45deg"></i>
-        <span>{{ copied ? '¡Copiado!' : 'Copiar enlace' }}</span>
-      </button>
+
+      @if (isModalOpen()) {
+        <app-ticket-share-modal
+          [authorization]="authorization()"
+          [qrImageUrl]="qrImageUrl()"
+          (close)="closeModal()" />
+      }
     </div>
   `,
   styles: [`
-    .share-actions {
+    .share-actions-container {
       display: flex;
-      gap: 12px;
       justify-content: center;
       padding: 16px 0;
+      width: 100%;
     }
 
-    .share-btn {
+    .btn-main-share {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      width: 100%;
       border: none;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 600;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .share-btn:active {
-      transform: scale(0.95);
-    }
-
-    .whatsapp {
-      background: #25d366;
+      background: var(--color-primary, #FF5722);
       color: white;
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+      transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
-    .whatsapp:hover {
-      background: #1da851;
+    .btn-main-share:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 6px rgba(255, 87, 34, 0.2);
     }
 
-    .copy-link {
-      background: #e9ecef;
-      color: #495057;
-    }
-
-    .copy-link:hover {
-      background: #dee2e6;
-    }
-
-    .share-btn i {
-      font-size: 1.125rem;
+    .btn-main-share i {
+      font-size: 1.1rem;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShareActionsComponent {
-  readonly shareUrl = input.required<string>();
-  readonly personName = input<string>('');
-  readonly shareViaWhatsApp = output<string>();
-  readonly copyToClipboard = output<string>();
+  readonly authorization = input.required<Authorization>();
+  readonly qrImageUrl = input<string | null>(null);
 
-  copied = false;
+  isModalOpen = signal(false);
 
-  onShareWhatsApp(): void {
-    const message = this.personName()
-      ? `Hola, aquí está tu autorización de ingreso: ${this.shareUrl()}`
-      : `Autorización de ingreso: ${this.shareUrl()}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    this.shareViaWhatsApp.emit(this.shareUrl());
+  openModal(): void {
+    this.isModalOpen.set(true);
   }
 
-  onCopyLink(): void {
-    navigator.clipboard.writeText(this.shareUrl()).then(() => {
-      this.copied = true;
-      setTimeout(() => { this.copied = false; }, 2000);
-    });
-    this.copyToClipboard.emit(this.shareUrl());
+  closeModal(): void {
+    this.isModalOpen.set(false);
   }
 }
+  
