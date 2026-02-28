@@ -55,7 +55,7 @@ describe('ThemingService', () => {
       service.applyTheme(config);
 
       const root = document.documentElement;
-      expect(root.style.getPropertyValue('--color-primary')).toBe('#FF8C61');
+      expect(root.style.getPropertyValue('--color-primary')).toBe('#B01129');
     });
 
     it('should persist theme data to localStorage', () => {
@@ -93,10 +93,10 @@ describe('ThemingService', () => {
   });
 
   describe('applyDefaultTheme', () => {
-    it('should set --color-primary to #FF8C61', () => {
+    it('should set --color-primary to #B01129', () => {
       service.applyDefaultTheme();
 
-      expect(document.documentElement.style.getPropertyValue('--color-primary')).toBe('#FF8C61');
+      expect(document.documentElement.style.getPropertyValue('--color-primary')).toBe('#B01129');
     });
 
     it('should remove theme from localStorage', () => {
@@ -110,7 +110,7 @@ describe('ThemingService', () => {
 
   describe('generateVariations', () => {
     it('should return valid light, dark, and rgb values', () => {
-      const result = service.generateVariations('#FF8C61');
+      const result = service.generateVariations('#B01129');
 
       expect(result.light).toMatch(/^#[0-9A-Fa-f]{6}$/);
       expect(result.dark).toMatch(/^#[0-9A-Fa-f]{6}$/);
@@ -186,7 +186,7 @@ describe('ThemingService', () => {
 
       service.loadAndApplyTheme();
 
-      expect(document.documentElement.style.getPropertyValue('--color-primary')).toBe('#FF8C61');
+      expect(document.documentElement.style.getPropertyValue('--color-primary')).toBe('#B01129');
     });
   });
 

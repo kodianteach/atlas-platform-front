@@ -15,7 +15,7 @@ export class AdminBottomNavComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthenticationService);
 
-  readonly activeTab = input<'home' | 'authorizations' | 'owners' | 'more'>('home');
+  readonly activeTab = input<'home' | 'authorizations' | 'owners' | 'communications' | 'more'>('home');
 
   /**
    * Verifica si el usuario es administrador supremo (ADMIN_ATLAS)
@@ -31,6 +31,7 @@ export class AdminBottomNavComponent {
       home: '/home',
       authorizations: '/admin/authorizations',
       owners: '/admin/invitations',
+      communications: '/admin/communications',
       more: '/admin/more'
     };
     const route = routes[tab];

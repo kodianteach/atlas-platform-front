@@ -39,12 +39,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-  box-shadow: 0 10px 20px rgba(255, 140, 97, 0.3);
+  box-shadow: 0 10px 20px rgba(176, 17, 41, 0.3);
 }
 
 .btn-go-login:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(255, 140, 97, 0.4);
+  box-shadow: 0 15px 30px rgba(176, 17, 41, 0.4);
 }
 
 .spinning {

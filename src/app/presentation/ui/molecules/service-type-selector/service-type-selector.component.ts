@@ -82,9 +82,9 @@ import { ServiceType } from '@domain/models/authorization/authorization.model';
     }
 
     .type-card.selected {
-      background: rgba(var(--color-primary-rgb, 255, 140, 97), 0.08);
-      border-color: var(--color-primary, #FF8C61);
-      box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 255, 140, 97), 0.2);
+      background: rgba(var(--color-primary-rgb, 176, 17, 41), 0.08);
+      border-color: var(--color-primary, #B01129);
+      box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 176, 17, 41), 0.2);
     }
 
     .icon-circle {
@@ -100,7 +100,7 @@ import { ServiceType } from '@domain/models/authorization/authorization.model';
     }
 
     .type-card.selected .icon-circle {
-      background: var(--color-primary, #FF8C61);
+      background: var(--color-primary, #B01129);
       color: white;
       transform: scale(1.1);
     }
@@ -119,7 +119,7 @@ import { ServiceType } from '@domain/models/authorization/authorization.model';
     }
 
     .type-card.selected .type-label {
-      color: var(--color-primary-dark, #FF6B3D);
+      color: var(--color-primary-dark, #8A0D20);
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush

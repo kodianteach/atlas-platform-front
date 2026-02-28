@@ -9,6 +9,7 @@ import { PreRegistrationGateway } from '@domain/gateways/pre-registration/pre-re
 import { PreRegisterRequest, PreRegisterResponse } from '@domain/models/pre-registration/pre-registration.model';
 import { Result, success, failure } from '@domain/models/common/api-response.model';
 import { environment } from '@env/environment';
+import { UrlHelperService } from '../../services/url-helper.service';
 
 /** Backend API envelope wrapper */
 interface ApiEnvelope<T> {
@@ -32,6 +33,7 @@ interface PreRegisterBackendData {
 @Injectable({ providedIn: 'root' })
 export class PreRegistrationAdapter extends PreRegistrationGateway {
   private readonly http = inject(HttpClient);
+  private readonly urlHelper = inject(UrlHelperService);
 
   private readonly ENDPOINT = `${environment.apiUrl}/external/admin/pre-register`;
   private readonly TIMEOUT_MS = 15000;
@@ -46,7 +48,7 @@ export class PreRegistrationAdapter extends PreRegistrationGateway {
       documentType: request.documentType,
       documentNumber: request.documentNumber,
       phone: request.phone,
-      activationBaseUrl: `${window.location.origin}/activate`
+      activationBaseUrl: this.urlHelper.buildUrl('/activate')
     };
 
     return this.http.post<ApiEnvelope<PreRegisterBackendData>>(this.ENDPOINT, body, { headers }).pipe(

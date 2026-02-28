@@ -9,9 +9,9 @@ import { Authorization, SERVICE_TYPE_LABELS, STATUS_LABELS } from '@domain/model
 
 /** Brand colors matching global CSS variables */
 const BRAND = {
-  primary: '#FF8C61',
-  primaryDark: '#FF6B3D',
-  primaryLight: '#FFB399',
+  primary: '#B01129',
+  primaryDark: '#8A0D20',
+  primaryLight: '#D64A5E',
   success: '#28a745',
   successLight: '#d4edda',
   error: '#dc3545',

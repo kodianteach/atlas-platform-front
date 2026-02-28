@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminBottomNavComponent } from '../../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
 import { CreateOwnerInvitationUseCase } from '@domain/use-cases/invitation/create-owner-invitation.use-case';
+import { UrlHelperService } from '@infrastructure/services/url-helper.service';
 
 type PageState = 'idle' | 'generating' | 'link-ready' | 'error';
 
@@ -22,6 +23,7 @@ export class InvitationManagementPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly createOwnerInvitationUseCase = inject(CreateOwnerInvitationUseCase);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly urlHelper = inject(UrlHelperService);
 
   readonly state = signal<PageState>('idle');
   readonly invitationUrl = signal<string | null>(null);
@@ -41,7 +43,7 @@ export class InvitationManagementPageComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(result => {
       if (result.success) {
-        this.invitationUrl.set(result.data.invitationUrl);
+        this.invitationUrl.set(this.urlHelper.normalizeUrl(result.data.invitationUrl));
         this.state.set('link-ready');
       } else {
         this.errorMessage.set(result.error.message);

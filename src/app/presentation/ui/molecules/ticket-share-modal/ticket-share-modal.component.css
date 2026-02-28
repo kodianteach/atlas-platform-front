@@ -75,7 +75,7 @@
   flex-direction: column;
   width: 100%;
   padding: 0;
-  background: linear-gradient(135deg, #FF6E40 0%, #FF9E80 100%); /* Atlas Orange Gradient */
+  background: var(--gradient-primary, linear-gradient(135deg, #B01129 0%, #D64A5E 100%));
   color: white;
   position: relative;
   overflow: hidden;
@@ -153,7 +153,7 @@
 
 .info-group .highlight {
   font-size: 1rem;
-  color: #FF5722; /* Primary Orange */
+  color: var(--color-primary, #B01129);
 }
 
 .info-row {

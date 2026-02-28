@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.component';
 import { AdminBottomNavComponent } from '../../ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
@@ -22,6 +22,7 @@ import { GlobalNotificationService } from '@infrastructure/services/global-notif
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly notificationService = inject(NotificationService);
   private readonly storage = inject(StorageGateway);
   private readonly getMyResidenceUseCase = inject(GetMyResidenceUseCase);
@@ -68,6 +69,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadUserData();
     this.loadResidenceInfo();
     this.initNotificationPolling();
+
+    // Check for action query param to open authorization form
+    this.route.queryParams.subscribe(params => {
+      if (params['action'] === 'register') {
+        this.showFormOverlay.set(true);
+        // Clear the query param to avoid reopening on refresh
+        this.router.navigate([], { 
+          relativeTo: this.route, 
+          queryParams: {}, 
+          replaceUrl: true 
+        });
+      }
+    });
 
     this.subscription = this.notificationService.notifications$.subscribe(notifications => {
       this.unreadCount.set(notifications.filter(n => !n.read).length);

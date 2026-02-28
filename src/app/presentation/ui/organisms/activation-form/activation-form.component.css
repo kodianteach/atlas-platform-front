@@ -34,13 +34,13 @@ app-button ::ng-deep button {
   padding: 0.875rem !important;
   font-size: var(--font-size-md) !important;
   font-weight: 600 !important;
-  box-shadow: 0 10px 20px rgba(255, 140, 97, 0.3);
+  box-shadow: 0 10px 20px rgba(176, 17, 41, 0.3);
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
 
 app-button ::ng-deep button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(255, 140, 97, 0.4);
+  box-shadow: 0 15px 30px rgba(176, 17, 41, 0.4);
 }
 
 app-button ::ng-deep button:disabled {

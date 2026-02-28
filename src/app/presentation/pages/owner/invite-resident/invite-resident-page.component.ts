@@ -15,6 +15,7 @@ import { BottomNavComponent } from '../../../ui/organisms/bottom-nav/bottom-nav.
 import { CreateResidentInvitationUseCase } from '@domain/use-cases/invitation/create-resident-invitation.use-case';
 import { GetOrganizationConfigUseCase } from '@domain/use-cases/organization/get-organization-config.use-case';
 import { GlobalNotificationService } from '@infrastructure/services/global-notification.service';
+import { UrlHelperService } from '@infrastructure/services/url-helper.service';
 
 type PageState = 'loading' | 'idle' | 'select-permissions' | 'generating' | 'link-ready' | 'error';
 
@@ -44,6 +45,7 @@ export class InviteResidentPageComponent implements OnInit {
   private readonly getOrgConfigUseCase = inject(GetOrganizationConfigUseCase);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notify = inject(GlobalNotificationService);
+  private readonly urlHelper = inject(UrlHelperService);
 
   readonly state = signal<PageState>('loading');
   readonly invitationUrl = signal<string | null>(null);
@@ -109,7 +111,7 @@ export class InviteResidentPageComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(result => {
       if (result.success) {
-        this.invitationUrl.set(result.data.invitationUrl);
+        this.invitationUrl.set(this.urlHelper.normalizeUrl(result.data.invitationUrl));
         this.state.set('link-ready');
         this.notify.success('Enlace de invitación generado');
       } else {

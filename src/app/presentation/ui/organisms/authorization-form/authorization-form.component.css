@@ -173,8 +173,8 @@
 
 ::ng-deep app-text-input input:focus {
   background-color: var(--bg-primary, #FFFFFF) !important;
-  border-color: var(--color-primary, #FF8C61) !important;
-  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 255, 140, 97), 0.15) !important;
+  border-color: var(--color-primary, #B01129) !important;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 176, 17, 41), 0.15) !important;
 }
 
 .form-select {
@@ -198,8 +198,8 @@
 
 .form-select:focus {
   background-color: var(--bg-primary, #FFFFFF);
-  border-color: var(--color-primary, #FF8C61);
-  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 255, 140, 97), 0.15);
+  border-color: var(--color-primary, #B01129);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 176, 17, 41), 0.15);
   outline: none;
 }
 
@@ -238,7 +238,7 @@
 
 .file-label i {
   font-size: 2.5rem;
-  color: var(--color-primary, #FF8C61);
+  color: var(--color-primary, #B01129);
   margin-bottom: 0.5rem;
 }
 
@@ -250,12 +250,12 @@
 
 .file-label:hover {
   background-color: var(--bg-tertiary, #F3F4F6);
-  border-color: var(--color-primary, #FF8C61);
+  border-color: var(--color-primary, #B01129);
 }
 
 .file-input:focus + .file-label {
-  border-color: var(--color-primary, #FF8C61);
-  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 255, 140, 97), 0.15);
+  border-color: var(--color-primary, #B01129);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 176, 17, 41), 0.15);
 }
 
 .form-row {
@@ -290,7 +290,7 @@
 }
 
 .section-subtitle i {
-  color: var(--color-primary, #FF8C61);
+  color: var(--color-primary, #B01129);
   font-size: 1.25rem;
 }
 
@@ -360,7 +360,7 @@
 
 .submit-button {
   width: 100%;
-  background: var(--color-primary, #FF8C61);
+  background: var(--color-primary, #B01129);
   color: white;
   border: none;
   border-radius: 16px;
@@ -375,13 +375,13 @@
   transition: all 0.2s ease-in-out;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 255, 140, 97), 0.25);
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 176, 17, 41), 0.25);
 }
 
 .submit-button:hover {
-  background: var(--color-primary-dark, #FF6B3D);
+  background: var(--color-primary-dark, #8A0D20);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(var(--color-primary-rgb, 255, 140, 97), 0.35);
+  box-shadow: 0 6px 16px rgba(var(--color-primary-rgb, 176, 17, 41), 0.35);
 }
 
 .submit-button:active {
@@ -389,7 +389,7 @@
 }
 
 .submit-button:disabled {
-  background: var(--color-primary-light, #FFB399);
+  background: var(--color-primary-light, #D64A5E);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;

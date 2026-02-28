@@ -37,6 +37,7 @@ export interface Authorization {
   createdAt: string;
   updatedAt: string;
   unitCode?: string;
+  unitName?: string;
   createdByUserName?: string;
 }
 

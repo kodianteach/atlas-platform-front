@@ -17,7 +17,7 @@ import { AdminPostCardComponent } from '@presentation/ui/organisms/admin-post-ca
 import { AdminPollCardComponent } from '@presentation/ui/organisms/admin-poll-card/admin-poll-card.component';
 import { AdminCommentPanelComponent } from '@presentation/ui/organisms/admin-comment-panel/admin-comment-panel.component';
 import { PaginationComponent } from '@presentation/ui/atoms/pagination/pagination.component';
-import { UnifiedBottomNavComponent } from '@presentation/ui/organisms/unified-bottom-nav/unified-bottom-nav.component';
+import { AdminBottomNavComponent } from '@presentation/ui/organisms/admin-bottom-nav/admin-bottom-nav.component';
 
 import { GetAdminCommunicationsUseCase } from '@domain/use-cases/announcement/get-admin-communications.use-case';
 import { ManageCommunicationsUseCase } from '@domain/use-cases/announcement/manage-communications.use-case';
@@ -47,7 +47,7 @@ import {
     AdminPollCardComponent,
     AdminCommentPanelComponent,
     PaginationComponent,
-    UnifiedBottomNavComponent
+    AdminBottomNavComponent
   ],
   templateUrl: './admin-communications-page.component.html',
   styleUrl: './admin-communications-page.component.css',
