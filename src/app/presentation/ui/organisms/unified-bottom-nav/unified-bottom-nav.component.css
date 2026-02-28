@@ -1,0 +1,200 @@
+/* ==============================
+   Unified Bottom Navigation
+   BEM Block: .unified-nav
+   ============================== */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ---- Pill Style (OWNER/RESIDENT) ---- */
+.unified-nav--pill {
+  position: fixed;
+  bottom: 20px;
+  left: 5%;
+  right: 5%;
+  background: #EDEAE7;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  z-index: var(--z-index-fixed);
+  height: 72px;
+  border-radius: 2.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ---- Flat Style (ADMIN/DOORMAN) ---- */
+.unified-nav--flat {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #E5E5E5;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: var(--spacing-sm) 0 calc(var(--spacing-sm) + env(safe-area-inset-bottom));
+  z-index: var(--z-index-fixed);
+  height: 72px;
+}
+
+/* ---- Nav Item (shared) ---- */
+.unified-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #9E9E9E;
+  transition: all var(--transition-fast);
+  flex: 1;
+  padding: 0.4rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  min-width: 56px;
+  position: relative;
+  gap: 2px;
+}
+
+.unified-nav__icon {
+  font-size: 1.4rem;
+  transition: transform var(--transition-fast);
+}
+
+.unified-nav__label {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+/* ---- Active State - Pill ---- */
+.unified-nav--pill .unified-nav__item--active {
+  color: var(--color-accent, var(--color-primary));
+}
+
+.unified-nav--pill .unified-nav__item:hover:not(.unified-nav__item--active) {
+  color: var(--color-accent, var(--color-primary));
+}
+
+.unified-nav--pill .unified-nav__item--active .unified-nav__label {
+  font-weight: 500;
+}
+
+/* ---- Active State - Flat ---- */
+.unified-nav--flat .unified-nav__item--active {
+  color: var(--color-accent, var(--color-primary));
+}
+
+.unified-nav--flat .unified-nav__item--active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent, var(--color-primary));
+  border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
+}
+
+.unified-nav--flat .unified-nav__item--active .unified-nav__icon {
+  transform: scale(1.1);
+}
+
+.unified-nav--flat .unified-nav__item--active .unified-nav__label {
+  font-weight: 500;
+}
+
+.unified-nav--flat .unified-nav__item:hover:not(.unified-nav__item--active) {
+  color: var(--text-secondary, #6c757d);
+}
+
+/* ---- FAB (pill only) ---- */
+.unified-nav__fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 1.25rem;
+  border: none;
+  background: var(--color-accent, var(--gradient-primary));
+  color: white;
+  box-shadow: 0 8px 20px rgba(var(--color-accent-rgb, var(--color-primary-rgb)), 0.4);
+  margin-top: -10px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1;
+}
+
+.unified-nav__fab i {
+  font-size: 1.75rem;
+  color: white;
+}
+
+.unified-nav__fab:hover {
+  transform: scale(1.1);
+}
+
+.unified-nav__fab:active {
+  transform: scale(0.95);
+}
+
+/* ---- Dark Theme ---- */
+.theme-dark .unified-nav--pill {
+  background: var(--dark-bg-secondary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark .unified-nav--flat {
+  background: var(--dark-bg-primary);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .unified-nav__item {
+  color: var(--dark-text-secondary, #94a3b8);
+}
+
+.theme-dark .unified-nav--pill .unified-nav__item--active,
+.theme-dark .unified-nav--flat .unified-nav__item--active {
+  color: var(--color-accent, var(--color-primary));
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 380px) {
+  .unified-nav__item {
+    padding: 0.3rem;
+    min-width: 48px;
+  }
+
+  .unified-nav__icon {
+    font-size: 1.25rem;
+  }
+
+  .unified-nav__label {
+    font-size: 0.7rem;
+  }
+
+  .unified-nav__fab {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+  }
+
+  .unified-nav__fab i {
+    font-size: 1.5rem;
+  }
+}
+
+/* Safe area support */
+@supports (padding: max(0px)) {
+  .unified-nav--flat {
+    padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+  }
+}

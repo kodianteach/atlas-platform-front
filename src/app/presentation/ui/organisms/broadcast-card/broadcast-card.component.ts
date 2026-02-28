@@ -14,7 +14,7 @@ import { BroadcastMessage } from '@domain/models/announcement/announcement.model
 })
 export class BroadcastCardComponent {
   readonly broadcast = input.required<BroadcastMessage>();
-  readonly readMoreClick = output<string>();
+  readonly readMoreClick = output<number>();
 
   onReadMoreClick(): void {
     this.readMoreClick.emit(this.broadcast().id);

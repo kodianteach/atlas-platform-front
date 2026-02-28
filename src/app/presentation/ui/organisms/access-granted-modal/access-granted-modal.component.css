@@ -253,7 +253,7 @@
 }
 
 .btn-open-gate {
-  background: linear-gradient(135deg, #FF7A59 0%, #ff6a45 100%);
+  background: var(--gradient-primary);
   color: white;
 }
 

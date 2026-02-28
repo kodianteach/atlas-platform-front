@@ -223,15 +223,20 @@ import {
   BroadcastMessage, 
   Poll, 
   PollOption, 
-  User, 
-  Discussion,
-  DiscussionMessage 
-} from '../models/announcement.model';
+  AnnouncementUser,
+  PostResponse,
+  PollResponse,
+  PollOptionResponse,
+  CommentResponse,
+  Comment
+} from '@domain/models/announcement/announcement.model';
+import { Discussion, DiscussionMessage } from '@domain/models/announcement/discussion.model';
+import { BackendNotification } from '@domain/models/notification/notification.model';
 
 /**
- * Generates a random User
+ * Generates a random User (AnnouncementUser)
  */
-export const userArbitrary = (): fc.Arbitrary<User> => {
+export const userArbitrary = (): fc.Arbitrary<AnnouncementUser> => {
   return fc.record({
     id: fc.uuid(),
     name: fc.string({ minLength: 1, maxLength: 50 }),
@@ -240,28 +245,36 @@ export const userArbitrary = (): fc.Arbitrary<User> => {
 };
 
 /**
- * Generates a random PollOption
+ * Generates a random PollOption (frontend model with number id)
  */
 export const pollOptionArbitrary = (): fc.Arbitrary<PollOption> => {
   return fc.record({
-    id: fc.uuid(),
+    id: fc.nat({ max: 100000 }),
     text: fc.string({ minLength: 1, maxLength: 100 }),
-    votes: fc.nat({ max: 10000 })
+    votes: fc.nat({ max: 10000 }),
+    percentage: fc.double({ min: 0, max: 100, noNaN: true })
   });
 };
 
 /**
- * Generates a random BroadcastMessage
+ * Generates a random BroadcastMessage (frontend model with number id)
  */
 export const broadcastMessageArbitrary = (): fc.Arbitrary<BroadcastMessage> => {
   return fc.record({
-    id: fc.uuid(),
+    id: fc.nat({ max: 100000 }),
     type: fc.constant('broadcast' as const),
-    createdAt: fc.date(),
+    createdAt: fc.date().map(d => d.toISOString()),
     priority: fc.integer({ min: 0, max: 10 }),
     title: fc.string({ minLength: 1, maxLength: 100 }),
     description: fc.string({ minLength: 10, maxLength: 500 }),
     previewText: fc.string({ minLength: 10, maxLength: 150 }),
+    postType: fc.constantFrom('ANNOUNCEMENT' as const, 'NEWS' as const, 'AD' as const),
+    isPinned: fc.boolean(),
+    allowComments: fc.boolean(),
+    status: fc.constantFrom('DRAFT' as const, 'PUBLISHED' as const, 'ARCHIVED' as const),
+    authorId: fc.nat({ max: 10000 }),
+    organizationId: fc.nat({ max: 1000 }),
+    publishedAt: fc.option(fc.date().map(d => d.toISOString()), { nil: null }),
     isUrgent: fc.boolean(),
     backgroundColor: fc.stringMatching(/^#[0-9A-F]{6}$/),
     relatedUsers: fc.array(userArbitrary(), { minLength: 0, maxLength: 20 })
@@ -274,19 +287,23 @@ export const broadcastMessageArbitrary = (): fc.Arbitrary<BroadcastMessage> => {
  */
 export const pollArbitrary = (): fc.Arbitrary<Poll> => {
   return fc.record({
-    id: fc.uuid(),
+    id: fc.nat({ max: 100000 }),
     type: fc.constant('poll' as const),
-    createdAt: fc.date(),
+    createdAt: fc.date().map(d => d.toISOString()),
     priority: fc.integer({ min: 0, max: 10 }),
     title: fc.string({ minLength: 1, maxLength: 100 }),
     question: fc.string({ minLength: 10, maxLength: 200 }),
     icon: fc.string({ minLength: 1, maxLength: 50 }),
-    endsAt: fc.date({ min: new Date() }),
+    status: fc.constantFrom('DRAFT' as const, 'ACTIVE' as const, 'CLOSED' as const),
+    endsAt: fc.option(fc.date({ min: new Date() }).map(d => d.toISOString()), { nil: null }),
     options: fc.array(pollOptionArbitrary(), { minLength: 2, maxLength: 6 }),
-    userVote: fc.option(fc.uuid(), { nil: undefined }),
+    userVote: fc.option(fc.nat({ max: 100000 }), { nil: undefined }),
+    allowMultiple: fc.boolean(),
+    isAnonymous: fc.boolean(),
+    organizationId: fc.nat({ max: 1000 }),
+    authorId: fc.nat({ max: 10000 }),
     discussionId: fc.uuid()
   }).map(poll => {
-    // Calculate totalVotes as sum of all option votes
     const totalVotes = poll.options.reduce((sum, option) => sum + option.votes, 0);
     return { ...poll, totalVotes };
   });
@@ -343,16 +360,21 @@ export const pollWithOptionsArbitrary = (
   maxOptions: number
 ): fc.Arbitrary<Poll> => {
   return fc.record({
-    id: fc.uuid(),
+    id: fc.nat({ max: 100000 }),
     type: fc.constant('poll' as const),
-    createdAt: fc.date(),
+    createdAt: fc.date().map(d => d.toISOString()),
     priority: fc.integer({ min: 0, max: 10 }),
     title: fc.string({ minLength: 1, maxLength: 100 }),
     question: fc.string({ minLength: 10, maxLength: 200 }),
     icon: fc.string({ minLength: 1, maxLength: 50 }),
-    endsAt: fc.date({ min: new Date() }),
+    status: fc.constantFrom('DRAFT' as const, 'ACTIVE' as const, 'CLOSED' as const),
+    endsAt: fc.option(fc.date({ min: new Date() }).map(d => d.toISOString()), { nil: null }),
     options: fc.array(pollOptionArbitrary(), { minLength: minOptions, maxLength: maxOptions }),
-    userVote: fc.option(fc.uuid(), { nil: undefined }),
+    userVote: fc.option(fc.nat({ max: 100000 }), { nil: undefined }),
+    allowMultiple: fc.boolean(),
+    isAnonymous: fc.boolean(),
+    organizationId: fc.nat({ max: 1000 }),
+    authorId: fc.nat({ max: 10000 }),
     discussionId: fc.uuid()
   }).map(poll => {
     const totalVotes = poll.options.reduce((sum, option) => sum + option.votes, 0);
@@ -369,13 +391,20 @@ export const broadcastWithUsersArbitrary = (
   maxUsers: number
 ): fc.Arbitrary<BroadcastMessage> => {
   return fc.record({
-    id: fc.uuid(),
+    id: fc.nat({ max: 100000 }),
     type: fc.constant('broadcast' as const),
-    createdAt: fc.date(),
+    createdAt: fc.date().map(d => d.toISOString()),
     priority: fc.integer({ min: 0, max: 10 }),
     title: fc.string({ minLength: 1, maxLength: 100 }),
     description: fc.string({ minLength: 10, maxLength: 500 }),
     previewText: fc.string({ minLength: 10, maxLength: 150 }),
+    postType: fc.constantFrom('ANNOUNCEMENT' as const, 'NEWS' as const, 'AD' as const),
+    isPinned: fc.boolean(),
+    allowComments: fc.boolean(),
+    status: fc.constantFrom('DRAFT' as const, 'PUBLISHED' as const, 'ARCHIVED' as const),
+    authorId: fc.nat({ max: 10000 }),
+    organizationId: fc.nat({ max: 1000 }),
+    publishedAt: fc.option(fc.date().map(d => d.toISOString()), { nil: null }),
     isUrgent: fc.boolean(),
     backgroundColor: fc.stringMatching(/^#[0-9A-F]{6}$/),
     relatedUsers: fc.array(userArbitrary(), { minLength: minUsers, maxLength: maxUsers })
@@ -395,16 +424,21 @@ export const pollEndingInArbitrary = (
   const maxTime = new Date(now.getTime() + maxHours * 60 * 60 * 1000);
   
   return fc.record({
-    id: fc.uuid(),
+    id: fc.nat({ max: 100000 }),
     type: fc.constant('poll' as const),
-    createdAt: fc.date(),
+    createdAt: fc.date().map(d => d.toISOString()),
     priority: fc.integer({ min: 0, max: 10 }),
     title: fc.string({ minLength: 1, maxLength: 100 }),
     question: fc.string({ minLength: 10, maxLength: 200 }),
     icon: fc.string({ minLength: 1, maxLength: 50 }),
-    endsAt: fc.date({ min: minTime, max: maxTime }),
+    status: fc.constant('ACTIVE' as const),
+    endsAt: fc.date({ min: minTime, max: maxTime }).map(d => d.toISOString()),
     options: fc.array(pollOptionArbitrary(), { minLength: 2, maxLength: 6 }),
-    userVote: fc.option(fc.uuid(), { nil: undefined }),
+    userVote: fc.option(fc.nat({ max: 100000 }), { nil: undefined }),
+    allowMultiple: fc.boolean(),
+    isAnonymous: fc.boolean(),
+    organizationId: fc.nat({ max: 1000 }),
+    authorId: fc.nat({ max: 10000 }),
     discussionId: fc.uuid()
   }).map(poll => {
     const totalVotes = poll.options.reduce((sum, option) => sum + option.votes, 0);
@@ -419,7 +453,7 @@ export const pollEndingInArbitrary = (
 export const userArrayArbitrary = (
   minLength: number = 0,
   maxLength: number = 20
-): fc.Arbitrary<User[]> => {
+): fc.Arbitrary<AnnouncementUser[]> => {
   return fc.array(userArbitrary(), { minLength, maxLength });
 };
 
@@ -581,3 +615,110 @@ export const authorizationWithTypeArbitrary = (
   type: 'permanent' | 'scheduled'
 ): fc.Arbitrary<import('../models/authorization.model').Authorization> =>
   type === 'permanent' ? permanentAuthorizationArbitrary() : scheduledAuthorizationArbitrary();
+
+// =======================================
+// HU-11: Canal de Difusión generators
+// =======================================
+
+/**
+ * Generates a random PostResponse (backend DTO)
+ */
+export const postResponseArbitrary = (): fc.Arbitrary<PostResponse> => {
+  return fc.record({
+    id: fc.nat({ max: 100000 }),
+    organizationId: fc.nat({ max: 1000 }),
+    authorId: fc.nat({ max: 10000 }),
+    title: fc.string({ minLength: 1, maxLength: 150 }),
+    content: fc.string({ minLength: 1, maxLength: 5000 }),
+    type: fc.constantFrom('ANNOUNCEMENT' as const, 'NEWS' as const, 'AD' as const),
+    allowComments: fc.boolean(),
+    isPinned: fc.boolean(),
+    status: fc.constantFrom('DRAFT' as const, 'PUBLISHED' as const, 'ARCHIVED' as const),
+    publishedAt: fc.option(fc.date().map(d => d.toISOString()), { nil: null }),
+    createdAt: fc.date().map(d => d.toISOString()),
+  });
+};
+
+/**
+ * Generates a random PollOptionResponse (backend DTO)
+ */
+export const pollOptionResponseArbitrary = (): fc.Arbitrary<PollOptionResponse> => {
+  return fc.record({
+    id: fc.nat({ max: 100000 }),
+    optionText: fc.string({ minLength: 1, maxLength: 100 }),
+    sortOrder: fc.nat({ max: 10 }),
+    voteCount: fc.nat({ max: 10000 }),
+    percentage: fc.double({ min: 0, max: 100, noNaN: true })
+  });
+};
+
+/**
+ * Generates a random PollResponse (backend DTO)
+ */
+export const pollResponseArbitrary = (): fc.Arbitrary<PollResponse> => {
+  return fc.record({
+    id: fc.nat({ max: 100000 }),
+    organizationId: fc.nat({ max: 1000 }),
+    authorId: fc.nat({ max: 10000 }),
+    title: fc.string({ minLength: 1, maxLength: 150 }),
+    description: fc.string({ minLength: 0, maxLength: 500 }),
+    allowMultiple: fc.boolean(),
+    isAnonymous: fc.boolean(),
+    status: fc.constantFrom('DRAFT' as const, 'ACTIVE' as const, 'CLOSED' as const),
+    startsAt: fc.option(fc.date().map(d => d.toISOString()), { nil: null }),
+    endsAt: fc.option(fc.date().map(d => d.toISOString()), { nil: null }),
+    createdAt: fc.date().map(d => d.toISOString()),
+    options: fc.array(pollOptionResponseArbitrary(), { minLength: 2, maxLength: 6 }),
+    totalVotes: fc.nat({ max: 50000 })
+  });
+};
+
+/**
+ * Generates a random CommentResponse (backend DTO)
+ */
+export const commentResponseArbitrary = (): fc.Arbitrary<CommentResponse> => {
+  return fc.record({
+    id: fc.nat({ max: 100000 }),
+    postId: fc.nat({ max: 100000 }),
+    authorId: fc.nat({ max: 10000 }),
+    parentId: fc.option(fc.nat({ max: 100000 }), { nil: null }),
+    content: fc.string({ minLength: 1, maxLength: 1000 }),
+    isApproved: fc.boolean(),
+    createdAt: fc.date().map(d => d.toISOString())
+  });
+};
+
+/**
+ * Generates a random Comment (frontend model with replies)
+ */
+export const commentArbitrary = (): fc.Arbitrary<Comment> => {
+  return fc.record({
+    id: fc.nat({ max: 100000 }),
+    postId: fc.nat({ max: 100000 }),
+    authorId: fc.nat({ max: 10000 }),
+    authorName: fc.option(fc.string({ minLength: 2, maxLength: 50 }), { nil: undefined }),
+    parentId: fc.option(fc.nat({ max: 100000 }), { nil: null }),
+    content: fc.string({ minLength: 1, maxLength: 1000 }),
+    isApproved: fc.boolean(),
+    createdAt: fc.date().map(d => d.toISOString()),
+    replies: fc.constant(undefined as Comment[] | undefined)
+  });
+};
+
+/**
+ * Generates a random BackendNotification (backend DTO)
+ */
+export const backendNotificationArbitrary = (): fc.Arbitrary<BackendNotification> => {
+  return fc.record({
+    id: fc.nat({ max: 100000 }),
+    organizationId: fc.nat({ max: 1000 }),
+    userId: fc.option(fc.nat({ max: 10000 }), { nil: null }),
+    title: fc.string({ minLength: 1, maxLength: 100 }),
+    message: fc.string({ minLength: 1, maxLength: 500 }),
+    type: fc.constantFrom('POST_PUBLISHED' as const, 'POLL_ACTIVATED' as const),
+    isRead: fc.boolean(),
+    entityType: fc.option(fc.constantFrom('POST', 'POLL'), { nil: null }),
+    entityId: fc.option(fc.nat({ max: 100000 }), { nil: null }),
+    createdAt: fc.date().map(d => d.toISOString()),
+  });
+};

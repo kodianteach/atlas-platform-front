@@ -14,6 +14,7 @@ import { PageHeaderComponent } from '../../../ui/organisms/page-header/page-head
 import { BottomNavComponent } from '../../../ui/organisms/bottom-nav/bottom-nav.component';
 import { CreateResidentInvitationUseCase } from '@domain/use-cases/invitation/create-resident-invitation.use-case';
 import { GetOrganizationConfigUseCase } from '@domain/use-cases/organization/get-organization-config.use-case';
+import { GlobalNotificationService } from '@infrastructure/services/global-notification.service';
 
 type PageState = 'loading' | 'idle' | 'select-permissions' | 'generating' | 'link-ready' | 'error';
 
@@ -42,6 +43,7 @@ export class InviteResidentPageComponent implements OnInit {
   private readonly createResidentInvitationUseCase = inject(CreateResidentInvitationUseCase);
   private readonly getOrgConfigUseCase = inject(GetOrganizationConfigUseCase);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly notify = inject(GlobalNotificationService);
 
   readonly state = signal<PageState>('loading');
   readonly invitationUrl = signal<string | null>(null);
@@ -109,9 +111,11 @@ export class InviteResidentPageComponent implements OnInit {
       if (result.success) {
         this.invitationUrl.set(result.data.invitationUrl);
         this.state.set('link-ready');
+        this.notify.success('Enlace de invitación generado');
       } else {
         this.errorMessage.set(result.error.message);
         this.state.set('error');
+        this.notify.error(result.error.message || 'Error al generar invitación');
       }
     });
   }
@@ -122,6 +126,7 @@ export class InviteResidentPageComponent implements OnInit {
       try {
         await navigator.clipboard.writeText(url);
         this.linkCopied.set(true);
+        this.notify.success('Enlace copiado al portapapeles');
         setTimeout(() => this.linkCopied.set(false), 3000);
       } catch {
         const textarea = document.createElement('textarea');
@@ -131,6 +136,7 @@ export class InviteResidentPageComponent implements OnInit {
         document.execCommand('copy');
         document.body.removeChild(textarea);
         this.linkCopied.set(true);
+        this.notify.success('Enlace copiado al portapapeles');
         setTimeout(() => this.linkCopied.set(false), 3000);
       }
     }

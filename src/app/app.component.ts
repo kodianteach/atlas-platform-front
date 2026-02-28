@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationContainerComponent } from '@presentation/ui/organisms/notification-container/notification-container.component';
 import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
 import { PwaUpdateBannerComponent } from '@presentation/ui/organisms/pwa-update-banner/pwa-update-banner.component';
+import { ThemingService } from '@infrastructure/services/theming.service';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,12 @@ import { PwaUpdateBannerComponent } from '@presentation/ui/organisms/pwa-update-
 export class AppComponent {
   private readonly translate = inject(TranslateService);
   private readonly pwaUpdate = inject(PwaUpdateService);
+  private readonly themingService = inject(ThemingService);
 
   constructor() {
     this.translate.setDefaultLang('es');
     this.translate.use('es');
     this.pwaUpdate.initialize();
+    this.themingService.applyThemeFromCache();
   }
 }

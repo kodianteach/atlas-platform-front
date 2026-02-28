@@ -65,7 +65,7 @@
 .porter-form__input:focus,
 .porter-form__select:focus {
   outline: none;
-  border-color: #FF7A59;
+  border-color: var(--color-primary-dark);
   box-shadow: 0 0 0 3px rgba(255, 122, 89, 0.15);
   background: white;
 }
@@ -97,7 +97,7 @@
 }
 
 .porter-form__btn--submit {
-  background: #FF7A59;
+  background: var(--color-primary-dark);
   color: white;
 }
 

@@ -163,6 +163,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
       },
       {
+        path: 'communications',
+        loadComponent: () => import('@presentation/pages/admin/communications/admin-communications-page.component').then(m => m.AdminCommunicationsPageComponent),
+        canActivate: [authGuard]
+      },
+      {
         path: 'more',
         loadComponent: () => import('@presentation/pages/admin/more/admin-more-page.component').then(m => m.AdminMorePageComponent),
         canActivate: [authGuard]

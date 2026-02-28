@@ -1,0 +1,92 @@
+<div class="cp">
+  @if (loading()) {
+    <div class="cp__loading">
+      <div class="cp__spinner"></div>
+      <span>Cargando comentarios...</span>
+    </div>
+  }
+
+  @if (!loading() && comments().length === 0) {
+    <div class="cp__empty">
+      <div class="cp__empty-icon">
+        <i class="bi bi-chat-square-text"></i>
+      </div>
+      <p class="cp__empty-title">Sin comentarios</p>
+      <p class="cp__empty-desc">No hay comentarios para esta publicación.</p>
+    </div>
+  }
+
+  <div class="cp__list">
+    @for (comment of comments(); track comment.id) {
+      <div class="cp__item"
+           [class.cp__item--flagged]="isFlagged(comment)"
+           [class.cp__item--hidden]="isHidden(comment)"
+           [class.cp__item--admin]="isAdmin(comment)">
+
+        <!-- Avatar + meta -->
+        <div class="cp__item-top">
+          <div class="cp__avatar" [class.cp__avatar--admin]="isAdmin(comment)">
+            <i class="bi" [class.bi-shield-check]="isAdmin(comment)" [class.bi-person]="!isAdmin(comment)"></i>
+          </div>
+          <div class="cp__meta">
+            <span class="cp__author">
+              {{ isAdmin(comment) ? 'Administrador' : 'Usuario #' + comment.authorId }}
+            </span>
+            <span class="cp__time">{{ comment.createdAt | date:'dd/MM/yy HH:mm' }}</span>
+          </div>
+          <div class="cp__badges">
+            @if (isFlagged(comment)) {
+              <span class="cp__badge cp__badge--danger"><i class="bi bi-flag-fill"></i> Flaggeado</span>
+            }
+            @if (isHidden(comment)) {
+              <span class="cp__badge cp__badge--muted"><i class="bi bi-eye-slash"></i> Oculto</span>
+            }
+          </div>
+        </div>
+
+        <!-- Content -->
+        <p class="cp__text">{{ comment.content }}</p>
+
+        @if (isFlagged(comment) && comment.flagReason) {
+          <div class="cp__flag-reason">
+            <i class="bi bi-info-circle"></i> {{ comment.flagReason }}
+          </div>
+        }
+
+        <!-- Actions -->
+        <div class="cp__actions">
+          @if (isFlagged(comment)) {
+            <button class="cp__action cp__action--approve" (click)="onApprove(comment.id)" type="button">
+              <i class="bi bi-check-lg"></i> Aprobar
+            </button>
+          }
+          @if (comment.isApproved) {
+            <button class="cp__action cp__action--hide" (click)="onHide(comment.id)" type="button">
+              <i class="bi bi-eye-slash"></i> Ocultar
+            </button>
+          }
+          <button class="cp__action cp__action--delete" (click)="onDelete(comment.id)" type="button">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Reply as admin -->
+  <div class="cp__reply">
+    <div class="cp__reply-avatar">
+      <i class="bi bi-shield-check"></i>
+    </div>
+    <input
+      type="text"
+      class="cp__reply-input"
+      placeholder="Responder como administrador..."
+      [(ngModel)]="replyContent"
+      (keyup.enter)="onReply()"
+    />
+    <button class="cp__reply-btn" (click)="onReply()" [disabled]="!replyContent.trim()" type="button">
+      <i class="bi bi-send-fill"></i>
+    </button>
+  </div>
+</div>

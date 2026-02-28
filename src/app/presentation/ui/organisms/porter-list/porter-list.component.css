@@ -58,7 +58,7 @@
 
 .porter-list__card-icon {
   font-size: 1.5rem;
-  color: #FF7A59;
+  color: var(--color-primary-dark);
   background: #FFF1EC;
   width: 40px;
   height: 40px;
@@ -110,8 +110,8 @@
 
 .porter-list__action-btn:hover {
   background: #f3f4f6;
-  color: #FF7A59;
-  border-color: #FF7A59;
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
 }
 
 .porter-list__action-btn--inactive {

@@ -1,18 +1,22 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AnnouncementsService } from '../../../services/announcements.service';
-import { Announcement, BroadcastMessage, Poll } from '@domain/models/announcement/announcement.model';
+import { AnnouncementGateway } from '@domain/gateways/announcement/announcement.gateway';
+import { Announcement, BroadcastMessage, Poll, PostResponse, PollResponse, CommentResponse } from '@domain/models/announcement/announcement.model';
 import { AnnouncementsHeaderComponent } from '../../ui/organisms/announcements-header/announcements-header.component';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { GlobalNotificationService } from '@infrastructure/services/global-notification.service';
 
-interface Comment {
+interface DisplayComment {
   id: string;
+  authorId: number;
   author: string;
   avatarUrl: string;
   content: string;
   timestamp: Date;
   likes: number;
+  isOwn: boolean;
 }
 
 @Component({
@@ -26,21 +30,46 @@ interface Comment {
 export class AnnouncementDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly announcementsService = inject(AnnouncementsService);
+  private readonly gateway = inject(AnnouncementGateway);
+  private readonly authService = inject(AuthenticationService);
+  private readonly notify = inject(GlobalNotificationService);
 
   readonly announcement = signal<Announcement | null>(null);
-  readonly comments = signal<Comment[]>([]);
+  readonly comments = signal<DisplayComment[]>([]);
   readonly newComment = signal('');
   readonly loading = signal(true);
+  readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
 
+  /** Current user info */
+  private readonly currentUserId = signal<number>(0);
+  readonly isAdmin = signal(false);
+
+  /** True if comments are allowed on this announcement */
+  readonly commentsAllowed = computed(() => {
+    const ann = this.announcement();
+    if (!ann) return false;
+    if (ann.type === 'poll') return true;
+    return 'allowComments' in ann && Boolean(ann.allowComments);
+  });
+
   private readonly destroy$ = new Subject<void>();
+  private currentPostId = 0;
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    // Load current user context
+    const user = this.authService.getUser();
+    if (user) {
+      this.currentUserId.set(Number(user.id) || 0);
+      this.isAdmin.set(user.role === 'ADMIN_ATLAS' || user.roles?.includes('ADMIN_ATLAS') === true);
+    }
+
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
+      this.currentPostId = id;
       this.loadAnnouncement(id);
-      this.loadComments();
+      this.loadComments(id);
     } else {
       this.error.set('ID de anuncio no válido');
       this.loading.set(false);
@@ -52,14 +81,35 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadAnnouncement(id: string): void {
-    this.announcementsService.getAnnouncements()
+  private loadAnnouncement(id: number): void {
+    // Try loading as post first, then as poll
+    this.gateway.getPostById(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (announcements) => {
-          const found = announcements.find(a => a.id === id) || null;
-          this.announcement.set(found);
-          if (!found) {
+        next: (result) => {
+          if (result.success) {
+            this.announcement.set(this.mapPostToBroadcast(result.data));
+          } else {
+            // Try as poll
+            this.loadAsPoll(id);
+            return;
+          }
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loadAsPoll(id);
+        }
+      });
+  }
+
+  private loadAsPoll(id: number): void {
+    this.gateway.getPollById(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          if (result.success) {
+            this.announcement.set(this.mapPollResponseToPoll(result.data));
+          } else {
             this.error.set('Anuncio no encontrado');
           }
           this.loading.set(false);
@@ -71,33 +121,92 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadComments(): void {
-    this.comments.set([
-      {
-        id: '1',
-        author: 'María García',
-        avatarUrl: 'https://i.pravatar.cc/150?img=5',
-        content: '¡Excelente noticia! Me alegra mucho que estemos implementando estas mejoras.',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        likes: 12
-      },
-      {
-        id: '2',
-        author: 'Carlos Rodríguez',
-        avatarUrl: 'https://i.pravatar.cc/150?img=8',
-        content: '¿Cuándo estará disponible esta funcionalidad? Estoy muy interesado.',
-        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
-        likes: 8
-      },
-      {
-        id: '3',
-        author: 'Ana Martínez',
-        avatarUrl: 'https://i.pravatar.cc/150?img=9',
-        content: 'Gracias por mantener a la comunidad informada. ¡Sigan así!',
-        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        likes: 15
-      }
-    ]);
+  private mapPostToBroadcast(post: PostResponse): BroadcastMessage {
+    return {
+      id: post.id,
+      type: 'broadcast',
+      createdAt: post.createdAt,
+      priority: post.isPinned ? 10 : 0,
+      title: post.title,
+      description: post.content,
+      previewText: post.content.substring(0, 150),
+      postType: post.type,
+      isPinned: post.isPinned,
+      allowComments: post.allowComments,
+      status: post.status,
+      authorId: post.authorId,
+      organizationId: post.organizationId,
+      publishedAt: post.publishedAt,
+      isUrgent: post.isPinned,
+      backgroundColor: '#ffffff',
+      relatedUsers: []
+    };
+  }
+
+  private mapPollResponseToPoll(poll: PollResponse): Poll {
+    return {
+      id: poll.id,
+      type: 'poll',
+      createdAt: poll.createdAt,
+      priority: 5,
+      title: poll.title,
+      question: poll.description || poll.title,
+      icon: '📊',
+      status: poll.status,
+      endsAt: poll.endsAt,
+      options: (poll.options || []).map(o => ({
+        id: o.id,
+        text: o.optionText,
+        votes: o.voteCount,
+        percentage: o.percentage
+      })),
+      totalVotes: poll.totalVotes,
+      allowMultiple: poll.allowMultiple,
+      isAnonymous: poll.isAnonymous,
+      organizationId: poll.organizationId,
+      authorId: poll.authorId,
+      discussionId: ''
+    };
+  }
+
+  private loadComments(postId: number): void {
+    const admin = this.isAdmin();
+
+    // Admin uses the admin endpoint that returns ALL comments (including hidden/flagged).
+    // Owners use the normal endpoint and see only their own.
+    const comments$ = admin
+      ? this.gateway.getAllCommentsByPost(postId)
+      : this.gateway.getComments(postId);
+
+    comments$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          if (result.success) {
+            const userId = this.currentUserId();
+            // Admin sees everything; owner sees only own comments
+            const filtered = admin
+              ? result.data
+              : result.data.filter(c => c.authorId === userId);
+
+            this.comments.set(filtered.map(c => this.mapComment(c)));
+          }
+        }
+      });
+  }
+
+  private mapComment(c: CommentResponse): DisplayComment {
+    const userId = this.currentUserId();
+    return {
+      id: String(c.id),
+      authorId: c.authorId,
+      author: c.authorId === userId ? 'Tú' : `Usuario ${c.authorId}`,
+      avatarUrl: `https://i.pravatar.cc/150?img=${c.authorId % 70}`,
+      content: c.content,
+      timestamp: new Date(c.createdAt),
+      likes: 0,
+      isOwn: c.authorId === userId
+    };
   }
 
   onBack(): void {
@@ -110,18 +219,27 @@ export class AnnouncementDetailComponent implements OnInit, OnDestroy {
 
   onSubmitComment(): void {
     const text = this.newComment().trim();
-    if (text) {
-      const comment: Comment = {
-        id: Date.now().toString(),
-        author: 'Usuario Actual',
-        avatarUrl: 'https://i.pravatar.cc/150?img=1',
-        content: text,
-        timestamp: new Date(),
-        likes: 0
-      };
-      this.comments.update(c => [comment, ...c]);
-      this.newComment.set('');
-    }
+    if (!text || this.submitting()) return;
+
+    this.submitting.set(true);
+    this.gateway.createComment({ postId: this.currentPostId, content: text })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          this.submitting.set(false);
+          if (result.success) {
+            this.comments.update(c => [this.mapComment(result.data), ...c]);
+            this.newComment.set('');
+            this.notify.success('Comentario publicado');
+          } else {
+            this.notify.error('Error al publicar el comentario');
+          }
+        },
+        error: () => {
+          this.submitting.set(false);
+          this.notify.error('Error al publicar el comentario');
+        }
+      });
   }
 
   onLikeComment(commentId: string): void {

@@ -11,7 +11,7 @@
 
 /* ═══ Header ═══ */
 .auth-detail__header {
-  background: linear-gradient(135deg, #FF7A59 0%, #FF6B4A 100%);
+  background: var(--gradient-primary);
   padding: var(--spacing-lg) var(--spacing-md);
   display: flex;
   align-items: center;

@@ -1,53 +1,140 @@
 <!-- Announcements Page Template -->
 <div class="announcements-page">
-  <!-- Header with notifications icon -->
-  <app-announcements-header [title]="'Anuncios'" [showBackButton]="false" [showNotificationIcon]="true"
-    (notificationClick)="onNotifications()" />
+
+  <!-- Custom Header -->
+  <header class="ann-header">
+    <button class="ann-header__back" (click)="onBack()" aria-label="Volver" type="button">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h1 class="ann-header__title">Tablón de Anuncios</h1>
+    <button class="ann-header__bell" (click)="onNotifications()" aria-label="Notificaciones" type="button">
+      <i class="bi bi-bell"></i>
+    </button>
+  </header>
+
+  <!-- Hero banner -->
+  <div class="ann-hero">
+    <div class="ann-hero__content">
+      <span class="ann-hero__label">COMUNIDAD</span>
+      <h2 class="ann-hero__title">Novedades</h2>
+      <p class="ann-hero__subtitle">Publicaciones y encuestas de tu conjunto</p>
+    </div>
+    <div class="ann-hero__icon">
+      <i class="bi bi-megaphone"></i>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="ann-tabs">
+    <button class="ann-tab" [class.ann-tab--active]="activeTab() === 'all'"
+      (click)="setTab('all')" role="tab">Todos</button>
+    <button class="ann-tab" [class.ann-tab--active]="activeTab() === 'posts'"
+      (click)="setTab('posts')" role="tab">Publicaciones</button>
+    <button class="ann-tab" [class.ann-tab--active]="activeTab() === 'polls'"
+      (click)="setTab('polls')" role="tab">Encuestas</button>
+  </div>
 
   <!-- Main content area -->
-  <div class="announcements-content">
+  <div class="ann-content">
     @if (loading()) {
-      <div class="loading-state" role="status" aria-live="polite">
-        <div class="loading-spinner" aria-label="Cargando anuncios"></div>
-        <p class="loading-text">Cargando anuncios...</p>
-      </div>
+      <output class="ann-loading" aria-live="polite">
+        <div class="ann-loading__spinner"></div>
+        <p class="ann-loading__text">Cargando anuncios...</p>
+      </output>
     }
 
     @if (error() && !loading()) {
-      <div class="error-state" role="alert" aria-live="assertive">
-        <div class="error-icon">⚠️</div>
-        <h2 class="error-title">¡Ups! Algo salió mal</h2>
-        <p class="error-message">{{ error() }}</p>
-        <button class="retry-button" (click)="retryLoad()" aria-label="Reintentar cargar anuncios">
-          Intentar de Nuevo
+      <div class="ann-state-card ann-state-card--error" role="alert">
+        <div class="ann-state-card__icon"><i class="bi bi-exclamation-triangle"></i></div>
+        <h2 class="ann-state-card__title">Algo salió mal</h2>
+        <p class="ann-state-card__text">{{ error() }}</p>
+        <button class="ann-btn ann-btn--primary" (click)="retryLoad()">
+          <i class="bi bi-arrow-clockwise"></i> Reintentar
         </button>
       </div>
     }
 
     @if (announcements$ | async; as announcements) {
       @if (announcements.length === 0 && !loading() && !error()) {
-        <div class="empty-state">
-          <div class="empty-icon">📢</div>
-          <h2 class="empty-title">Aún No Hay Anuncios</h2>
-          <p class="empty-message">
-            No hay anuncios o encuestas disponibles en este momento.
-            Vuelve más tarde para ver actualizaciones de la comunidad.
+        <div class="ann-state-card ann-state-card--empty">
+          <div class="ann-state-card__icon ann-state-card__icon--muted">
+            <i class="bi bi-megaphone"></i>
+          </div>
+          <h2 class="ann-state-card__title">Sin novedades</h2>
+          <p class="ann-state-card__text">
+            No hay publicaciones ni encuestas disponibles. Vuelve más tarde.
           </p>
         </div>
       }
 
       @if (announcements.length > 0 && !loading()) {
-        <div class="announcements-list" role="feed" aria-label="Feed de anuncios">
-          @for (announcement of announcements; track announcement.id) {
-            <div class="announcement-item">
+        <div class="ann-feed" role="feed" aria-label="Feed de anuncios">
+          @for (announcement of filteredAnnouncements(); track announcement.id; let idx = $index) {
+            <div class="ann-feed__item" [style.animation-delay]="idx * 60 + 'ms'">
               @if (isBroadcast(announcement)) {
-                <app-broadcast-card [broadcast]="$any(announcement)" (readMoreClick)="onReadMore($event)" role="article"
-                  [attr.aria-label]="'Comunicado: ' + announcement.title" />
+                <!-- Inline post card -->
+                <article class="post-card">
+                  <div class="post-card__header">
+                    <div class="post-card__avatar">
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="post-card__meta">
+                      <span class="post-card__author">Administración</span>
+                      <span class="post-card__date">{{ formatDate($any(announcement).createdAt) }}</span>
+                    </div>
+                    @if ($any(announcement).isPinned) {
+                      <span class="post-card__pinned" title="Fijado"><i class="bi bi-pin-fill"></i></span>
+                    }
+                  </div>
+                  <div class="post-card__body">
+                    <h3 class="post-card__title">{{ announcement.title }}</h3>
+                    <p class="post-card__preview">{{ $any(announcement).previewText }}</p>
+                  </div>
+                  <div class="post-card__footer">
+                    @if ($any(announcement).allowComments) {
+                      <span class="post-card__comments">
+                        <i class="bi bi-chat-dots"></i> Comentarios
+                      </span>
+                    }
+                    <button class="post-card__read-more" (click)="onReadMore(announcement.id)">
+                      Leer más <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+                </article>
               }
               @if (isPoll(announcement)) {
-                <app-poll-card [poll]="$any(announcement)" (voteClick)="onVote($event)"
-                  (viewDiscussionClick)="onViewDiscussion($event)" role="article"
-                  [attr.aria-label]="'Encuesta: ' + announcement.title" />
+                <!-- Inline poll card -->
+                <article class="poll-card-v2">
+                  <div class="poll-card-v2__header">
+                    <div class="poll-card-v2__icon-wrap">
+                      <i class="bi bi-bar-chart-line"></i>
+                    </div>
+                    <div class="poll-card-v2__meta">
+                      <h3 class="poll-card-v2__title">{{ announcement.title }}</h3>
+                      <span class="poll-card-v2__status">
+                        <i class="bi bi-circle-fill"></i> Activa
+                      </span>
+                    </div>
+                  </div>
+                  <p class="poll-card-v2__question">{{ $any(announcement).question }}</p>
+                  <div class="poll-card-v2__options">
+                    @for (option of $any(announcement).options; track option.id) {
+                      <button class="poll-option"
+                        [class.poll-option--voted]="isOptionSelected(option.id)"
+                        (click)="onVote({ pollId: announcement.id, optionId: option.id })">
+                        <span class="poll-option__text">{{ option.text }}</span>
+                        <div class="poll-option__bar" [style.width.%]="option.percentage || 0"></div>
+                        <span class="poll-option__pct">{{ option.percentage || 0 }}%</span>
+                      </button>
+                    }
+                  </div>
+                  <div class="poll-card-v2__footer">
+                    <span class="poll-card-v2__votes">
+                      <i class="bi bi-people"></i>
+                      {{ $any(announcement).totalVotes }} {{ $any(announcement).totalVotes === 1 ? 'voto' : 'votos' }}
+                    </span>
+                  </div>
+                </article>
               }
             </div>
           }
@@ -57,7 +144,7 @@
   </div>
 
   <!-- Bottom Navigation -->
-  <app-bottom-nav (centerAction)="onCenterAction()" />
+  <app-bottom-nav />
 
   <!-- Authorization Form Overlay -->
   <app-authorization-form [visible]="showFormOverlay()" (authorizationCreated)="onAuthorizationCreated($event)"

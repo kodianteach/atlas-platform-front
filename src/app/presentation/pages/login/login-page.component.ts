@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoginTemplateComponent } from '../../ui/templates/login-template/login-template.component';
 import { AuthenticationService, AuthResponse, AuthUser } from '../../../services/authentication.service';
 import { AdminProfileService } from '../../../services/admin-profile.service';
+import { NotificationService } from '../../../services/notification.service';
 
 interface LoginFormData {
   email: string;
@@ -27,6 +28,7 @@ export class LoginPageComponent {
   private readonly authService = inject(AuthenticationService);
   private readonly adminProfileService = inject(AdminProfileService);
   private readonly router = inject(Router);
+  private readonly notificationService = inject(NotificationService);
 
   readonly isSubmitting = signal(false);
   readonly generalError = signal<string | undefined>(undefined);
@@ -53,6 +55,11 @@ export class LoginPageComponent {
     this.isSubmitting.set(false);
 
     const user = response.user;
+
+    // Start notification polling for the user's organization
+    if (user?.organizationId) {
+      this.notificationService.startPolling(Number(user.organizationId));
+    }
 
     // PORTERO: redirect to doorman entry control
     if (user && this.isPorter(user)) {

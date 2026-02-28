@@ -17,24 +17,37 @@ export class OrganizationConfigAdapter extends OrganizationConfigGateway {
   private readonly SETTINGS_ENDPOINT = `${environment.apiUrl}/organization/settings`;
 
   override getConfig(): Observable<Result<OrganizationConfig>> {
-    return this.http.get<{ data: { maxUnitsPerDistribution: number; enableOwnerPermissionManagement: boolean } }>(
+    return this.http.get<{ data: OrganizationConfig }>(
       this.SETTINGS_ENDPOINT
     ).pipe(
       map(response => success<OrganizationConfig>({
         maxUnitsPerDistribution: response.data.maxUnitsPerDistribution,
-        enableOwnerPermissionManagement: response.data.enableOwnerPermissionManagement ?? false
+        enableOwnerPermissionManagement: response.data.enableOwnerPermissionManagement ?? false,
+        logoBase64: response.data.logoBase64,
+        logoContentType: response.data.logoContentType,
+        dominantColor: response.data.dominantColor,
+        secondaryColor: response.data.secondaryColor,
+        accentColor: response.data.accentColor
       })),
       catchError(error => of(this.handleError<OrganizationConfig>(error)))
     );
   }
 
   override saveConfig(config: OrganizationConfig): Observable<Result<OrganizationConfig>> {
-    return this.http.put<{ data: { maxUnitsPerDistribution: number; enableOwnerPermissionManagement: boolean }; message: string }>(
+    return this.http.put<{ data: OrganizationConfig; message: string }>(
       this.SETTINGS_ENDPOINT,
-      { maxUnitsPerDistribution: config.maxUnitsPerDistribution, enableOwnerPermissionManagement: config.enableOwnerPermissionManagement }
+      config
     ).pipe(
       map(response => success<OrganizationConfig>(
-        { maxUnitsPerDistribution: response.data.maxUnitsPerDistribution, enableOwnerPermissionManagement: response.data.enableOwnerPermissionManagement ?? false },
+        {
+          maxUnitsPerDistribution: response.data.maxUnitsPerDistribution,
+          enableOwnerPermissionManagement: response.data.enableOwnerPermissionManagement ?? false,
+          logoBase64: response.data.logoBase64,
+          logoContentType: response.data.logoContentType,
+          dominantColor: response.data.dominantColor,
+          secondaryColor: response.data.secondaryColor,
+          accentColor: response.data.accentColor
+        },
         response.message
       )),
       catchError(error => of(this.handleError<OrganizationConfig>(error)))

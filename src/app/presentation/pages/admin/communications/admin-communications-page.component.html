@@ -1,0 +1,368 @@
+<div class="comm-page">
+  <!-- Header -->
+  <header class="comm-page__header">
+    <div class="comm-page__header-content">
+      <h1 class="comm-page__title">
+        <i class="bi bi-megaphone"></i>
+        Comunicaciones
+      </h1>
+      <p class="comm-page__subtitle">Gestiona publicaciones y encuestas</p>
+    </div>
+    <div class="comm-page__header-actions">
+      <button class="comm-page__action-btn" (click)="toggleCreatePostForm()" type="button">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+      <button class="comm-page__action-btn comm-page__action-btn--outline" (click)="toggleCreatePollForm()" type="button">
+        <i class="bi bi-bar-chart"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Create Post Form -->
+  @if (showCreatePostForm()) {
+    <div class="comm-page__form-overlay">
+      <div class="comm-page__form-card">
+        <h2 class="comm-page__form-title">
+          <i class="bi bi-file-earmark-plus"></i> Nueva Publicación
+        </h2>
+        <div class="comm-page__field">
+          <input type="text" class="comm-page__input" placeholder="Título de la publicación"
+                 [value]="newPostTitle()" (input)="newPostTitle.set($any($event.target).value)" />
+        </div>
+        <div class="comm-page__field">
+          <textarea class="comm-page__input comm-page__textarea" rows="3" placeholder="Contenido de la publicación..."
+                    [value]="newPostContent()" (input)="newPostContent.set($any($event.target).value)"></textarea>
+        </div>
+        <div class="comm-page__field">
+          <label class="comm-page__checkbox">
+            <input type="checkbox"
+                   [checked]="newPostAllowComments()" (change)="newPostAllowComments.set($any($event.target).checked)" />
+            <span>Permitir comentarios</span>
+          </label>
+        </div>
+        <div class="comm-page__form-actions">
+          <button class="comm-page__btn comm-page__btn--primary" (click)="onCreatePost()"
+                  [disabled]="!newPostTitle() || !newPostContent()" type="button">
+            Crear como Borrador
+          </button>
+          <button class="comm-page__btn comm-page__btn--success" (click)="onCreateAndPublishPost()"
+                  [disabled]="!newPostTitle() || !newPostContent()" type="button">
+            Crear y Publicar
+          </button>
+          <button class="comm-page__btn comm-page__btn--ghost" (click)="toggleCreatePostForm()" type="button">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Create Poll Form -->
+  @if (showCreatePollForm()) {
+    <div class="comm-page__form-overlay">
+      <div class="comm-page__form-card">
+        <h2 class="comm-page__form-title">
+          <i class="bi bi-bar-chart"></i> Nueva Encuesta
+        </h2>
+        <div class="comm-page__field">
+          <input type="text" class="comm-page__input" placeholder="Título de la encuesta"
+                 [value]="newPollTitle()" (input)="newPollTitle.set($any($event.target).value)" />
+        </div>
+        <div class="comm-page__field">
+          <textarea class="comm-page__input comm-page__textarea" rows="2" placeholder="Descripción (opcional)"
+                    [value]="newPollDescription()" (input)="newPollDescription.set($any($event.target).value)"></textarea>
+        </div>
+        <div class="comm-page__field">
+          <span class="comm-page__field-label">Opciones</span>
+          @for (option of newPollOptions(); track $index) {
+            <div class="comm-page__option-row">
+              <input type="text" class="comm-page__input" [placeholder]="'Opción ' + ($index + 1)"
+                     [value]="option" (input)="updatePollOption($index, $any($event.target).value)" />
+              @if (newPollOptions().length > 2) {
+                <button class="comm-page__option-remove" (click)="removePollOption($index)" type="button">
+                  <i class="bi bi-x"></i>
+                </button>
+              }
+            </div>
+          }
+          <button class="comm-page__btn comm-page__btn--ghost" (click)="addPollOption()" type="button">
+            <i class="bi bi-plus"></i> Agregar opción
+          </button>
+        </div>
+        <div class="comm-page__field comm-page__checkbox-group">
+          <label class="comm-page__checkbox">
+            <input type="checkbox"
+                   [checked]="newPollAllowMultiple()" (change)="newPollAllowMultiple.set($any($event.target).checked)" />
+            <span>Respuesta múltiple</span>
+          </label>
+          <label class="comm-page__checkbox">
+            <input type="checkbox"
+                   [checked]="newPollAnonymous()" (change)="newPollAnonymous.set($any($event.target).checked)" />
+            <span>Anónima</span>
+          </label>
+        </div>
+        <div class="comm-page__form-actions">
+          <button class="comm-page__btn comm-page__btn--primary" (click)="onCreatePoll()"
+                  [disabled]="!canCreatePoll()" type="button">
+            Crear Encuesta
+          </button>
+          <button class="comm-page__btn comm-page__btn--ghost" (click)="toggleCreatePollForm()" type="button">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Stats -->
+  <app-stats-counter [stats]="stats()" />
+
+  <!-- Tabs -->
+  <div class="comm-page__tabs">
+    <button class="comm-page__chip"
+            [class.comm-page__chip--active]="activeTab() === 'all'"
+            (click)="onTabChange('all')" type="button">
+      Todos
+    </button>
+    <button class="comm-page__chip"
+            [class.comm-page__chip--active]="activeTab() === 'posts'"
+            (click)="onTabChange('posts')" type="button">
+      Publicaciones
+    </button>
+    <button class="comm-page__chip"
+            [class.comm-page__chip--active]="activeTab() === 'polls'"
+            (click)="onTabChange('polls')" type="button">
+      Encuestas
+    </button>
+    <!-- <button class="comm-page__chip"
+            [class.comm-page__chip--active]="activeTab() === 'flagged'"
+            (click)="onTabChange('flagged')" type="button">
+      <i class="bi bi-flag"></i> Flaggeados
+      @if (flaggedComments().length > 0) {
+        <span class="comm-page__badge">{{ flaggedComments().length }}</span>
+      }
+    </button> -->
+  </div>
+
+  <!-- Filters (hidden on flagged tab) -->
+  @if (!showFlaggedTab()) {
+    <app-admin-filter-bar (filtersChange)="onFiltersChange($event)" />
+  }
+
+  <!-- Loading state -->
+  @if (loading()) {
+    <div class="comm-page__loading">
+      <div class="comm-page__spinner"></div>
+      <span>Cargando comunicaciones...</span>
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (error()) {
+    <div class="comm-page__error" role="alert">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+      <button class="comm-page__error-close" (click)="loadData()" type="button">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Content -->
+  @if (!loading() && !error()) {
+    <main class="comm-page__content">
+      <!-- Flagged comments tab -->
+      @if (showFlaggedTab()) {
+        <section class="comm-page__section">
+          <h2 class="comm-page__section-title">
+            <i class="bi bi-flag-fill comm-page__icon--danger"></i>
+            Comentarios Flaggeados por Moderación
+          </h2>
+          @if (flaggedComments().length === 0) {
+            <div class="comm-page__empty">
+              <i class="bi bi-check-circle comm-page__empty-icon comm-page__icon--success"></i>
+              <p class="comm-page__empty-title">Sin pendientes</p>
+              <p class="comm-page__empty-desc">No hay comentarios flaggeados pendientes de revisión.</p>
+            </div>
+          } @else {
+            <app-admin-comment-panel
+              [comments]="flaggedComments()"
+              [postId]="0"
+              [loading]="false"
+              (deleteAction)="onDeleteComment($event)"
+              (hideAction)="onHideComment($event)"
+              (approveAction)="onApproveComment($event)"
+              (closePanel)="onTabChange('all')"
+            />
+          }
+        </section>
+      }
+
+      <!-- Posts section -->
+      @if (showPosts()) {
+        <section class="comm-page__section">
+          @if (posts().length > 0) {
+            <h2 class="comm-page__section-title">Publicaciones</h2>
+            <div class="comm-page__cards">
+              @for (post of posts(); track post.id) {
+                <app-admin-post-card
+                  [post]="post"
+                  (publishAction)="onPublishPost($event)"
+                  (archiveAction)="onArchivePost($event)"
+                  (reactivateAction)="onReactivatePost($event)"
+                  (togglePinAction)="onTogglePinPost($event)"
+                  (deleteAction)="onDeletePost($event)"
+                  (viewCommentsAction)="onViewComments($event)"
+                />
+              }
+            </div>
+            <app-pagination
+              [currentPage]="filters().page"
+              [totalPages]="totalPostPages()"
+              [totalElements]="totalPostElements()"
+              [pageSize]="filters().size"
+              (pageChange)="onPageChange($event)"
+            />
+          } @else {
+            <div class="comm-page__empty">
+              <i class="bi bi-file-text comm-page__empty-icon"></i>
+              <p class="comm-page__empty-title">Sin publicaciones</p>
+              <p class="comm-page__empty-desc">No hay publicaciones que coincidan con los filtros.</p>
+            </div>
+          }
+        </section>
+      }
+
+      <!-- Polls section -->
+      @if (showPolls()) {
+        <section class="comm-page__section">
+          @if (polls().length > 0) {
+            <h2 class="comm-page__section-title">Encuestas</h2>
+            <div class="comm-page__cards">
+              @for (poll of polls(); track poll.id) {
+                <app-admin-poll-card
+                  [poll]="poll"
+                  (activateAction)="onActivatePoll($event)"
+                  (closeAction)="onClosePoll($event)"
+                  (viewResultsAction)="onViewPollResults($event)"
+                />
+              }
+            </div>
+            <app-pagination
+              [currentPage]="filters().page"
+              [totalPages]="totalPollPages()"
+              [totalElements]="totalPollElements()"
+              [pageSize]="filters().size"
+              (pageChange)="onPageChange($event)"
+            />
+          } @else {
+            <div class="comm-page__empty">
+              <i class="bi bi-bar-chart comm-page__empty-icon"></i>
+              <p class="comm-page__empty-title">Sin encuestas</p>
+              <p class="comm-page__empty-desc">No hay encuestas que coincidan con los filtros.</p>
+            </div>
+          }
+        </section>
+      }
+    </main>
+  }
+
+  <!-- Poll results panel overlay -->
+  @if (pollResultsOpen() && selectedPoll()) {
+    <div class="comm-page__comment-backdrop" (click)="onClosePollResults()" (keydown.escape)="onClosePollResults()" aria-hidden="true"></div>
+    <div class="comm-page__comment-overlay">
+      <div class="comm-page__comment-overlay-header">
+        <h3 class="comm-page__comment-overlay-title">
+          <i class="bi bi-bar-chart-fill"></i> Resultados
+        </h3>
+        <button class="comm-page__comment-overlay-close" (click)="onClosePollResults()" type="button">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="pr">
+        <!-- Poll info -->
+        <div class="pr__header">
+          <h4 class="pr__title">{{ selectedPoll()!.title }}</h4>
+          @if (selectedPoll()!.description) {
+            <p class="pr__desc">{{ selectedPoll()!.description }}</p>
+          }
+          <div class="pr__meta">
+            <span class="pr__meta-item">
+              <i class="bi bi-people-fill"></i> {{ selectedPoll()!.totalVotes }} votos totales
+            </span>
+            <span class="pr__meta-item">
+              <i class="bi bi-list-ul"></i> {{ selectedPoll()!.options?.length || 0 }} opciones
+            </span>
+            @if (selectedPoll()!.isAnonymous) {
+              <span class="pr__meta-item pr__meta-item--muted">
+                <i class="bi bi-incognito"></i> Anónima
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Options with bars -->
+        <div class="pr__options">
+          @for (option of selectedPoll()!.options || []; track option.id) {
+            <div class="pr__option">
+              <div class="pr__option-top">
+                <span class="pr__option-text">{{ option.optionText }}</span>
+                <span class="pr__option-votes">{{ option.voteCount }} votos</span>
+              </div>
+              <div class="pr__bar-track">
+                <div class="pr__bar-fill" [style.width.%]="option.percentage"></div>
+              </div>
+              <span class="pr__option-pct">{{ option.percentage | number:'1.0-1' }}%</span>
+            </div>
+          } @empty {
+            <div class="pr__empty">
+              <i class="bi bi-bar-chart"></i>
+              <p>Esta encuesta aún no tiene opciones configuradas.</p>
+            </div>
+          }
+        </div>
+
+        <!-- Status info -->
+        <div class="pr__footer">
+          <span class="pr__status-badge" [class.pr__status-badge--active]="selectedPoll()!.status === 'ACTIVE'"
+                [class.pr__status-badge--closed]="selectedPoll()!.status === 'CLOSED'"
+                [class.pr__status-badge--draft]="selectedPoll()!.status === 'DRAFT'">
+            {{ selectedPoll()!.status === 'ACTIVE' ? 'Activa' : selectedPoll()!.status === 'CLOSED' ? 'Cerrada' : 'Borrador' }}
+          </span>
+          <span class="pr__date">
+            <i class="bi bi-calendar3"></i> Creada {{ selectedPoll()!.createdAt | date:'dd/MM/yy' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Comment panel overlay -->
+  @if (commentPanelOpen()) {
+    <div class="comm-page__comment-backdrop" (click)="onCloseCommentPanel()" (keydown.escape)="onCloseCommentPanel()" aria-hidden="true"></div>
+    <div class="comm-page__comment-overlay">
+      <div class="comm-page__comment-overlay-header">
+        <h3 class="comm-page__comment-overlay-title">
+          <i class="bi bi-chat-dots"></i> Comentarios de la publicación
+        </h3>
+        <button class="comm-page__comment-overlay-close" (click)="onCloseCommentPanel()" type="button">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <app-admin-comment-panel
+        [comments]="comments()"
+        [postId]="selectedPostId() || 0"
+        [loading]="commentsLoading()"
+        (deleteAction)="onDeleteComment($event)"
+        (hideAction)="onHideComment($event)"
+        (approveAction)="onApproveComment($event)"
+        (replyAction)="onReplyAsAdmin($event)"
+        (closePanel)="onCloseCommentPanel()"
+      />
+    </div>
+  }
+</div>
+
+<!-- Bottom nav -->
+<app-unified-bottom-nav [role]="'ADMIN_ATLAS'" [activeTab]="'communications'" />

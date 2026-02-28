@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, timeout, retry, map } from 'rxjs/operators';
+import { ThemingService } from '@infrastructure/services/theming.service';
+import { NotificationService } from './notification.service';
 
 export interface LoginCredentials {
   email: string;
@@ -67,7 +69,9 @@ export class AuthenticationService {
   private readonly TIMEOUT_MS = 10000;
   private readonly RETRY_ATTEMPTS = 2;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly themingService: ThemingService) {}
+
+  private readonly notificationService = inject(NotificationService);
 
   login(credentials: LoginCredentials): Observable<AuthResponse> {
     return this.http.post<LoginApiEnvelope>(this.AUTH_ENDPOINT, credentials).pipe(
@@ -91,6 +95,7 @@ export class AuthenticationService {
 
           this.storeToken(token);
           this.storeUser(user);
+          this.themingService.loadAndApplyTheme();
 
           return { success: true, token, user } as AuthResponse;
         }
@@ -101,8 +106,10 @@ export class AuthenticationService {
   }
 
   logout(): void {
+    this.notificationService.stopPolling();
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+    this.themingService.clearTheme();
   }
 
   isAuthenticated(): boolean {

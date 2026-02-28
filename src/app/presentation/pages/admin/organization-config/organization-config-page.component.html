@@ -95,6 +95,131 @@
           </div>
         </div>
 
+        <!-- Branding Section -->
+        <div class="org-config__section">
+          <div class="org-config__section-header">
+            <i class="bi bi-palette"></i>
+            <h2 class="org-config__section-title">Identidad Visual</h2>
+          </div>
+
+          <div class="org-config__card">
+            <!-- Logo Upload -->
+            <div class="org-config__item">
+              <div class="org-config__info">
+                <label for="logoUpload" class="org-config__label">Logo de la organización</label>
+                <p class="org-config__description">Carga el logo o ícono de tu organización. Formatos aceptados: PNG, JPG. Tamaño máximo: 2MB.</p>
+              </div>
+
+              <div class="org-config__logo-upload">
+                @if (logoPreview()) {
+                  <div class="org-config__logo-preview">
+                    <img [src]="logoPreview()" alt="Logo de la organización" />
+                  </div>
+                }
+
+                <label for="logoUpload" class="org-config__upload-btn">
+                  <i class="bi bi-cloud-arrow-up"></i>
+                  {{ logoPreview() ? 'Cambiar imagen' : 'Seleccionar imagen' }}
+                </label>
+                <input
+                  id="logoUpload"
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  class="org-config__file-input"
+                  (change)="onLogoSelected($event)" />
+
+                @if (logoError()) {
+                  <span class="org-config__field-error">{{ logoError() }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Extracting colors indicator -->
+            @if (isExtractingColors()) {
+              <div class="org-config__item org-config__extracting">
+                <div class="org-config__spinner-sm"></div>
+                <span>Extrayendo colores de la imagen...</span>
+              </div>
+            }
+
+            <!-- Color Pickers -->
+            <div class="org-config__item">
+              <div class="org-config__info">
+                <label class="org-config__label">Colores del tema</label>
+                <p class="org-config__description">Personaliza los colores de tu organización. Se autocompletan al cargar un logo, pero puedes editarlos manualmente.</p>
+              </div>
+
+              <div class="org-config__color-pickers">
+                <div class="org-config__color-field">
+                  <label for="dominantColor" class="org-config__color-label">Dominante (60%)</label>
+                  <div class="org-config__color-input-group">
+                    <input
+                      type="color"
+                      [value]="form.get('dominantColor')?.value || '#FF8C61'"
+                      (input)="onColorPickerChange('dominantColor', $event)"
+                      class="org-config__color-swatch" />
+                    <input
+                      id="dominantColor"
+                      formControlName="dominantColor"
+                      type="text"
+                      class="org-config__color-text"
+                      placeholder="#FF8C61"
+                      maxlength="7"
+                      [class.org-config__input--error]="form.get('dominantColor')?.touched && form.get('dominantColor')?.invalid" />
+                  </div>
+                  @if (getErrorMessage('dominantColor')) {
+                    <span class="org-config__field-error">{{ getErrorMessage('dominantColor') }}</span>
+                  }
+                </div>
+
+                <div class="org-config__color-field">
+                  <label for="secondaryColor" class="org-config__color-label">Secundario (30%)</label>
+                  <div class="org-config__color-input-group">
+                    <input
+                      type="color"
+                      [value]="form.get('secondaryColor')?.value || '#6c757d'"
+                      (input)="onColorPickerChange('secondaryColor', $event)"
+                      class="org-config__color-swatch" />
+                    <input
+                      id="secondaryColor"
+                      formControlName="secondaryColor"
+                      type="text"
+                      class="org-config__color-text"
+                      placeholder="#6c757d"
+                      maxlength="7"
+                      [class.org-config__input--error]="form.get('secondaryColor')?.touched && form.get('secondaryColor')?.invalid" />
+                  </div>
+                  @if (getErrorMessage('secondaryColor')) {
+                    <span class="org-config__field-error">{{ getErrorMessage('secondaryColor') }}</span>
+                  }
+                </div>
+
+                <div class="org-config__color-field">
+                  <label for="accentColor" class="org-config__color-label">Acento (10%)</label>
+                  <div class="org-config__color-input-group">
+                    <input
+                      type="color"
+                      [value]="form.get('accentColor')?.value || '#FF8C61'"
+                      (input)="onColorPickerChange('accentColor', $event)"
+                      class="org-config__color-swatch" />
+                    <input
+                      id="accentColor"
+                      formControlName="accentColor"
+                      type="text"
+                      class="org-config__color-text"
+                      placeholder="#FF8C61"
+                      maxlength="7"
+                      [class.org-config__input--error]="form.get('accentColor')?.touched && form.get('accentColor')?.invalid" />
+                  </div>
+                  @if (getErrorMessage('accentColor')) {
+                    <span class="org-config__field-error">{{ getErrorMessage('accentColor') }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Save Button -->
         <button
           type="submit"

@@ -1,0 +1,115 @@
+<section class="comment-section" aria-label="Sección de comentarios">
+  <!-- Comment Input -->
+  @if (allowComments()) {
+    <div class="comment-input">
+      <textarea
+        class="comment-input__textarea"
+        [ngModel]="newComment()"
+        (ngModelChange)="newComment.set($event)"
+        placeholder="Escribe un comentario..."
+        rows="2"
+        maxlength="1000"
+        aria-label="Escribir comentario"></textarea>
+      <button
+        class="comment-input__submit"
+        (click)="onSubmitComment()"
+        [disabled]="!newComment().trim() || isLoading()"
+        type="button"
+        aria-label="Enviar comentario">
+        Comentar
+      </button>
+    </div>
+  } @else {
+    <p class="comment-section__disabled">Los comentarios están deshabilitados para esta publicación.</p>
+  }
+
+  <!-- Moderation Error -->
+  @if (moderationError()) {
+    <div class="comment-section__error" role="alert">
+      {{ moderationError() }}
+    </div>
+  }
+
+  <!-- Comments List -->
+  @if (isLoading()) {
+    <div class="comment-section__loading" aria-busy="true">Cargando comentarios...</div>
+  } @else {
+    <div class="comment-list" role="list">
+      @for (comment of comments(); track comment.id) {
+        <div class="comment-item" role="listitem">
+          <div class="comment-item__header">
+            <span class="comment-item__author">{{ comment.authorName || 'Usuario ' + comment.authorId }}</span>
+            <time class="comment-item__time" [attr.datetime]="comment.createdAt">
+              {{ comment.createdAt | date:'short' }}
+            </time>
+          </div>
+          <p class="comment-item__content">{{ comment.content }}</p>
+          <div class="comment-item__actions">
+            <button
+              class="comment-item__reply-btn"
+              (click)="onReply(comment.id)"
+              type="button"
+              aria-label="Responder comentario">
+              Responder
+            </button>
+            <button
+              class="comment-item__delete-btn"
+              (click)="onDelete(comment.id)"
+              type="button"
+              aria-label="Eliminar comentario">
+              Eliminar
+            </button>
+          </div>
+
+          <!-- Reply Form -->
+          @if (replyingTo() === comment.id) {
+            <div class="comment-reply">
+              <textarea
+                class="comment-reply__textarea"
+                [ngModel]="replyContent()"
+                (ngModelChange)="replyContent.set($event)"
+                placeholder="Escribe una respuesta..."
+                rows="2"
+                maxlength="1000"
+                aria-label="Escribir respuesta"></textarea>
+              <div class="comment-reply__actions">
+                <button
+                  class="comment-reply__cancel"
+                  (click)="onCancelReply()"
+                  type="button">
+                  Cancelar
+                </button>
+                <button
+                  class="comment-reply__submit"
+                  (click)="onSubmitReply(comment.id)"
+                  [disabled]="!replyContent().trim()"
+                  type="button">
+                  Responder
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- Nested Replies -->
+          @if (comment.replies?.length) {
+            <div class="comment-replies" role="list">
+              @for (reply of comment.replies; track reply.id) {
+                <div class="comment-item comment-item--reply" role="listitem">
+                  <div class="comment-item__header">
+                    <span class="comment-item__author">{{ reply.authorName || 'Usuario ' + reply.authorId }}</span>
+                    <time class="comment-item__time" [attr.datetime]="reply.createdAt">
+                      {{ reply.createdAt | date:'short' }}
+                    </time>
+                  </div>
+                  <p class="comment-item__content">{{ reply.content }}</p>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      } @empty {
+        <p class="comment-section__empty">No hay comentarios aún. ¡Sé el primero!</p>
+      }
+    </div>
+  }
+</section>
