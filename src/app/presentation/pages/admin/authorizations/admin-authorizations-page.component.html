@@ -136,13 +136,13 @@
         type="button">
         <div class="auth-page__card-header">
           <div class="auth-page__card-icon-container">
-            <i [class]="'bi ' + getServiceTypeIcon(auth.serviceType) + ' auth-page__card-icon'"></i>
+            <i class="bi bi-house-door auth-page__card-icon"></i>
           </div>
           <div class="auth-page__card-info">
-            <span class="auth-page__card-name">{{ auth.personName }}</span>
+            <span class="auth-page__card-name">{{ auth.unitName || auth.unitCode || auth.unitId }}</span>
             <span class="auth-page__card-document">
-              <i class="bi bi-credit-card-2-front"></i>
-              {{ auth.personDocument }}
+              <i class="bi bi-person-badge"></i>
+              {{ auth.createdByUserName || '-' }}
             </span>
           </div>
           <span class="auth-page__card-status" [class]="getStatusClass(auth)">
@@ -151,7 +151,15 @@
         </div>
         <div class="auth-page__card-details">
           <div class="auth-page__card-detail">
-            <i class="bi bi-tag"></i>
+            <i class="bi bi-person"></i>
+            <span>{{ auth.personName }}</span>
+          </div>
+          <div class="auth-page__card-detail">
+            <i class="bi bi-credit-card-2-front"></i>
+            <span>{{ auth.personDocument }}</span>
+          </div>
+          <div class="auth-page__card-detail">
+            <i [class]="'bi ' + getServiceTypeIcon(auth.serviceType)"></i>
             <span>{{ getServiceTypeLabel(auth.serviceType) }}</span>
           </div>
           <div class="auth-page__card-detail">

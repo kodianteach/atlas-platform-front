@@ -578,7 +578,7 @@
 }
 
 .comm-page__comment-overlay-title i {
-  color: var(--color-primary, #FF8C61);
+  color: var(--color-primary, #B01129);
 }
 
 .comm-page__comment-overlay-close {
@@ -596,8 +596,8 @@
 }
 
 .comm-page__comment-overlay-close:hover {
-  background: var(--color-primary-bg, rgba(255,140,97,0.08));
-  color: var(--color-primary, #FF8C61);
+  background: var(--color-primary-bg, rgba(176, 17, 41,0.08));
+  color: var(--color-primary, #B01129);
 }
 
 @media (max-width: 480px) {
@@ -650,8 +650,8 @@
   gap: 0.3rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-primary, #FF8C61);
-  background: var(--color-primary-bg, rgba(255,140,97,0.08));
+  color: var(--color-primary, #B01129);
+  background: var(--color-primary-bg, rgba(176, 17, 41,0.08));
   padding: 3px 10px;
   border-radius: var(--border-radius-full, 50px);
 }
@@ -701,7 +701,7 @@
 
 .pr__bar-fill {
   height: 100%;
-  background: var(--gradient-primary, linear-gradient(135deg, #FF8C61, #FF6B6B));
+  background: var(--gradient-primary, linear-gradient(135deg, #B01129, #FF6B6B));
   border-radius: var(--border-radius-full, 50px);
   transition: width 0.6s ease-out;
   min-width: 0;
@@ -710,7 +710,7 @@
 .pr__option-pct {
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--color-primary, #FF8C61);
+  color: var(--color-primary, #B01129);
 }
 
 .pr__empty {

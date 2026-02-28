@@ -31,7 +31,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 140, 97, 0.1), rgba(255, 140, 97, 0.2));
+  background: linear-gradient(135deg, rgba(176, 17, 41, 0.1), rgba(176, 17, 41, 0.2));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,12 +67,12 @@
   justify-content: center;
   gap: 0.5rem;
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-  box-shadow: 0 10px 20px rgba(255, 140, 97, 0.3);
+  box-shadow: 0 10px 20px rgba(176, 17, 41, 0.3);
 }
 
 .btn-install:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(255, 140, 97, 0.4);
+  box-shadow: 0 15px 30px rgba(176, 17, 41, 0.4);
 }
 
 .installed-message {

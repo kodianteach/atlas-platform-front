@@ -44,6 +44,23 @@
         </span>
       </div>
 
+      <!-- Owner Info -->
+      <section class="auth-detail__card">
+        <h2 class="auth-detail__card-title">
+          <i class="bi bi-person-badge"></i> Información de propietario autorizador
+        </h2>
+        <div class="auth-detail__info-grid">
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Propiedad</span>
+            <span class="auth-detail__info-value">{{ auth.unitName || auth.unitCode || auth.unitId }}</span>
+          </div>
+          <div class="auth-detail__info-item">
+            <span class="auth-detail__info-label">Propietario</span>
+            <span class="auth-detail__info-value">{{ auth.createdByUserName || '-' }}</span>
+          </div>
+        </div>
+      </section>
+
       <!-- Person Info Card -->
       <section class="auth-detail__card">
         <h2 class="auth-detail__card-title">
@@ -123,23 +140,6 @@
           </div>
         </section>
       }
-
-      <!-- Organization Info -->
-      <section class="auth-detail__card">
-        <h2 class="auth-detail__card-title">
-          <i class="bi bi-building"></i> Información Adicional
-        </h2>
-        <div class="auth-detail__info-grid">
-          <div class="auth-detail__info-item">
-            <span class="auth-detail__info-label">Unidad</span>
-            <span class="auth-detail__info-value">{{ auth.unitCode || auth.unitId }}</span>
-          </div>
-          <div class="auth-detail__info-item">
-            <span class="auth-detail__info-label">Creada por</span>
-            <span class="auth-detail__info-value">{{ auth.createdByUserName || auth.createdByUserId }}</span>
-          </div>
-        </div>
-      </section>
 
       <!-- Identity Document Card -->
       @if (hasDocument()) {

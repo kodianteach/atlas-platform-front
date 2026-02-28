@@ -55,9 +55,9 @@
   width: 60px;
   height: 60px;
   border-radius: 1.25rem;
-  background: linear-gradient(135deg, #FF8C61 0%, #FFB399 100%);
+  background: var(--gradient-primary, linear-gradient(135deg, #B01129 0%, #D64A5E 100%));
   color: white;
-  box-shadow: 0 8px 20px rgba(255, 140, 97, 0.4);
+  box-shadow: 0 8px 20px rgba(176, 17, 41, 0.4);
   margin-top: -10px;
   flex: 0 0 60px;
   display: flex;

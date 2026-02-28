@@ -7,7 +7,7 @@
  * - Accent (10%): CTAs, links, indicators, badges
  *
  * Persists theme in localStorage for instant apply on page load.
- * Falls back to default colors (#FF8C61) when no branding is configured.
+ * Falls back to default colors (#B01129) when no branding is configured.
  */
 import { Injectable, inject } from '@angular/core';
 import { OrganizationConfigGateway } from '@domain/gateways/organization/organization-config.gateway';
@@ -31,10 +31,10 @@ interface ThemeData {
 export class ThemingService {
 
   private static readonly STORAGE_KEY = 'atlas_theme';
-  private static readonly DEFAULT_PRIMARY = '#FF8C61';
-  private static readonly DEFAULT_PRIMARY_LIGHT = '#FFB399';
-  private static readonly DEFAULT_PRIMARY_DARK = '#FF6B3D';
-  private static readonly DEFAULT_PRIMARY_RGB = '255, 140, 97';
+  private static readonly DEFAULT_PRIMARY = '#B01129';
+  private static readonly DEFAULT_PRIMARY_LIGHT = '#D64A5E';
+  private static readonly DEFAULT_PRIMARY_DARK = '#8A0D20';
+  private static readonly DEFAULT_PRIMARY_RGB = '176, 17, 41';
 
   private readonly configGateway = inject(OrganizationConfigGateway);
 
@@ -93,7 +93,7 @@ export class ThemingService {
   }
 
   /**
-   * Apply default system colors (naranja coral #FF8C61)
+   * Apply default system colors (rojo corporativo #B01129)
    */
   applyDefaultTheme(): void {
     const root = document.documentElement;

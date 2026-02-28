@@ -155,7 +155,7 @@
                   <div class="org-config__color-input-group">
                     <input
                       type="color"
-                      [value]="form.get('dominantColor')?.value || '#FF8C61'"
+                      [value]="form.get('dominantColor')?.value || '#B01129'"
                       (input)="onColorPickerChange('dominantColor', $event)"
                       class="org-config__color-swatch" />
                     <input
@@ -163,7 +163,7 @@
                       formControlName="dominantColor"
                       type="text"
                       class="org-config__color-text"
-                      placeholder="#FF8C61"
+                      placeholder="#B01129"
                       maxlength="7"
                       [class.org-config__input--error]="form.get('dominantColor')?.touched && form.get('dominantColor')?.invalid" />
                   </div>
@@ -199,7 +199,7 @@
                   <div class="org-config__color-input-group">
                     <input
                       type="color"
-                      [value]="form.get('accentColor')?.value || '#FF8C61'"
+                      [value]="form.get('accentColor')?.value || '#B01129'"
                       (input)="onColorPickerChange('accentColor', $event)"
                       class="org-config__color-swatch" />
                     <input
@@ -207,7 +207,7 @@
                       formControlName="accentColor"
                       type="text"
                       class="org-config__color-text"
-                      placeholder="#FF8C61"
+                      placeholder="#B01129"
                       maxlength="7"
                       [class.org-config__input--error]="form.get('accentColor')?.touched && form.get('accentColor')?.invalid" />
                   </div>

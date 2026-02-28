@@ -161,7 +161,7 @@ export class OrganizationConfigPageComponent implements OnInit {
     if (control.errors['required']) return 'Campo obligatorio';
     if (control.errors['min']) return 'El valor mínimo es 1';
     if (control.errors['max']) return 'El valor máximo es 1000';
-    if (control.errors['pattern']) return 'Formato hex inválido (ej: #FF8C61)';
+    if (control.errors['pattern']) return 'Formato hex inválido (ej: #B01129)';
     return 'Campo inválido';
   }
 

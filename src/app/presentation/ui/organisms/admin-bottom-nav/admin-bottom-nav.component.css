@@ -28,11 +28,12 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-sm);
   cursor: pointer;
   color: var(--text-tertiary);
   transition: all var(--transition-fast);
-  min-width: 60px;
+  min-width: 52px;
+  flex: 1;
   position: relative;
 }
 

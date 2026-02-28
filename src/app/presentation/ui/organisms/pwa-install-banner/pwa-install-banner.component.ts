@@ -161,7 +161,7 @@ import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
     }
 
     .btn-install {
-      background: var(--color-primary, #FF8C61);
+      background: var(--color-primary, #B01129);
       color: white;
       border: none;
       border-radius: 50rem;
@@ -175,7 +175,7 @@ import { PwaUpdateService } from '@infrastructure/services/pwa-update.service';
 
     .btn-install:hover {
       transform: scale(1.05);
-      background: var(--color-primary-dark, #FF6B3D);
+      background: var(--color-primary-dark, #8A0D20);
     }
 
     .btn-dismiss {

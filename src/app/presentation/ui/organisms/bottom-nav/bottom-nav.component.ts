@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, output } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, ChangeDetectionStrategy, output, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 interface NavItem {
   label: string;
@@ -16,6 +16,7 @@ interface NavItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BottomNavComponent {
+  private readonly router = inject(Router);
   readonly centerAction = output<void>();
 
   readonly navItems: NavItem[] = [
@@ -26,6 +27,8 @@ export class BottomNavComponent {
   ];
 
   onCenterAction(): void {
+    // Navigate to home with query param to open authorization form
+    this.router.navigate(['/home'], { queryParams: { action: 'register' } });
     this.centerAction.emit();
   }
 }

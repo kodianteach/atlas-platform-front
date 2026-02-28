@@ -7,6 +7,7 @@ import { GetAuthorizationByIdUseCase } from '@domain/use-cases/authorization/get
 import { RevokeAuthorizationUseCase } from '@domain/use-cases/authorization/revoke-authorization.use-case';
 import { AuthorizationGateway } from '@domain/gateways/authorization/authorization.gateway';
 import { AuthorizationPdfService } from '../../../infrastructure/services/authorization-pdf.service';
+import { UrlHelperService } from '../../../infrastructure/services/url-helper.service';
 import { QrDisplayComponent } from '../../ui/molecules/qr-display/qr-display.component';
 import { ShareActionsComponent } from '../../ui/molecules/share-actions/share-actions.component';
 import { ButtonComponent } from '../../ui/atoms/button/button.component';
@@ -364,19 +365,19 @@ import { BottomNavComponent } from '../../ui/organisms/bottom-nav/bottom-nav.com
       gap: 8px;
       padding: 14px;
       border: none;
-      background: linear-gradient(135deg, #FF8C61, #FF6B3D);
+      background: var(--gradient-primary, linear-gradient(135deg, #B01129, #8A0D20));
       color: white;
       border-radius: 12px;
       font-size: 0.9375rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(255, 107, 61, 0.3);
+      box-shadow: 0 4px 12px rgba(176, 17, 41, 0.3);
     }
 
     .download-pdf-btn:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(255, 107, 61, 0.4);
+      box-shadow: 0 6px 20px rgba(176, 17, 41, 0.4);
     }
 
     .download-pdf-btn:active:not(:disabled) {
@@ -537,6 +538,7 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   private readonly revokeUseCase = inject(RevokeAuthorizationUseCase);
   private readonly authorizationGateway = inject(AuthorizationGateway);
   private readonly pdfService = inject(AuthorizationPdfService);
+  private readonly urlHelper = inject(UrlHelperService);
 
   readonly authorization = signal<Authorization | null>(null);
   readonly loading = signal(true);
@@ -579,7 +581,7 @@ export class AuthorizationDetailComponent implements OnInit, OnDestroy {
   }
 
   getShareUrl(): string {
-    return `${window.location.origin}/authorization/verify/${this.authorizationId}`;
+    return this.urlHelper.buildUrl(`/authorization/verify/${this.authorizationId}`);
   }
 
   getServiceTypeLabel(type: string): string {

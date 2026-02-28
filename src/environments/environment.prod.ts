@@ -7,6 +7,8 @@ export const environment = {
   useMockData: false,
   appName: 'Atlas Platform',
   defaultLanguage: 'es',
+  /** Base URL for generated links - empty string uses window.location.origin in production */
+  frontendBaseUrl: '',
   pwa: {
     enabled: true,
     updateCheckInterval: 60000

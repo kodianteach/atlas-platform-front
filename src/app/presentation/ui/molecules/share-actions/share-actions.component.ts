@@ -46,15 +46,15 @@ import { TicketShareModalComponent } from '../ticket-share-modal/ticket-share-mo
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      background: var(--color-primary, #FF5722);
+      background: var(--color-primary, #B01129);
       color: white;
-      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+      box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 176, 17, 41), 0.3);
       transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
     .btn-main-share:active {
       transform: scale(0.96);
-      box-shadow: 0 2px 6px rgba(255, 87, 34, 0.2);
+      box-shadow: 0 2px 6px rgba(var(--color-primary-rgb, 176, 17, 41), 0.2);
     }
 
     .btn-main-share i {

@@ -292,7 +292,7 @@
               <i class="bi bi-people-fill"></i> {{ selectedPoll()!.totalVotes }} votos totales
             </span>
             <span class="pr__meta-item">
-              <i class="bi bi-list-ul"></i> {{ selectedPoll()!.options?.length || 0 }} opciones
+              <i class="bi bi-list-ul"></i> {{ selectedPoll()!.options.length || 0 }} opciones
             </span>
             @if (selectedPoll()!.isAnonymous) {
               <span class="pr__meta-item pr__meta-item--muted">
@@ -365,4 +365,4 @@
 </div>
 
 <!-- Bottom nav -->
-<app-unified-bottom-nav [role]="'ADMIN_ATLAS'" [activeTab]="'communications'" />
+<app-admin-bottom-nav [activeTab]="'communications'" />

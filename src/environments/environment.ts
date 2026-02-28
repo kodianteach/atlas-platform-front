@@ -7,6 +7,8 @@ export const environment = {
   useMockData: false,
   appName: 'Atlas Platform',
   defaultLanguage: 'es',
+  /** Base URL for generated links (for tunneler testing) - set to empty string to use window.location.origin */
+  frontendBaseUrl: 'https://8q5djhhd-4200.use2.devtunnels.ms',
   pwa: {
     enabled: false,
     updateCheckInterval: 30000
